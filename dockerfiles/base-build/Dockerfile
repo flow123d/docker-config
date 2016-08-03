@@ -1,0 +1,30 @@
+# BASE-BUILD Dockerfile for running flow123d
+FROM flow123d/base
+MAINTAINER Jan Hybs
+
+# install basic set of tools
+RUN sudo apt-get update && sudo apt-get install -y  \
+    cmake \ 
+    git \ 
+    python \ 
+    python-dev \ 
+    python-pip \
+    valgrind \ 
+    perl \ 
+    gfortran \ 
+    gcc \ 
+    g++ \
+    texlive-full
+
+# install boost
+RUN sudo apt-get update && sudo apt-get install -y  \
+    libboost-program-options-dev \
+    libboost-serialization-dev \
+    libboost-regex-dev \
+    libboost-filesystem-dev 
+
+# install python basic tools
+RUN sudo pip install \
+    pyyaml \
+    markdown \
+    psutil
