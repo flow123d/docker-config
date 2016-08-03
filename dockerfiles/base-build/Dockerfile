@@ -13,8 +13,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     perl \ 
     gfortran \ 
     gcc \ 
-    g++ \
-    texlive-full
+    g++ 
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \
