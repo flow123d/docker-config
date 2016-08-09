@@ -14,6 +14,13 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     gfortran \ 
     gcc \ 
     g++ 
+    
+# install additional tools and libs
+RUN sudo apt-get update && sudo apt-get install -y
+    libblas-dev \
+    liblapack-dev \
+    libmpich-dev \
+    libopenmpi-dev 
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \
