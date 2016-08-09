@@ -17,8 +17,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
-    libblas-dev \
-    liblapack-dev \
+    libblas* \
+    liblapack* \
     libmpich-dev \
     libopenmpi-dev 
 
