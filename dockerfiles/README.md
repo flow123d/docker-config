@@ -16,12 +16,13 @@ Simple scheme where dependencies are shown:
    - `make, wget, python`
 
 
-## Dockerfile `flow123d/base-build` ![base-build](https://img.shields.io/badge/base--build-4.8 GB / 5 layers / ~27 min-blue.svg)
+## Dockerfile `flow123d/base-build` ![base-build](https://img.shields.io/badge/base--build-881.3 MB / 6 layers / ~8 min-blue.svg)
  - Image for building other libraries. Originates from `flow123d/base`
  - *note*: big image size is cause be full latex environment
  - What is installed:
    - `cmake, git, python, python-dev, python-pip`
-     `valgrind, perl, gfortran, gcc, g++, texlive-full`
+     `valgrind, perl, gfortran, gcc, g++, (texlive-full disabled)`
+   - `libblas-dev, liblapack-dev, libmpich-dev, libopenmpi-dev`
    - `libboost`:
      - `libboost-program-options-dev`
      - `libboost-serialization-dev`
