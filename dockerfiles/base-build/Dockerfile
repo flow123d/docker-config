@@ -16,7 +16,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     g++ 
     
 # install additional tools and libs
-RUN sudo apt-get update && sudo apt-get install -y
+RUN sudo apt-get update && sudo apt-get install -y \
     libblas-dev \
     liblapack-dev \
     libmpich-dev \
