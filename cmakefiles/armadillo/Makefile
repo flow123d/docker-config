@@ -9,7 +9,7 @@ BUILD_TREE = build_$(BUILD_TYPE)
 # default package name
 PACKAGE_NAME = ARMADILLO_3.4.3
 # given by docker -v option
-PACKAGE_DIR = /packages/ARMADILLO_3.4.3_$(BUILD_TYPE)
+PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
