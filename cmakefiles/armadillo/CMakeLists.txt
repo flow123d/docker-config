@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
-project(PETSC CXX C Fortran)
+project(ARMADILLO CXX C Fortran)
 find_program (MAKE_EXECUTABLE NAMES make gmake)
 
 # find blas
@@ -21,15 +21,16 @@ set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
 set(INSTALL_URL "http://flow.nti.tul.cz/libraries/armadillo-${ARMADILLO_VERSION}.tar.gz")
 
 
-# setup external project with target petsc-lib
+# setup external project with target external-lib
 include(ExternalProject)
-ExternalProject_Add(armadillo-lib
-    DOWNLOAD_DIR        ${INSTALL_DIR} 
+ExternalProject_Add(external-lib
+    DOWNLOAD_DIR        ${INSTALL_DIR}
     URL                 ${INSTALL_URL}
     SOURCE_DIR          ${INSTALL_DIR}/src
     BINARY_DIR          ${INSTALL_DIR}/src
+    # patch to build .a lib instead of .so libs
     PATCH_COMMAND patch ${INSTALL_DIR}/src/CMakeLists.txt ${CMAKE_SOURCE_DIR}/patch/armadillo_patch
-    CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES} 
+    CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
                               -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
                               -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/build
                               .
@@ -39,21 +40,21 @@ ExternalProject_Add(armadillo-lib
 
 
 install(
-	DIRECTORY ${INSTALL_DIR}/build/lib/
-	DESTINATION lib/
+    DIRECTORY ${INSTALL_DIR}/build/lib/
+    DESTINATION lib/armadillo/
 )
 
 install(
-	DIRECTORY ${INSTALL_DIR}/build/include/
-	DESTINATION include/
+    DIRECTORY ${INSTALL_DIR}/build/include/
+    DESTINATION include/armadillo/
 )
 
 install(
-	DIRECTORY ${INSTALL_DIR}/build/share/
-	DESTINATION share/
+    DIRECTORY ${INSTALL_DIR}/build/share/
+    DESTINATION share/armadillo/
 )
 
-# CPack configuration 
+# CPack configuration
 # set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 set(CPACK_PACKAGE_FILE_NAME "ARMADILLO_${ARMADILLO_VERSION}")
 set(CPACK_GENERATOR "DEB;TGZ;ZIP")
