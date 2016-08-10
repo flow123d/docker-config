@@ -6,9 +6,12 @@ find_program (MAKE_EXECUTABLE NAMES make gmake)
 # find blas
 set(BLA_STATIC On)
 find_package(BLAS REQUIRED)
+message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
+
 # find lapack
 set(LAPACK_STATIC On)
 find_package(LAPACK REQUIRED)
+message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
 
 # set version
 set(ARMADILLO_VERSION_MAJOR "3")
