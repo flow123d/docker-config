@@ -64,11 +64,3 @@ SET(CPACK_PACKAGE_FILE_NAME "PETSC_${PETSC_VERSION}")
 SET(CPACK_GENERATOR "DEB;TGZ;ZIP")
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jan Hybs") #required
 INCLUDE(CPack)
-
-
-set(PETSC_DIR "/home/jan-hybs/Dokumenty/projects/docker-config/cmakefiles/petsc/build_Debug/src/")
-set(PETSC_ARCH "linux-Debug")
-
-# set(PETSC_DIR "/home/jan-hybs/Dokumenty/Smartgit-flow/external_projects/petsc_3.6_build/src/")
-# set(PETSC_ARCH "flow123d_release")
-find_package(PETSc)
