@@ -4,16 +4,16 @@ MAINTAINER Jan Hybs
 
 # install basic set of tools
 RUN sudo apt-get update && sudo apt-get install -y  \
-    cmake \ 
-    git \ 
-    python \ 
-    python-dev \ 
+    cmake \
+    git \
+    python \
+    python-dev \
     python-pip \
-    valgrind \ 
-    perl \ 
-    gfortran \ 
-    gcc \ 
-    g++ 
+    valgrind \
+    perl \
+    gfortran \
+    gcc \
+    g++
     
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
