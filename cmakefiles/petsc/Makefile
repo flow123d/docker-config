@@ -36,6 +36,7 @@ package:
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).tar.gz  $(PACKAGE_DIR)/$(PACKAGE_NAME).tar.gz
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).zip     $(PACKAGE_DIR)/$(PACKAGE_NAME).zip
+	cp $(BUILD_TREE)/_CPack_Packages/Linux/DEB/$(PACKAGE_NAME)/md5sums $(PACKAGE_DIR)/$(PACKAGE_NAME).md5sums
 
 
 .PHONY : clean
