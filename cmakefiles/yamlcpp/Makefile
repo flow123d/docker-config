@@ -7,7 +7,7 @@ BUILD_TYPE = Debug
 BUILD_TREE = build_$(BUILD_TYPE)
 
 # default package name
-PACKAGE_NAME = YAML_CPP_0.5.2
+PACKAGE_NAME = YAMLCPP_0.5.2
 # given by docker -v option
 PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
 
