@@ -1,6 +1,8 @@
 # FLOW-LIBS-DEV-DBG Dockerfile for running flow123d
 FROM flow123d/base-build
 MAINTAINER Jan Hybs
+
+# defalt BUILD_TYPE is debug
 ARG BUILD_TYPE=debug
 
 # copy install script
