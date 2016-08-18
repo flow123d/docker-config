@@ -24,7 +24,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
 
 # install docker
 # alt way to install 
-RUN wget -qO- https://get.docker.com/ | sh
+# RUN wget -qO- https://get.docker.com/ | sh
 
 
 # install jenkins
