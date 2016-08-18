@@ -34,14 +34,14 @@ RUN sudo apt-get update
 RUN sudo apt-get install -y jenkins
 
 # copy files
-COPY plugins.sh /usr/local/bin/plugins.sh
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh /usr/local/bin/jenkins.sh
-
-# install curl and zip
-RUN sudo apt-get install -y curl zip
-ENV JENKINS_UC https://updates.jenkins.io
-
-# install plugins
-RUN /usr/local/bin/install-plugins.sh jenkins-multijob view-job-filters github build-name-setter envinject cloudbees-folder
+# COPY plugins.sh /usr/local/bin/plugins.sh
+# COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+# COPY jenkins-support /usr/local/bin/jenkins-support
+# COPY jenkins.sh /usr/local/bin/jenkins.sh
+# 
+# # install curl and zip
+# RUN sudo apt-get install -y curl zip
+# ENV JENKINS_UC https://updates.jenkins.io
+# 
+# # install plugins
+# RUN /usr/local/bin/install-plugins.sh jenkins-multijob view-job-filters github build-name-setter envinject cloudbees-folder
