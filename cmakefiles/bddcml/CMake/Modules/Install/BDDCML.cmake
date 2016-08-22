@@ -15,7 +15,7 @@ ExternalProject_Add(bddcml-lib
     PATCH_COMMAND patch ${BDDCML_DIR}/src/f_symbol.h ${CMAKE_SOURCE_DIR}/patch/f_symbol.h.patch
     
     CONFIGURE_COMMAND   cp ${MAKE_INC} ${BDDCML_DIR}/make.inc && cp ${INSTALL_DIR}/FC_Magle.h ${BDDCML_DIR}/FC_Magle.h
-    BUILD_COMMAND       make -j ${MAKE_NUMCPUS} all
+    BUILD_COMMAND       make -j 1 all
     INSTALL_COMMAND     ""
 )
 
