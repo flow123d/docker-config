@@ -45,12 +45,28 @@ configure_file(
 execute_process(COMMAND
     ${CMAKE_COMMAND} -E copy_if_different "${INSTALL_DIR}/conf_tmp.sh" "${INSTALL_DIR}/conf.sh")
 
+# patch paths to /usr/lib/petsc
+install(
+    CODE "execute_process(COMMAND make -C ${CMAKE_BINARY_DIR} patch-path)"
+)
+
 # add install rule, for now we copy everything in src dir
 install(
 	DIRECTORY ${INSTALL_DIR}/src/
 	DESTINATION lib/petsc
 )
     
+set(PETSC_OLD_PATH "${INSTALL_DIR}/src")
+set(PETSC_NEW_PATH "/usr/lib/petsc")
+set(PETSC_REPLACE_FILES 
+    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/include/petscconf.h"
+    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/lib/petsc/conf/petscvariables")
+
+add_custom_target(patch-path
+    COMMAND sed -i "s#${PETSC_OLD_PATH}#${PETSC_NEW_PATH}#g" ${PETSC_REPLACE_FILES}
+)
+
+
 # CPack configuration 
 # SET(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 SET(CPACK_PACKAGE_FILE_NAME "PETSC_${PETSC_VERSION}")
