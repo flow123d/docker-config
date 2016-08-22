@@ -41,7 +41,7 @@ set(BLOPEX_ROOT ${BLOPEX_DIR})
 include(Install/Blopex)
 
 set(BDDCML_DIR ${INSTALL_DIR}/bddcml)
-set(BDDCML_ROOT ${BDDCML_DIR}/src)
+set(BDDCML_ROOT ${BDDCML_DIR})
 include(Install/BDDCML)
 
 
