@@ -46,9 +46,9 @@ execute_process(COMMAND
     ${CMAKE_COMMAND} -E copy_if_different "${INSTALL_DIR}/conf_tmp.sh" "${INSTALL_DIR}/conf.sh")
 
 # patch paths to /usr/lib/petsc
-install(
-    CODE "execute_process(COMMAND make -C ${CMAKE_BINARY_DIR} patch-path)"
-)
+#install(
+#    CODE "execute_process(COMMAND make -C ${CMAKE_BINARY_DIR} patch-path)"
+#)
 
 # add install rule, for now we copy everything in src dir
 install(
