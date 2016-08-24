@@ -6,6 +6,8 @@ BUILD_TYPE = Debug
 # default location for building
 #BUILD_TREE = build_$(BUILD_TYPE)
 BUILD_TREE = /usr/lib/petsc
+# get pwd
+SOURCE_TREE = $(shell pwd)
 
 # default package name
 PACKAGE_NAME = PETSC_3.6.1
@@ -21,7 +23,7 @@ MAKE_NUMCPUS = 2
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMAKE_NUMCPUS=$(MAKE_NUMCPUS) ..
+	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMAKE_NUMCPUS=$(MAKE_NUMCPUS) $(SOURCE_TREE)
 
 
 .PHONY : build
@@ -31,7 +33,6 @@ build: cmake
 
 .PHONY : package
 package:
-	cd $(BUILD_TREE) && make package
 	# copy out packages
 	mkdir -p $(PACKAGE_DIR)
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
