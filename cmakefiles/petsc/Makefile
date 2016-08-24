@@ -5,7 +5,7 @@
 BUILD_TYPE = Debug
 # default location for building
 #BUILD_TREE = build_$(BUILD_TYPE)
-BUILD_TYPE = /usr/lib/petsc
+BUILD_TREE = /usr/lib/petsc
 
 # default package name
 PACKAGE_NAME = PETSC_3.6.1
