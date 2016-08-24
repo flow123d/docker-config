@@ -33,6 +33,7 @@ build: cmake
 
 .PHONY : package
 package:
+	cd $(BUILD_TREE) && make package
 	# copy out packages
 	mkdir -p $(PACKAGE_DIR)
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
