@@ -33,8 +33,8 @@ ExternalProject_Add(external-lib
     BINARY_DIR          ${INSTALL_DIR}/src
 
     CONFIGURE_COMMAND   bash ${INSTALL_DIR}/conf.sh
-    BUILD_COMMAND       make all
-    INSTALL_COMMAND     make test
+    BUILD_COMMAND       make -C ${PETSC_DIR} all
+    INSTALL_COMMAND     make -C ${PETSC_DIR} test
 )
 
 # prepare configure script for petsc and copy if different to isntall dir
