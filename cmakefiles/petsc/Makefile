@@ -4,7 +4,8 @@
 # default build type
 BUILD_TYPE = Debug
 # default location for building
-BUILD_TREE = build_$(BUILD_TYPE)
+#BUILD_TREE = build_$(BUILD_TYPE)
+BUILD_TYPE = /usr/lib/petsc
 
 # default package name
 PACKAGE_NAME = PETSC_3.6.1
@@ -29,8 +30,8 @@ build: cmake
 
 
 .PHONY : package
-package: 
-	cd $(BUILD_TREE) && make package	
+package:
+	cd $(BUILD_TREE) && make package
 	# copy out packages
 	mkdir -p $(PACKAGE_DIR)
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
@@ -60,5 +61,3 @@ help:
 	@echo "   PACKAGE_DIR - e.g. make PACKAGE_DIR=/var/www/html package"
 	@echo "To change configuration and compilation process of petsc set variable"
 	@echo "   MAKE_NUMCPUS - parallel processing (default is 2)"
-	
-	
