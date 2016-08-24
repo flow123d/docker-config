@@ -53,7 +53,7 @@ execute_process(COMMAND
 # add install rule, for now we copy everything in src dir
 install(
 	DIRECTORY ${PETSC_DIR}
-	DESTINATION lib/petsc
+	DESTINATION lib
 )
 
 #set(PETSC_OLD_PATH "${INSTALL_DIR}/src")
