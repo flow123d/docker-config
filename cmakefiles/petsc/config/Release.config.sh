@@ -1,5 +1,7 @@
 #!/bin/bash
-cd @INSTALL_DIR@/src
+mkdir -p @PETSC_DIR@
+cp -r @INSTALL_DIR@/src/* @PETSC_DIR@
+cd @PETSC_DIR@
 
 # by default petsc will found default system libs such as blas lapack or openmpi
 ./configure \
@@ -11,5 +13,5 @@ cd @INSTALL_DIR@/src
 
 # other options
 # --with-mpi-dir=@MPI_DIR@ \
-# --with-cc=@CMAKE_C_COMPILER@ --with-cxx=@CMAKE_CXX_COMPILER@ --with-fc=@CMAKE_Fortran_COMPILER@ 
-# --download-fblaslapack --download-mpich 
+# --with-cc=@CMAKE_C_COMPILER@ --with-cxx=@CMAKE_CXX_COMPILER@ --with-fc=@CMAKE_Fortran_COMPILER@
+# --download-fblaslapack --download-mpich

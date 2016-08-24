@@ -21,17 +21,17 @@ SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${PETS
 # set petsc arch based on CMAKE_BUILD_TYPE
 #     linux-Debug or linux-Release
 SET(PETSC_ARCH      "linux-${CMAKE_BUILD_TYPE}")
-SET(PETSC_DIR       "${INSTALL_DIR}/src/")
+#SET(PETSC_DIR       "${INSTALL_DIR}/src/")
 SET(MAKE_NUMCPUS    2)
 
 # setup external project with target petsc-lib
 include(ExternalProject)
 ExternalProject_Add(external-lib
-    DOWNLOAD_DIR        ${INSTALL_DIR} 
+    DOWNLOAD_DIR        ${INSTALL_DIR}
     URL                 ${INSTALL_URL}
     SOURCE_DIR          ${INSTALL_DIR}/src
     BINARY_DIR          ${INSTALL_DIR}/src
-    
+
     CONFIGURE_COMMAND   bash ${INSTALL_DIR}/conf.sh
     BUILD_COMMAND       make all
     INSTALL_COMMAND     make test
@@ -52,22 +52,22 @@ install(
 
 # add install rule, for now we copy everything in src dir
 install(
-	DIRECTORY ${INSTALL_DIR}/src/
+	DIRECTORY ${PETSC_DIR}
 	DESTINATION lib/petsc
 )
-    
-set(PETSC_OLD_PATH "${INSTALL_DIR}/src")
-set(PETSC_NEW_PATH "/usr/lib/petsc")
-set(PETSC_REPLACE_FILES 
-    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/include/petscconf.h"
-    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/lib/petsc/conf/petscvariables")
 
-add_custom_target(patch-path
-    COMMAND sed -i "s#${PETSC_OLD_PATH}#${PETSC_NEW_PATH}#g" ${PETSC_REPLACE_FILES}
-)
+#set(PETSC_OLD_PATH "${INSTALL_DIR}/src")
+#set(PETSC_NEW_PATH "/usr/lib/petsc")
+#set(PETSC_REPLACE_FILES
+#    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/include/petscconf.h"
+#    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/lib/petsc/conf/petscvariables")
+
+#add_custom_target(patch-path
+#    COMMAND sed -i "s#${PETSC_OLD_PATH}#${PETSC_NEW_PATH}#g" ${PETSC_REPLACE_FILES}
+#)
 
 
-# CPack configuration 
+# CPack configuration
 # SET(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 SET(CPACK_PACKAGE_FILE_NAME "PETSC_${PETSC_VERSION}")
 SET(CPACK_GENERATOR "DEB;TGZ;ZIP")
