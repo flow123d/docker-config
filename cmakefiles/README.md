@@ -1,28 +1,18 @@
 # Libs structure
 <pre>
-├── <strong>armadillo</strong> library:
-│   └── usr
-│       ├── include
-│       │   └── armadillo
-│       ├── lib
-│       │   └── armadillo
-│       └── share
-│           └── armadillo
-├── <strong>bddcml</strong> library:
-│   └── usr
-│       └── lib
-│           ├── bddcml
-│           └── blopex
-├── <strong>petsc</strong> library:
-│   └── usr
-│       └── lib
-│           └── petsc
-└── <strong>yamlcpp</strong> library:
-    └── usr
-        ├── include
-        │   └── yaml-cpp
-        └── lib
-            └── yaml-cpp
+/usr/lib
+    ├── <strong>armadillo</strong>
+    │   ├── include
+    │   ├── lib
+    │   └── share
+    ├── <strong>bddcml_blopex</strong>
+    │   ├── bddcml
+    │   └── blopex
+    ├── <strong>yamlcpp</strong>
+    │   ├── include
+    │   └── lib
+    └── <strong>petsc</strong>
+
 </pre>
 
 ---
@@ -33,8 +23,8 @@
  - *no dependencies*
 
 ### Deb package content
- - `/usr/include/yaml-cpp/`
- - `/usr/lib/yaml-cpp/`
+ - `/usr/lib/yamlcpp/lib`
+ - `/usr/lib/yamlcpp/include`
 
 ---
 
@@ -44,9 +34,9 @@
  - system dev installation of `blas` and `lapack`
 
 ### Deb package content
- - `/usr/include/armadillo/`
- - `/usr/lib/armadillo/`
- - `/usr/share/armadillo/`
+ - `/usr/lib/armadillo/lib`
+ - `/usr/lib/armadillo/include`
+ - `/usr/lib/armadillo/share`
 
 
 ## Petsc library ![info](https://img.shields.io/badge/petsc--3.6.1-110 MB / 22k files-blue.svg)
@@ -64,6 +54,6 @@
  - petsc installation with `metis`, `parmetis`, `blacs`, `scalapack`, `mumps`
 
 ### Deb package content
- - `/usr/lib/bddcml/`
- - `/usr/lib/blopex/`
+ - `/usr/lib/bddcml_blopex/bddcml/`
+ - `/usr/lib/bddcml_blopex/blopex/`
 
