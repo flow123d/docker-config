@@ -36,24 +36,24 @@ find_package(PETSc 3.6.0 REQUIRED)
 find_package(MPI REQUIRED)
 
 
-set(BLOPEX_DIR ${INSTALL_DIR}/blopex)
+set(BLOPEX_DIR ${INSTALL_DIR}/blopex/${CMAKE_BUILD_TYPE})
 set(BLOPEX_ROOT ${BLOPEX_DIR})
 include(Install/Blopex)
 
-set(BDDCML_DIR ${INSTALL_DIR}/bddcml)
+set(BDDCML_DIR ${INSTALL_DIR}/bddcml/${CMAKE_BUILD_TYPE})
 set(BDDCML_ROOT ${BDDCML_DIR})
 include(Install/BDDCML)
 
 
 # add install rule, for now we copy everything in src dir
 install(
-	DIRECTORY ${BLOPEX_DIR}
-	DESTINATION lib/blopex
+	DIRECTORY ${BLOPEX_DIR}/
+	DESTINATION lib/bddcml_blopex/blopex/${CMAKE_BUILD_TYPE}
 )
 
 install(
-	DIRECTORY ${BDDCML_DIR}
-	DESTINATION lib/bddcml
+	DIRECTORY ${BDDCML_DIR}/
+	DESTINATION lib/bddcml_blopex/bddcml/${CMAKE_BUILD_TYPE}
 )
     
 # CPack configuration 

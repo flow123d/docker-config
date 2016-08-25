@@ -17,23 +17,23 @@ include(ExternalProject)
 ExternalProject_Add(external-lib
     DOWNLOAD_DIR        ${INSTALL_DIR}
     URL                 ${INSTALL_URL}
-    SOURCE_DIR          ${INSTALL_DIR}/src
-    BINARY_DIR          ${INSTALL_DIR}/src
-    CONFIGURE_COMMAND   cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}.
+    SOURCE_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
+    BINARY_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
+    CONFIGURE_COMMAND   cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} .
     BUILD_COMMAND       make yaml-cpp
     INSTALL_COMMAND     ""
 )
 
 
 install(
-    DIRECTORY ${INSTALL_DIR}/src/
-    DESTINATION lib/yaml-cpp/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/
+    DESTINATION lib/yamlcpp/${CMAKE_BUILD_TYPE}/lib
     FILES_MATCHING PATTERN "*.a"
 )
 
 install(
-    DIRECTORY ${INSTALL_DIR}/src/include/yaml-cpp/
-    DESTINATION include/yaml-cpp/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include/yaml-cpp/
+    DESTINATION lib/yamlcpp/${CMAKE_BUILD_TYPE}/include
 )
 
 # CPack configuration

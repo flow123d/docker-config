@@ -29,10 +29,10 @@ include(ExternalProject)
 ExternalProject_Add(external-lib
     DOWNLOAD_DIR        ${INSTALL_DIR}
     URL                 ${INSTALL_URL}
-    SOURCE_DIR          ${INSTALL_DIR}/src
-    BINARY_DIR          ${INSTALL_DIR}/src
+    SOURCE_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
+    BINARY_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
     # patch to build .a lib instead of .so libs
-    PATCH_COMMAND patch ${INSTALL_DIR}/src/CMakeLists.txt ${CMAKE_SOURCE_DIR}/patch/armadillo_patch
+    PATCH_COMMAND patch ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/CMakeLists.txt ${CMAKE_SOURCE_DIR}/patch/armadillo_patch
     CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
                               -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
                               -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/build
@@ -44,17 +44,17 @@ ExternalProject_Add(external-lib
 
 install(
     DIRECTORY ${INSTALL_DIR}/build/lib/
-    DESTINATION lib/armadillo/
+    DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/lib
 )
 
 install(
     DIRECTORY ${INSTALL_DIR}/build/include/
-    DESTINATION include/armadillo/
+    DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/include
 )
 
 install(
     DIRECTORY ${INSTALL_DIR}/build/share/
-    DESTINATION share/armadillo/
+    DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/share
 )
 
 # CPack configuration

@@ -4,8 +4,9 @@
 # default build type
 BUILD_TYPE = Debug
 # default location for building
-BUILD_TREE = build_$(BUILD_TYPE)
-
+BUILD_TREE = /usr/lib/bddcml_blopex
+# get cwd
+SOURCE_TREE = $(shell pwd)
 # default package name
 PACKAGE_NAME = BDDCML_2.4.0
 # given by docker -v option
@@ -17,7 +18,7 @@ PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ..
+	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(SOURCE_TREE)
 
 .PHONY : build
 build: cmake
