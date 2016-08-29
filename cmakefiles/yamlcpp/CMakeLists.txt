@@ -32,7 +32,7 @@ install(
 )
 
 install(
-    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include/yaml-cpp/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include/
     DESTINATION lib/yamlcpp/${CMAKE_BUILD_TYPE}/include
 )
 
