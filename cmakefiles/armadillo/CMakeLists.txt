@@ -35,7 +35,7 @@ ExternalProject_Add(external-lib
     PATCH_COMMAND patch ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/CMakeLists.txt ${CMAKE_SOURCE_DIR}/patch/armadillo_patch
     CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
                               -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
-                              -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/build
+                              -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
                               .
     BUILD_COMMAND       make
     INSTALL_COMMAND     make install
@@ -43,17 +43,17 @@ ExternalProject_Add(external-lib
 
 
 install(
-    DIRECTORY ${INSTALL_DIR}/build/lib/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/lib/
     DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/lib
 )
 
 install(
-    DIRECTORY ${INSTALL_DIR}/build/include/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include/
     DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/include
 )
 
 install(
-    DIRECTORY ${INSTALL_DIR}/build/share/
+    DIRECTORY ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/share/
     DESTINATION lib/armadillo/${CMAKE_BUILD_TYPE}/share
 )
 
