@@ -19,8 +19,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 RUN sudo apt-get update && sudo apt-get install -y \
     libblas* \
     liblapack* \
-    libmpich-dev \
-    libopenmpi-dev 
+    libmpich*
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \
