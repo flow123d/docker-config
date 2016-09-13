@@ -31,12 +31,13 @@ done
 # build images
 # ------------------------------------------------------------------------------
 if [[ $SKIP_BUILD -eq 0 ]]; then
+    cd $DOCKERFILES
     echo "Building images..."
     echo "============================================"
-    docker build --tag flow123d/base              $DOCKERFILES/base
-    docker build --tag flow123d/base-build        $DOCKERFILES/base-build
-    docker build --tag flow123d/flow-libs-dev-dbg $DOCKERFILES/flow-libs-dev-dbg
-    docker build --tag flow123d/flow-libs-dev-rel $DOCKERFILES/flow-libs-dev-rel
+    docker build --tag flow123d/base               base
+    docker build --tag flow123d/base-build         base-build
+    docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
+    docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
     echo "============================================"
     echo "Images built"
     echo ""
@@ -94,7 +95,8 @@ done
 EXITED=$(docker ps -q -f status=exited)
 if [[ -n $EXITED ]]; then
     echo "--------------------------------------------"
-    echo "Note: You have exited containers present"
+    echo "Note: You have exited containers present. Exited containers are usually"
+    echo "      left overs which can be safely removed."
     echo "Containers are: "
     docker images | grep "^<none>"
     
@@ -116,8 +118,9 @@ fi
 UNNAMED=$(docker images | grep "^<none>" | awk "{print \$3}")
 if [[ -n $UNNAMED ]]; then
     echo "--------------------------------------------"
-    echo "Note: You have untagged images present, this probably occured"
-    echo "      when images were reinstalled."
+    echo "Note: You have untagged images present, this probably occured when images"
+    echo "      were reinstalled. Even though these images can still be used it is "
+    echo "      recommended to simply delete them."
     echo "Images are: "
     docker images | grep "^<none>"
     
