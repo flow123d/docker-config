@@ -1,0 +1,138 @@
+#!/bin/bash
+# author: Jan Hybs
+# This script will alter specific docker images by adding curent user in them
+
+# get absolute dir in which is this script stored
+CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOCKERFILES=$CWD/../dockerfiles
+
+# default config
+YES_TO_ALL=0
+SKIP_BUILD=0
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -y|--yes-to-all)
+    YES_TO_ALL=1
+    ;;
+    -s|--skip-build)
+    SKIP_BUILD=1
+    ;;
+    *)
+        # unknown option
+    ;;
+esac
+shift
+done
+
+
+# build images
+# ------------------------------------------------------------------------------
+if [[ $SKIP_BUILD -eq 0 ]]; then
+    echo "Building images..."
+    echo "============================================"
+    docker build --tag flow123d/base              $DOCKERFILES/base
+    docker build --tag flow123d/base-build        $DOCKERFILES/base-build
+    docker build --tag flow123d/flow-libs-dev-dbg $DOCKERFILES/flow-libs-dev-dbg
+    docker build --tag flow123d/flow-libs-dev-rel $DOCKERFILES/flow-libs-dev-rel
+    echo "============================================"
+    echo "Images built"
+    echo ""
+fi
+
+# setup custom script
+# ------------------------------------------------------------------------------
+GROUP_ID=`id -g`
+USER_ID=`id -u`
+USER_NAME=`whoami`
+
+cp $CWD/templates/setup.template.sh $CWD/templates/setup.sh
+# going through script several times since some argument may be on the same line
+for V in 1 2 3
+do
+    sed -e "s/@GROUP_ID@/$GROUP_ID/" \
+        -e "s/@USER_ID@/$USER_ID/" \
+        -e "s/@USER_NAME@/$USER_NAME/" \
+        $CWD/templates/setup.sh > $CWD/templates/setup_tmp.sh
+    mv $CWD/templates/setup_tmp.sh $CWD/templates/setup.sh
+done
+chmod +x $CWD/templates/setup.sh
+
+
+# install custom images 
+# ------------------------------------------------------------------------------
+for IMAGE in dbg rel
+do
+    echo "--------------------------------------------"
+    echo "Altering image flow123d/flow-libs-dev-$IMAGE"
+    echo "--------------------------------------------"
+    CIDFILE=$CWD/cid.file.tmp
+    rm -rf $CIDFILE
+    docker run --privileged -di --cidfile $CIDFILE flow123d/flow-libs-dev-$IMAGE bash
+    docker_cid=`cat $CIDFILE`
+    docker cp   $CWD/templates/setup.sh $docker_cid:/tmp/setup.sh
+    docker exec $docker_cid /tmp/setup.sh
+    # create new image and stop container
+    docker commit $docker_cid flow123d/flow-libs-dev-$IMAGE:user
+    docker stop $docker_cid
+    docker rm   $docker_cid
+    rm -rf $CIDFILE
+    echo "--------------------------------------------"
+    echo "Image created. To use this image use full image name: flow123d/flow-libs-dev-$IMAGE:user"
+    echo "To be automatically user $USER_NAME, use one of the following syntax:"
+    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/flow-libs-dev-$IMAGE:user"
+    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/flow-libs-dev-$IMAGE:user"
+    echo ""
+done
+
+
+
+# detect exited containers
+# ------------------------------------------------------------------------------
+EXITED=$(docker ps -q -f status=exited)
+if [[ -n $EXITED ]]; then
+    echo "--------------------------------------------"
+    echo "Note: You have exited containers present"
+    echo "Containers are: "
+    docker images | grep "^<none>"
+    
+    if [[ $YES_TO_ALL -eq 1 ]]; then
+        docker rm $EXITED
+    else
+        read -p "Would you like to remove them? " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            docker rm $EXITED
+        fi
+    fi
+    echo "--------------------------------------------"
+fi
+
+# detect untagged images
+# ------------------------------------------------------------------------------
+UNNAMED=$(docker images | grep "^<none>" | awk "{print \$3}")
+if [[ -n $UNNAMED ]]; then
+    echo "--------------------------------------------"
+    echo "Note: You have untagged images present, this probably occured"
+    echo "      when images were reinstalled."
+    echo "Images are: "
+    docker images | grep "^<none>"
+    
+    if [[ $YES_TO_ALL -eq 1 ]]; then
+        docker rmi $UNNAMED
+    else
+        read -p "Would you like to remove them? " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            docker rmi $UNNAMED
+        fi
+    fi
+    echo "--------------------------------------------"
+fi
+
+
+docker images
