@@ -32,4 +32,5 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 RUN sudo pip install \
     pyyaml \
     markdown \
-    psutil
+    psutil \
+    simplejson
