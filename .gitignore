@@ -1,3 +1,4 @@
 build_Debug
 build_Release
 /flow123d/
+bin/templates/setup.sh
