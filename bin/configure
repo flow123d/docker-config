@@ -9,11 +9,30 @@ DOCKERFILES=$CWD/../dockerfiles
 # default config
 YES_TO_ALL=0
 SKIP_BUILD=0
+DO_NOT_OVERRIDE=0
+GROUP_ID=`id -g`
+USER_ID=`id -u`
+USER_NAME=`whoami`
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
+    -n|--user-name)
+    USER_NAME="$2"
+    shift
+    ;;
+    -u|--uid)
+    USER_ID="$2"
+    shift
+    ;;
+    -g|--gid)
+    GROUP_ID="$2"
+    shift
+    ;;
+    -d|--do-not-override)
+    DO_NOT_OVERRIDE=1
+    ;;
     -y|--yes-to-all)
     YES_TO_ALL=1
     ;;
@@ -27,10 +46,7 @@ esac
 shift
 done
 
-
-# build images
-# ------------------------------------------------------------------------------
-if [[ $SKIP_BUILD -eq 0 ]]; then
+function build_images {
     cd $DOCKERFILES
     echo "Building images..."
     echo "============================================"
@@ -41,53 +57,79 @@ if [[ $SKIP_BUILD -eq 0 ]]; then
     echo "============================================"
     echo "Images built"
     echo ""
-fi
+}
 
-# setup custom script
-# ------------------------------------------------------------------------------
-GROUP_ID=`id -g`
-USER_ID=`id -u`
-USER_NAME=`whoami`
+function create_setup_script {
+    cp $CWD/templates/setup.template.sh $CWD/templates/setup.sh
+    # going through script several times since some argument may be on the same line
+    for V in 1 2 3
+    do
+        sed -e "s/@GROUP_ID@/$GROUP_ID/" \
+            -e "s/@USER_ID@/$USER_ID/" \
+            -e "s/@USER_NAME@/$USER_NAME/" \
+            $CWD/templates/setup.sh > $CWD/templates/setup_tmp.sh
+        mv $CWD/templates/setup_tmp.sh $CWD/templates/setup.sh
+    done
+    chmod +x $CWD/templates/setup.sh
+}
 
-cp $CWD/templates/setup.template.sh $CWD/templates/setup.sh
-# going through script several times since some argument may be on the same line
-for V in 1 2 3
-do
-    sed -e "s/@GROUP_ID@/$GROUP_ID/" \
-        -e "s/@USER_ID@/$USER_ID/" \
-        -e "s/@USER_NAME@/$USER_NAME/" \
-        $CWD/templates/setup.sh > $CWD/templates/setup_tmp.sh
-    mv $CWD/templates/setup_tmp.sh $CWD/templates/setup.sh
-done
-chmod +x $CWD/templates/setup.sh
-
-
-# install custom images 
-# ------------------------------------------------------------------------------
-for IMAGE in dbg rel
-do
+function alter_image {
     echo "--------------------------------------------"
-    echo "Altering image flow123d/flow-libs-dev-$IMAGE"
+    echo "Altering image flow123d/flow-libs-dev-$1"
     echo "--------------------------------------------"
     CIDFILE=$CWD/cid.file.tmp
     rm -rf $CIDFILE
-    docker run --privileged -di --cidfile $CIDFILE flow123d/flow-libs-dev-$IMAGE bash
+    docker run --privileged -di --cidfile $CIDFILE flow123d/flow-libs-dev-$1 bash
     docker_cid=`cat $CIDFILE`
     docker cp   $CWD/templates/setup.sh $docker_cid:/tmp/setup.sh
     docker exec $docker_cid /tmp/setup.sh
     # create new image and stop container
-    docker commit $docker_cid flow123d/flow-libs-dev-$IMAGE:user
+    docker commit $docker_cid flow123d/flow-libs-dev-$1:user
     docker stop $docker_cid
     docker rm   $docker_cid
     rm -rf $CIDFILE
     echo "--------------------------------------------"
-    echo "Image created. To use this image use full image name: flow123d/flow-libs-dev-$IMAGE:user"
+    echo "Image created. To use this image use full image name: flow123d/flow-libs-dev-$1:user"
     echo "To be automatically user $USER_NAME, use one of the following syntax:"
-    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/flow-libs-dev-$IMAGE:user"
-    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/flow-libs-dev-$IMAGE:user"
+    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/flow-libs-dev-$1:user"
+    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/flow-libs-dev-$1:user"
     echo ""
-done
+}
 
+
+# build images
+# ------------------------------------------------------------------------------
+if [[ $SKIP_BUILD -eq 0 ]]; then
+    build_images
+fi
+
+
+# create setup script
+# ------------------------------------------------------------------------------
+create_setup_script
+
+
+# install custom images 
+# ------------------------------------------------------------------------------
+if [[ $DO_NOT_OVERRIDE -eq 1 ]]; then
+    echo 'check for images'
+    for IMAGE in dbg rel
+    do
+        RESULT=$(docker images flow123d/flow-libs-dev-$IMAGE:user -q)
+        if [[ -z $RESULT ]]; then
+            echo "Missing image flow123d/flow-libs-dev-$IMAGE:user"
+            alter_image $IMAGE
+        else
+            echo "Image flow123d/flow-libs-dev-$IMAGE:user exists, skipping..."
+        fi
+    done
+    echo $DBG $REL
+else
+    for IMAGE in dbg rel
+    do
+        alter_image $IMAGE
+    done
+fi
 
 
 # detect exited containers
