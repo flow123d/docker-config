@@ -23,3 +23,7 @@ adduser  --home /home/@USER_NAME@ --shell /bin/bash --uid @USER_ID@ --gid @GROUP
 # create folder where user builder will have access to
 mkdir -p /opt/flow123d/flow123d
 chown -R @USER_NAME@ /opt/flow123d/
+
+ls -la /opt
+ls -la /opt/flow123d
+ls -la /opt/flow123d/flow123d
