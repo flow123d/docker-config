@@ -13,7 +13,9 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     perl \
     gfortran \
     gcc \
-    g++
+    g++ \
+    pandoc \
+    clang
     
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
