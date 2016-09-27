@@ -33,4 +33,6 @@ RUN sudo pip install \
     pyyaml \
     markdown \
     psutil \
-    simplejson
+    simplejson \
+    formic
+
