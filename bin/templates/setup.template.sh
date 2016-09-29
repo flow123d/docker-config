@@ -18,6 +18,12 @@ addgroup --gid @GROUP_ID@ @USER_NAME@
 adduser  --home /home/@USER_NAME@ --shell /bin/bash --uid @USER_ID@ --gid @GROUP_ID@ --disabled-password --system @USER_NAME@
 
 
-# CUSTOM COMMANDS
+# BUILDER COMMANDS
 # ------------------------------------------------------------------------------
+# create folder where user builder will have access to
+mkdir -p /opt/flow123d/flow123d
+chown -R @USER_NAME@ /opt/flow123d/
 
+ls -la /opt
+ls -la /opt/flow123d
+ls -la /opt/flow123d/flow123d

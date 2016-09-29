@@ -54,6 +54,7 @@ function build_images {
     docker build --tag flow123d/base-build         base-build
     docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
     docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
+    docker build --tag flow123d/install            install
     echo "============================================"
     echo "Images built"
     echo ""
@@ -75,24 +76,24 @@ function create_setup_script {
 
 function alter_image {
     echo "--------------------------------------------"
-    echo "Altering image flow123d/flow-libs-dev-$1"
+    echo "Altering image flow123d/$1"
     echo "--------------------------------------------"
     CIDFILE=$CWD/cid.file.tmp
     rm -rf $CIDFILE
-    docker run --privileged -di --cidfile $CIDFILE flow123d/flow-libs-dev-$1 bash
+    docker run --privileged -di --cidfile $CIDFILE flow123d/$1 bash
     docker_cid=`cat $CIDFILE`
     docker cp   $CWD/templates/setup.sh $docker_cid:/tmp/setup.sh
     docker exec $docker_cid /tmp/setup.sh
     # create new image and stop container
-    docker commit $docker_cid flow123d/flow-libs-dev-$1:user
+    docker commit $docker_cid flow123d/$1:user
     docker stop $docker_cid
     docker rm   $docker_cid
     rm -rf $CIDFILE
     echo "--------------------------------------------"
-    echo "Image created. To use this image use full image name: flow123d/flow-libs-dev-$1:user"
+    echo "Image created. To use this image use full image name: flow123d/$1:user"
     echo "To be automatically user $USER_NAME, use one of the following syntax:"
-    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/flow-libs-dev-$1:user"
-    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/flow-libs-dev-$1:user"
+    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/$1:user"
+    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/$1:user"
     echo ""
 }
 
@@ -113,19 +114,19 @@ create_setup_script
 # ------------------------------------------------------------------------------
 if [[ $DO_NOT_OVERRIDE -eq 1 ]]; then
     echo 'check for images'
-    for IMAGE in dbg rel
+    for IMAGE in flow-libs-dev-dbg flow-libs-dev-rel install
     do
-        RESULT=$(docker images flow123d/flow-libs-dev-$IMAGE:user -q)
+        RESULT=$(docker images flow123d/$IMAGE:user -q)
         if [[ -z $RESULT ]]; then
-            echo "Missing image flow123d/flow-libs-dev-$IMAGE:user"
+            echo "Missing image flow123d/$IMAGE:user"
             alter_image $IMAGE
         else
-            echo "Image flow123d/flow-libs-dev-$IMAGE:user exists, skipping..."
+            echo "Image flow123d/$IMAGE:user exists, skipping..."
         fi
     done
     echo $DBG $REL
 else
-    for IMAGE in dbg rel
+    for IMAGE in flow-libs-dev-dbg flow-libs-dev-rel install
     do
         alter_image $IMAGE
     done
