@@ -20,7 +20,7 @@ adduser  --home /home/@USER_NAME@ --shell /bin/bash --uid @USER_ID@ --gid @GROUP
 
 # BUILDER COMMANDS
 # ------------------------------------------------------------------------------
-# create folder where user builder will have access to
+# create folder where user will have access to
 mkdir -p /opt/flow123d/flow123d
 chown -R @USER_NAME@ /opt/flow123d/
 
