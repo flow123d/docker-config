@@ -17,6 +17,7 @@ set(PETSC_VERSION "${PETSC_VERSION_MAJOR}.${PETSC_VERSION_MINOR}.${PETSC_VERSION
 # default variables
 SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
 SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${PETSC_VERSION}.tar.gz")
+SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${PETSC_VERSION}.tar.gz")
 
 # set petsc arch based on CMAKE_BUILD_TYPE
 #     linux-Debug or linux-Release
@@ -73,3 +74,4 @@ SET(CPACK_PACKAGE_FILE_NAME "PETSC_${PETSC_VERSION}")
 SET(CPACK_GENERATOR "DEB;TGZ;ZIP")
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jan Hybs") #required
 INCLUDE(CPack)
+

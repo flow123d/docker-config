@@ -10,6 +10,7 @@ set(YAMLCPP_VERSION "${YAMLCPP_VERSION_MAJOR}.${YAMLCPP_VERSION_MINOR}.${YAMLCPP
 # default variables
 set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
 set(INSTALL_URL "https://github.com/flow123d/yaml-cpp/archive/master.zip")
+set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
 
 
 # setup external project with target external-lib
@@ -42,3 +43,4 @@ set(CPACK_PACKAGE_FILE_NAME "YAMLCPP_${YAMLCPP_VERSION}")
 set(CPACK_GENERATOR "DEB;TGZ;ZIP")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jan Hybs") #required
 INCLUDE(CPack)
+
