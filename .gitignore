@@ -1,4 +1,8 @@
-build_Debug
-build_Release
+# docker files
+/cmakefiles/*/Debug
+/cmakefiles/*/Release
+/cmakefiles/*/build_Debug
+/cmakefiles/*/build_Release
+
 /flow123d/
 bin/templates/setup.sh
