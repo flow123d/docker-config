@@ -17,6 +17,6 @@ ExternalProject_Add(blopex-lib
 )
 
 configure_file(
-    ${CMAKE_SOURCE_DIR}/CMake/Templates/blopex_make_inc.template
+    ${EXTRAS}/Templates/blopex_make_inc.template
     ${MAKE_INC}
     @ONLY)

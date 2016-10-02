@@ -1,17 +1,24 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(ARMADILLO CXX C Fortran)
+set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
+set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 find_program (MAKE_EXECUTABLE NAMES make gmake)
 
-# find blas
-set(BLA_STATIC On)
-find_package(BLAS REQUIRED)
-message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
 
-# find lapack
-set(LAPACK_STATIC On)
-find_package(LAPACK REQUIRED)
+# This value can se be using makefile
+SET(USE_PETSC   Off                         CACHE STRING "Use petsc installation")
+SET(PETSC_DIR   "/usr/lib/petsc/"           CACHE STRING "Petsc dir value (must end with slash)")
+SET(PETSC_ARCH  "linux-${CMAKE_BUILD_TYPE}" CACHE STRING "Petsc arch value")
+
+# if set we use petsc installation 
+# otherwise we try to look for system libraries of blas and lapack
+include(FindBlasLapack)
+
+# print what we found
+message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES} ")
 message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
+
 
 # set version
 set(ARMADILLO_VERSION_MAJOR "3")
@@ -32,7 +39,7 @@ ExternalProject_Add(external-lib
     SOURCE_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
     BINARY_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
     # patch to build .a lib instead of .so libs
-    PATCH_COMMAND patch ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/CMakeLists.txt ${CMAKE_SOURCE_DIR}/patch/armadillo_patch
+    PATCH_COMMAND patch ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/CMakeLists.txt ${EXTRAS}/Patches/armadillo_patch
     CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
                               -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
                               -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/${CMAKE_BUILD_TYPE}

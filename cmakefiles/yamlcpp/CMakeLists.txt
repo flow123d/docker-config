@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(YAMLCPP CXX C)
+set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
+set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
+
 
 set(YAMLCPP_VERSION_MAJOR "0")
 set(YAMLCPP_VERSION_MINOR "5")
@@ -9,7 +12,7 @@ set(YAMLCPP_VERSION "${YAMLCPP_VERSION_MAJOR}.${YAMLCPP_VERSION_MINOR}.${YAMLCPP
 
 # default variables
 set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-set(INSTALL_URL "https://github.com/flow123d/yaml-cpp/archive/master.zip")
+# set(INSTALL_URL "https://github.com/flow123d/yaml-cpp/archive/master.zip")
 set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
 
 

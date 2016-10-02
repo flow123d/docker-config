@@ -12,7 +12,7 @@ ExternalProject_Add(bddcml-lib
     SOURCE_DIR          ${BDDCML_DIR}
     BINARY_DIR          ${BDDCML_DIR}
     
-    PATCH_COMMAND patch ${BDDCML_DIR}/src/f_symbol.h ${CMAKE_SOURCE_DIR}/patch/f_symbol.h.patch
+    PATCH_COMMAND patch ${BDDCML_DIR}/src/f_symbol.h ${EXTRAS}/Patches/f_symbol.h.patch
     
     CONFIGURE_COMMAND   cp ${MAKE_INC} ${BDDCML_DIR}/make.inc && cp ${INSTALL_DIR}/FC_Magle.h ${BDDCML_DIR}/FC_Magle.h
     BUILD_COMMAND       make -j 1 all
@@ -42,13 +42,6 @@ include(FortranCInterface)
 FortranCInterface_HEADER(${INSTALL_DIR}/FC_Magle.h MACRO_NAMESPACE FC_SYMBOL)
 
 configure_file(
-    ${CMAKE_SOURCE_DIR}/CMake/Templates/bddcml_make_inc.template
+    ${EXTRAS}/Templates/bddcml_make_inc.template
     ${MAKE_INC}
     @ONLY)
-
-
-# get_cmake_property(_variableNames VARIABLES)
-# foreach (_variableName ${_variableNames})
-#     message(STATUS "${_variableName}=${${_variableName}}")
-# endforeach()
-# message(FATAL_ERROR "Mumps_INCLUDES = ${PETSC_VAR_MUMPS_INCLUDE}")

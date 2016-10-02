@@ -12,13 +12,19 @@ PACKAGE_NAME = BDDCML_2.4.0
 # given by docker -v option
 PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
 
+# use petsc lapack and blas instead of system's
+USE_PETSC = Off
+# where is petsc installed (only viable if PETSC_DIR is set)
+PETSC_DIR  = /usr/lib/petsc
+PETSC_ARCH = linux-$(BUILD_TYPE)
+
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(SOURCE_TREE)
+	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DUSE_PETSC=$(USE_PETSC) -DPETSC_DIR=$(PETSC_DIR) -DPETSC_ARCH=$(PETSC_ARCH) $(SOURCE_TREE)
 
 .PHONY : build
 build: cmake
