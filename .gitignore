@@ -6,3 +6,7 @@
 
 /flow123d/
 bin/templates/setup.sh
+
+*.tar.gz
+run_dbg
+run_rel
