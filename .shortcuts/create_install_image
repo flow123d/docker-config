@@ -1,0 +1,54 @@
+#!/bin/bash
+# script which create installation image with flow
+# requirements are:
+#  - docker image flow123d/flow-libs-dev-dbg
+#  - docker image flow123d/install
+
+FLOW_LOC=/opt/flow123d/flow123d
+PACK_NAME=Flow123d-2.0.0-Linux.tar.gz
+PACK_PATH=./$PACK_NAME
+
+
+# run container
+docker run -tid --name flow_build flow123d/flow-libs-dev-dbg
+clone, build and pack flow123d
+docker exec flow_build git clone \
+            https://github.com/jbrezmorf/flow123d.git $FLOW_LOC
+docker exec flow_build cp \
+            $FLOW_LOC/config/config-jenkins-docker-debug.cmake \
+            $FLOW_LOC/config.cmake
+docker exec flow_build make -C $FLOW_LOC -j4 package
+
+# copy OUT of container
+docker cp   flow_build:$FLOW_LOC/build_tree/$PACK_NAME \
+            $PACK_PATH
+
+# stop and remove container
+docker stop flow_build
+docker rm   flow_build
+
+# ------------------------------------------------------------------------------
+
+# run container for installation
+docker run -tid --name flow_rel flow123d/install bash
+docker exec flow_rel mkdir -p $FLOW_LOC
+
+# copy INTO container
+docker cp  $PACK_PATH \
+            flow_rel:/tmp/$PACK_NAME
+
+# unpack
+docker exec flow_rel \
+            tar -xvzf /tmp/Flow123d-2.0.0-Linux.tar.gz \
+            -C $FLOW_LOC --strip-components=1
+
+
+# create new image out of container
+docker commit flow_rel flow123d/flow123d-200
+
+# stop and remove container
+docker stop flow_build
+docker rm   flow_build
+
+# export image to tar.gz file
+docker save flow123d/flow123d-200 > flow123d-200.tar.gz
