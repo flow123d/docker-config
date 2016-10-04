@@ -36,5 +36,6 @@ RUN sudo pip install \
     markdown \
     psutil \
     simplejson \
-    formic
+    formic \
+    pymongo
 
