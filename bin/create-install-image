@@ -11,7 +11,7 @@ PACK_PATH=./$PACK_NAME
 
 # run container
 docker run -tid --name flow_build flow123d/flow-libs-dev-dbg
-clone, build and pack flow123d
+# clone, build and pack flow123d
 docker exec flow_build git clone \
             https://github.com/jbrezmorf/flow123d.git $FLOW_LOC
 docker exec flow_build cp \
