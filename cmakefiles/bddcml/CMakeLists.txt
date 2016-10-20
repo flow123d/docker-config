@@ -14,7 +14,7 @@ set(BDDCML_VERSION "${BDDCML_VERSION_MAJOR}.${BDDCML_VERSION_MINOR}.${BDDCML_VER
 SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
 
 
-# This value can se be using makefile
+# This value can set be using makefile
 SET(USE_PETSC   Off                         CACHE STRING "Use petsc installation")
 SET(PETSC_DIR   "/usr/lib/petsc/"           CACHE STRING "Petsc dir value (must end with slash)")
 SET(PETSC_ARCH  "linux-${CMAKE_BUILD_TYPE}" CACHE STRING "Petsc arch value")
