@@ -19,4 +19,6 @@ RUN apt-get update && apt-get install -y  \
 
 # add auto bash-completion load
 COPY autoload.sh /etc/profile.d/autoload.sh
-RUN echo -e "\n . /etc/profile.d/autoload.sh\n" >> /root/.bashrc
+
+# default entrypoint will be login bash
+ENTRYPOINT ["/bin/bash", "-l"]
