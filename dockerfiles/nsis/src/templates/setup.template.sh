@@ -17,7 +17,6 @@ echo 'user:  @USER_NAME@(@USER_ID@)'
 addgroup --gid @GROUP_ID@ --force-badname @USER_NAME@
 adduser  --home /home/@USER_NAME@ --shell /bin/bash --uid @USER_ID@ --gid @GROUP_ID@ --disabled-password --system --force-badname @USER_NAME@
 
-# echo -e "\n . /etc/profile.d/autoload.sh\n" >> ~/.profile
 
 # BUILDER COMMANDS
 # ------------------------------------------------------------------------------

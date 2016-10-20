@@ -60,7 +60,6 @@ function build_images {
     docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
     docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
     docker build --tag flow123d/install            install
-    docker build --tag flow123d/nsis               nsis
     echo "============================================"
     echo "Images built"
     echo ""
@@ -84,17 +83,14 @@ function alter_image {
     echo "--------------------------------------------"
     echo "Altering image $1"
     echo "--------------------------------------------"
-    CIDFILE="$CWD/cid.file.tmp"
-    rm -rf "$CIDFILE"
-    docker run --privileged -di --cidfile "$CIDFILE" $1 bash
-    docker_cid=`cat "$CIDFILE"`
-    docker cp   "$CWD/templates/setup.sh" $docker_cid:/tmp/setup.sh
-    docker exec $docker_cid //tmp/setup.sh # double slash for mingw to not convert path to windows
+    TEMP_NAME="install-image"
+    docker run --privileged -di --name $TEMP_NAME $1 bash
+    docker cp   "templates/setup.sh" $TEMP_NAME:/tmp/setup.sh
+    docker exec $TEMP_NAME //tmp/setup.sh # double slash for mingw to not convert path to windows
     # create new image and stop container
-    docker commit $docker_cid $1:user
-    docker stop $docker_cid
-    docker rm   $docker_cid
-    rm -rf "$CIDFILE"
+    docker commit $TEMP_NAME $1:user
+    docker stop $TEMP_NAME
+    docker rm   -f $TEMP_NAME
     echo "--------------------------------------------"
     echo "Image created. To use this image use full image name: $1:user"
     echo "To be automatically user $USER_NAME, use one of the following syntax:"
@@ -150,13 +146,13 @@ if [[ -n $EXITED ]]; then
     docker images | grep "^<none>"
     
     if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rm -f $EXITED
+        docker rm $EXITED
     else
         read -p "Would you like to remove them? " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
-            docker rm -f $EXITED
+            docker rm $EXITED
         fi
     fi
     echo "--------------------------------------------"
@@ -174,13 +170,13 @@ if [[ -n $UNNAMED ]]; then
     docker images | grep "^<none>"
     
     if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rmi -f $UNNAMED
+        docker rmi $UNNAMED
     else
         read -p "Would you like to remove them? " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
-            docker rmi -f $UNNAMED
+            docker rmi $UNNAMED
         fi
     fi
     echo "--------------------------------------------"

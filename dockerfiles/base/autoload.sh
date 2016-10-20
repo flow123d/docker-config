@@ -7,3 +7,5 @@ if [ -f /etc/bash_completion ]; then
  . /etc/bash_completion
 fi
 
+alias ll="ls -lah"
+export PATH=$PATH:/opt/flow123d/flow123d/bin
