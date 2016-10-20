@@ -21,4 +21,4 @@ RUN apt-get update && apt-get install -y  \
 COPY autoload.sh /etc/profile.d/autoload.sh
 
 # default entrypoint will be login bash
-ENTRYPOINT ["/bin/bash", "-l"]
+CMD ["/bin/bash", "-l"]
