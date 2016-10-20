@@ -4,41 +4,22 @@
 #  - docker image flow123d/flow-libs-dev-dbg
 #  - docker image flow123d/install
 
+set -x
 
-# default config
 FLOW=/opt/flow123d/flow123d
-PACK_NAME=Flow123d-2.0.0-Linux.tar.gz
-PACK_PATH=./$PACK_NAME
+PACKAGE_NAME=Flow123d-2.0.0-Linux.tar.gz
+PACKAGE_PATH=./$PACKAGE_NAME
 
-# configurable options
-FLATTEN=1
-IMAGE_NAME=flow123d/flow123d-200
-OUTPUT_NAME=flow123d-200.tar.gz
+IMAGE_NAME=flow123d-image.tar.gz
+IMAGE_PATH=./libs/$IMAGE_NAME
 
-
-while [[ $# -gt 0 ]]
-do
-key="$1"
-case $key in
-    -F|--not-flat)
-    FLATTEN=0
-    shift
-    ;;
-    -n|--name)
-    IMAGE_NAME="$2"
-    shift
-    ;;
-    *)
-        # unknown option
-    ;;
-esac
-shift
-done
+# mount
+V="-v $(pwd)/build:/opt/flow123d/"
 
 
 # run container
-docker run -tid --name flow_build flow123d/flow-libs-dev-dbg
-#clone, build and pack flow123d
+docker run -tid --name flow_build $V flow123d/flow-libs-dev-dbg
+# clone, build and pack flow123d
 docker exec flow_build git clone \
             https://github.com/jbrezmorf/flow123d.git $FLOW
 docker exec flow_build cp \
@@ -47,56 +28,39 @@ docker exec flow_build cp \
 docker exec flow_build make -C $FLOW -j4 package
 
 # copy OUT of container
-docker cp   flow_build:$FLOW/build_tree/$PACK_NAME \
-            $PACK_PATH
+docker cp   flow_build:$FLOW/build_tree/$PACKAGE_NAME \
+            $PACKAGE_PATH
 
 # stop and remove container
 docker stop flow_build
-docker rm   flow_build
+docker rm   -f flow_build
 
 # ------------------------------------------------------------------------------
 
 # run container for installation
-docker run -tid --name flow_rel flow123d/install bash
+docker run -tid --name flow_rel flow123d/install
 docker exec flow_rel mkdir -p $FLOW
 
 # copy INTO container
-docker cp  $PACK_PATH \
-            flow_rel:/tmp/$PACK_NAME
+docker cp  $PACKAGE_PATH \
+            flow_rel:/tmp/$PACKAGE_NAME
 
 # unpack
 docker exec flow_rel \
             tar -xvzf /tmp/Flow123d-2.0.0-Linux.tar.gz \
             -C $FLOW --strip-components=1
+docker exec flow_rel rm -rf /tmp/Flow123d-2.0.0-Linux.tar.gz
 
 
-if [[ $FLATTEN -eq 0 ]]; then
-  # create new image out of container
-  docker commit flow_rel $IMAGE_NAME
-  # save image to tar.gz file
-  # this will preserve its history
-  docker save $IMAGE_NAME > $OUTPUT_NAME
-  echo "-----------------------------------------------------------------------"
-  echo "Docker image saved, to load it into system use:"
-  echo "    docker load < $OUTPUT_NAME"
-  echo ""
-  echo "This action will create new image with name $IMAGE_NAME"
-  echo "If such name already exists, it will not be removed, only untagged."
-  echo "-----------------------------------------------------------------------"
-else
-  # export image to tar.gz file
-  # # this will NOT preserve history of an image
-  docker export flow_rel > $OUTPUT_NAME
-  echo "-----------------------------------------------------------------------"
-  echo "Docker image saved, to load it into system use:"
-  echo "    docker import $OUTPUT_NAME - $IMAGE_NAME"
-  echo ""
-  echo "This action will create new image with name $IMAGE_NAME"
-  echo "If such name already exists, it will not be removed, only untagged."
-  echo "-----------------------------------------------------------------------"
-fi
-
-# stop and remove container
+docker export flow_rel > $IMAGE_PATH
 docker stop flow_rel
-docker rm   flow_rel
+docker rm   -f flow_rel
 
+# # create new image out of container
+# docker commit flow_rel flow123d/flow123d-200
+# 
+# # stop and remove container
+
+# 
+# # export image to tar.gz file
+# docker save flow123d/flow123d-200 > flow123d-200.tar.gz
