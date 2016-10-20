@@ -13,6 +13,7 @@ DO_NOT_OVERRIDE=0
 GROUP_ID=`id -g`
 USER_ID=`id -u`
 USER_NAME=`whoami`
+IMAGES="flow123d/flow-libs-dev-dbg flow123d/flow-libs-dev-rel flow123d/install"
 
 while [[ $# -gt 0 ]]
 do
@@ -28,6 +29,10 @@ case $key in
     ;;
     -g|--gid)
     GROUP_ID="$2"
+    shift
+    ;;
+    -i|--images)
+    IMAGES="$2"
     shift
     ;;
     -d|--do-not-override)
@@ -55,45 +60,46 @@ function build_images {
     docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
     docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
     docker build --tag flow123d/install            install
+    docker build --tag flow123d/nsis               nsis
     echo "============================================"
     echo "Images built"
     echo ""
 }
 
 function create_setup_script {
-    cp $CWD/templates/setup.template.sh $CWD/templates/setup.sh
+    cp "$CWD/templates/setup.template.sh" "$CWD/templates/setup.sh"
     # going through script several times since some argument may be on the same line
     for V in 1 2 3
     do
         sed -e "s/@GROUP_ID@/$GROUP_ID/" \
             -e "s/@USER_ID@/$USER_ID/" \
             -e "s/@USER_NAME@/$USER_NAME/" \
-            $CWD/templates/setup.sh > $CWD/templates/setup_tmp.sh
-        mv $CWD/templates/setup_tmp.sh $CWD/templates/setup.sh
+            "$CWD/templates/setup.sh" > "$CWD/templates/setup_tmp.sh"
+        mv "$CWD/templates/setup_tmp.sh" "$CWD/templates/setup.sh"
     done
-    chmod +x $CWD/templates/setup.sh
+    chmod +x "$CWD/templates/setup.sh"
 }
 
 function alter_image {
     echo "--------------------------------------------"
-    echo "Altering image flow123d/$1"
+    echo "Altering image $1"
     echo "--------------------------------------------"
-    CIDFILE=$CWD/cid.file.tmp
-    rm -rf $CIDFILE
-    docker run --privileged -di --cidfile $CIDFILE flow123d/$1 bash
-    docker_cid=`cat $CIDFILE`
-    docker cp   $CWD/templates/setup.sh $docker_cid:/tmp/setup.sh
-    docker exec $docker_cid /tmp/setup.sh
+    CIDFILE="$CWD/cid.file.tmp"
+    rm -rf "$CIDFILE"
+    docker run --privileged -di --cidfile "$CIDFILE" $1 bash
+    docker_cid=`cat "$CIDFILE"`
+    docker cp   "$CWD/templates/setup.sh" $docker_cid:/tmp/setup.sh
+    docker exec $docker_cid //tmp/setup.sh # double slash for mingw to not convert path to windows
     # create new image and stop container
-    docker commit $docker_cid flow123d/$1:user
+    docker commit $docker_cid $1:user
     docker stop $docker_cid
     docker rm   $docker_cid
-    rm -rf $CIDFILE
+    rm -rf "$CIDFILE"
     echo "--------------------------------------------"
-    echo "Image created. To use this image use full image name: flow123d/$1:user"
+    echo "Image created. To use this image use full image name: $1:user"
     echo "To be automatically user $USER_NAME, use one of the following syntax:"
-    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) flow123d/$1:user"
-    echo "    docker run -ti --rm -u $(id -u):$(id -g) flow123d/$1:user"
+    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) $1:user"
+    echo "    docker run -ti --rm -u $(id -u):$(id -g) $1:user"
     echo ""
 }
 
@@ -114,19 +120,19 @@ create_setup_script
 # ------------------------------------------------------------------------------
 if [[ $DO_NOT_OVERRIDE -eq 1 ]]; then
     echo 'check for images'
-    for IMAGE in flow-libs-dev-dbg flow-libs-dev-rel install
+    for IMAGE in $IMAGES
     do
-        RESULT=$(docker images flow123d/$IMAGE:user -q)
+        RESULT=$(docker images $IMAGE:user -q)
         if [[ -z $RESULT ]]; then
-            echo "Missing image flow123d/$IMAGE:user"
+            echo "Missing image $IMAGE:user"
             alter_image $IMAGE
         else
-            echo "Image flow123d/$IMAGE:user exists, skipping..."
+            echo "Image $IMAGE:user exists, skipping..."
         fi
     done
     echo $DBG $REL
 else
-    for IMAGE in flow-libs-dev-dbg flow-libs-dev-rel install
+    for IMAGE in $IMAGES
     do
         alter_image $IMAGE
     done
@@ -144,13 +150,13 @@ if [[ -n $EXITED ]]; then
     docker images | grep "^<none>"
     
     if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rm $EXITED
+        docker rm -f $EXITED
     else
         read -p "Would you like to remove them? " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
-            docker rm $EXITED
+            docker rm -f $EXITED
         fi
     fi
     echo "--------------------------------------------"
@@ -168,13 +174,13 @@ if [[ -n $UNNAMED ]]; then
     docker images | grep "^<none>"
     
     if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rmi $UNNAMED
+        docker rmi -f $UNNAMED
     else
         read -p "Would you like to remove them? " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
-            docker rmi $UNNAMED
+            docker rmi -f $UNNAMED
         fi
     fi
     echo "--------------------------------------------"
