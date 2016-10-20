@@ -15,7 +15,9 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     gcc \
     g++ \
     pandoc \
-    clang
+    clang \
+    vim \
+    ccache
     
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
