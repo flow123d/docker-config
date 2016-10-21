@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 2.8.8)
 SET(IMAGE_NAME          "flow123d/v200" CACHE STRING "Windows image name.")
 
 # flow image variables
-set(FLOW_IMAGE_NAME     "flow123d-image.tar.gz")
+set(FLOW_IMAGE_NAME     "Flow123d-image.tar.gz")
 set(FLOW_IMAGE_PATH     "${CMAKE_SOURCE_DIR}/libs/${FLOW_IMAGE_NAME}")
 
 # docker toolbox variables
