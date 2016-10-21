@@ -41,3 +41,7 @@ RUN sudo pip install \
     formic \
     pymongo
 
+# install doxygen and graphviz
+RUN sudo apt-get update && sudo apt-get install -y  \
+    doxygen \
+    graphviz 
