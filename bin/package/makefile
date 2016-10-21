@@ -11,11 +11,13 @@ DOCKER_PATH=$(DESTINATION)/$(DOCKER_NAME)
 INSTALLER_NAME=Flow123d-docker-windows.zip
 INSTALLER_PATH=$(DESTINATION)/$(INSTALLER_NAME)
 
-IMAGE_NAME=flow123d-image.tar.gz
+IMAGE_NAME=Flow123d-image.tar.gz
 IMAGE_PATH=$(DESTINATION)/$(IMAGE_NAME)
 
 MOUNT=-v $(shell pwd)/build:/opt/flow123d/
 MOUNT=""
+
+DOCKER_IMAGE_NAME=flow123d/v200
 
 
 # target will create docker image with flow123d installed
@@ -40,12 +42,12 @@ create-windows-installer: $(IMAGE_PATH)
 	docker run -tid --name nsis flow123d/nsis
 	docker exec nsis mkdir -p /pack/build/libs/
 	docker        cp $(IMAGE_PATH)  nsis:/pack/libs/
-	@docker      cp $(DOCKER_PATH) nsis:/pack/libs/
-	docker exec nsis make all
+	-docker       cp $(DOCKER_PATH) nsis:/pack/libs/
+	docker exec nsis make IMAGE_NAME=$(DOCKER_IMAGE_NAME) all
 	docker cp   nsis:/pack/build/Flow123d-0.1.1-Linux.zip $(DESTINATION)
 	docker stop nsis
 	docker rm   -f nsis
-	mv     $(DESTINATION)/Flow123d-0.1.1-Linux.zip $(INSTALLER_NAME)
+	mv     $(DESTINATION)/Flow123d-0.1.1-Linux.zip $(INSTALLER_PATH)
 
 
 # target will run fresh installation of flow123d
