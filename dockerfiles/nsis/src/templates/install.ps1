@@ -45,7 +45,7 @@ $DockerMachinePath = which docker-machine
 # check whether is docker installed
 if (!$DockerPath -Or !$DockerMachinePath) {
     Write-Host "Docker is not installed, running DockerToolbox installer"
-    $installer = "$cwd\libs\DockerToolbox.exe"
+    $installer = "$cwd\libs\DockerToolbox-1.12.2.exe"
     Write-Host $installer
     Start-Process $installer -NoNewWindow -Wait
     Write-Host "Installation finished. Exiting installation script for it to take an effect."
