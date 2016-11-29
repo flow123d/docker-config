@@ -3,7 +3,7 @@
 
 # get script location
 $cwd = split-path -parent $MyInvocation.MyCommand.Definition
-
+cd $cwd
 
 # finds executable in path and return it (or null)
 function which($name) {
@@ -16,6 +16,38 @@ function which($name) {
     } Catch {
         return $null
     }
+}
+
+# find program location using registry
+function find-program($name) { 
+    $computername=$env:computername
+     
+    # Branch of the Registry  
+    $Branch='LocalMachine'  
+     
+    # Main Sub Branch you need to open  
+    $SubBranch="SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"  
+     
+    $registry=[microsoft.win32.registrykey]::OpenRemoteBaseKey('Localmachine',$computername)  
+    $registrykey=$registry.OpenSubKey($Subbranch)  
+    $SubKeys=$registrykey.GetSubKeyNames()  
+     
+    # Drill through each key from the list and pull out the value of  
+    # “DisplayName” – Write to the Host console the name of the computer  
+    # with the application beside it 
+     
+    Foreach ($key in $subkeys)  {  
+        $exactkey=$key  
+        $NewSubKey=$SubBranch+"\\"+$exactkey  
+        $ReadUninstall=$registry.OpenSubKey($NewSubKey)  
+        $Value=$ReadUninstall.GetValue("DisplayName")
+        
+        if ($Value -like "*$name*") {
+          $Location = $ReadUninstall.GetValue("InstallLocation")
+          return $Location
+        }
+    }
+    return $null
 }
 
 # executes mingw shell command
@@ -66,13 +98,21 @@ $BashPath32a = "${Env:ProgramFiles(x86)}\Git\bin\bash.exe"
 $BashPath32b = "${Env:ProgramFiles}\Git\bin\bash.exe"
 $BashPath64  = "${Env:ProgramW6432}\Git\bin\bash.exe"
 $BashPath    = which bash
+$BashGitPath = ""
 
-$BashLocations = @($BashPath32a, $BashPath32b, $BashPath64, $BashPath)
+
+$GitPath     = find-program Git
+if ($GitPath) {
+    $BashGitPath = "$GitPath\bin\bash.exe"
+}
+
+# array of possible locations
+$BashLocations = @($BashGitPath, $BashPath32a, $BashPath32b, $BashPath64, $BashPath)
 
 # test bash locations and run configure if found
 Foreach ($bash in $BashLocations) {
     if($bash) {
-        #Write-Host "Testing path: $bash"
+        Write-Host "Testing path: $bash"
         if (Test-Path $bash) {
             status-line "Executing shell using $bash"
             exec-install-shell $bash
