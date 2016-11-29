@@ -41,7 +41,14 @@ RUN sudo pip install \
     formic \
     pymongo
 
-# install doxygen and graphviz
+# install doxygen and graphviz, latex
 RUN sudo apt-get update && sudo apt-get install -y  \
     doxygen \
-    graphviz 
+    graphviz \
+    texlive-full \
+    imagemagick
+
+# install pandoc tools
+RUN pip install \
+    pandoc-fignos \
+    pandoc-tablenos
