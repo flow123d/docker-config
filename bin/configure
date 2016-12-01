@@ -101,7 +101,6 @@ function build_images {
     docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
     docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
     docker build --tag flow123d/install            install
-    docker build --tag flow123d/nsis               nsis
     echo "============================================"
     echo "Images built"
     echo ""

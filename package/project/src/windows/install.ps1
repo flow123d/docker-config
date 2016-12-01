@@ -52,7 +52,10 @@ function find-program($name) {
 
 # executes mingw shell command
 function exec-install-shell($bash) {
-    $command = '"' + $bash + '" --login -i "bin\install.sh" ' + '"' + $bash + '" ' + '"' + $cwd + '"'
+    $command = '"' + $bash + '" --login -i "install.sh" '
+    iex "& $command"
+    
+    $command = '"' + $bash + '" --login -i "bin\create_shortcuts.sh" ' + '"' + $bash + '" ' + '"' + $cwd + '"'
     iex "& $command"
 }
 
@@ -77,7 +80,7 @@ $DockerMachinePath = which docker-machine
 # check whether is docker installed
 if (!$DockerPath -Or !$DockerMachinePath) {
     Write-Host "Docker is not installed, running DockerToolbox installer"
-    $installer = "$cwd\libs\DockerToolbox-1.12.2.exe"
+    $installer = "$cwd\data\DockerToolbox-1.12.2.exe"
     Write-Host $installer
     Start-Process $installer -NoNewWindow -Wait
     Write-Host "Installation finished. Exiting installation script for it to take an effect."
@@ -123,12 +126,12 @@ Foreach ($bash in $BashLocations) {
 
 
 # test image
-status-line "Testing image '@IMAGE_NAME@'"
-test-image "@IMAGE_NAME@"
+status-line "Testing image '@IMAGE_TAG@'"
+test-image "@IMAGE_TAG@"
 
 # test altered image
-status-line "Testing image '@IMAGE_NAME@:user'"
-test-image "@IMAGE_NAME@:user"
+status-line "Testing image '@IMAGE_TAG@:user'"
+test-image "@IMAGE_TAG@:user"
 
 # exit installation
 status-line "Installation finished, press any key to exit ..."
