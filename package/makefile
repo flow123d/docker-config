@@ -8,8 +8,8 @@ VERSION=$(strip $(shell docker exec $(CID) cat $(FLOW)/version))
 PACK_NAME=Flow123d-$(VERSION)-Linux.tar.gz
 IMG_NAME=Flow123d-$(VERSION)-image.tar.gz
 
-WIN_ARCH=Flow123d-$(VERSION)-windows.zip
-LIN_ARCH=Flow123d-$(VERSION)-linux.zip
+LIN_ARCH=Flow123d-$(VERSION)-linux-install.tar.gz
+WIN_ARCH=Flow123d-$(VERSION)-windows-install.zip
 
 # create install packages
 create-packages: $(DESTINATION)/$(IMG_NAME)
@@ -24,6 +24,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		-DIMAGE_PATH="$(DESTINATION)/$(IMG_NAME)" \
 		../project
 	make -C install-linux package
+	mv      install-linux/$(LIN_ARCH) $(DESTINATION)/$(LIN_ARCH)
 		
 	cd install-windows && cmake \
 		-DIS_WINDOWS=1 \
@@ -33,6 +34,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		-DIMAGE_PATH="$(DESTINATION)/$(IMG_NAME)" \
 		../project
 	make -C install-windows package
+	mv      install-linux/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
 	
 # create install image
 $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
