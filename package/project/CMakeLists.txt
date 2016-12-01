@@ -27,7 +27,7 @@ IF(IS_WINDOWS)
     # docker toolbox variables
     SET(DOCKER_TOOLBOX_URL  "https://github.com/docker/toolbox/releases/download/v1.12.2/DockerToolbox-1.12.2.exe")
     SET(DOCKER_TOOLBOX_NAME "DockerToolbox-1.12.2.exe")
-    SET(DOCKER_TOOLBOX_PATH "${CMAKE_BINARY_DIR}/pack/${DOCKER_TOOLBOX_NAME}")
+    SET(DOCKER_TOOLBOX_PATH "${CMAKE_BINARY_DIR}/pack/${DOCKER_TOOLBOX_NAME}" CACHE STRING "Location of DockerToolbox")
     
     # prepare docker toolbox
     if(NOT EXISTS ${DOCKER_TOOLBOX_PATH})
@@ -61,7 +61,7 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
     
     
-    set(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-windows")
+    set(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-windows-install")
     SET(CPACK_GENERATOR "ZIP")
 ELSE()
     message(STATUS "Creating Linux package")
@@ -85,7 +85,7 @@ ELSE()
     # install configure
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/configure    DESTINATION bin/)
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
-    SET(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-linux")
+    SET(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-linux-install")
     SET(CPACK_GENERATOR "TGZ")
 ENDIF()
 
