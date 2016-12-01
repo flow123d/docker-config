@@ -1,3 +1,6 @@
 /install-linux/
 /install-windows/
 /project/libs/
+
+*.tag.gz
+*.zip
