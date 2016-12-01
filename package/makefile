@@ -34,7 +34,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		-DIMAGE_PATH="$(DESTINATION)/$(IMG_NAME)" \
 		../project
 	make -C install-windows package
-	mv      install-linux/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
+	mv      install-windows/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
 	
 # create install image
 $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
