@@ -28,3 +28,8 @@ chown -R @USER_NAME@ /opt/flow123d/
 ls -la /opt
 ls -la /opt/flow123d
 ls -la /opt/flow123d/flow123d
+
+IMAGE_TAG="@IMAGE_TAG@"
+if [[ -n "${IMAGE_TAG}" ]]; then
+    echo -e "\nexport PS1=\"\u@${IMAGE_TAG}:\w\$ \"\n" >> /etc/profile.d/autoload.sh 
+fi

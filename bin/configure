@@ -15,6 +15,40 @@ USER_ID=`id -u`
 USER_NAME=`whoami`
 IMAGES="flow123d/flow-libs-dev-dbg flow123d/flow-libs-dev-rel flow123d/install"
 
+function usage {
+    echo "Configure script which will install all docker images"
+    echo "and modifies them for the current user. Modifications to the image are"
+    echo "in a template file template/setup.template.sh"
+    echo ""
+    echo "Current template file creates system user and system group in docker image."
+    echo "New docker image will have suffix 'user'"
+    echo ""
+    echo "After image modification, the script will check docker images and containers."
+    echo "If any image or container does not have a tag, configure script can remove them"
+    echo "You will be prompted"
+    echo ""
+    echo "By default all docker images which are part of Flow123d are installed"
+    echo "Options:"
+    echo "  -s|--skip-build         Will not install any images, will only"
+    echo "                          personalise them."
+    echo "  -i|--images             Specify which images will be altered, by default"
+    echo "                          all images will be altered. Value is list with"
+    echo "                          space as separator"
+    echo "  -n|--user-name          Force name value instead of \`whoami\`"
+    echo "                          current value is '`whoami`'"
+    echo "  -u|--uid                Force user id value instead of \`id -u\`"
+    echo "                          current value is '`id -u`'"
+    echo "  -g|--gid                Force group id value instead of \`id -g\`"
+    echo "                          current value is '`id -g`'"
+    echo "  -d|--do-not-override    If set will not override modified images (with)"
+    echo "                          suffix 'user' will skip modification for"
+    echo "                          the current image"
+    echo "  -y|--yes-to-all         Will remove any <none> images and containers"
+    echo "                          without asking"
+    echo "  -h|--help               Print this help message"
+    exit
+}
+
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -44,12 +78,19 @@ case $key in
     -s|--skip-build)
     SKIP_BUILD=1
     ;;
+    -h|--help)
+    usage
+    exit
+    ;;
     *)
-        # unknown option
+    echo "Invalid option: $1"
+    usage
+    exit
     ;;
 esac
 shift
 done
+
 
 function build_images {
     cd $DOCKERFILES
@@ -74,6 +115,7 @@ function create_setup_script {
         sed -e "s/@GROUP_ID@/$GROUP_ID/" \
             -e "s/@USER_ID@/$USER_ID/" \
             -e "s/@USER_NAME@/$USER_NAME/" \
+            -e "s/@IMAGE_TAG@/$IMAGE_TAG/" \
             "$CWD/templates/setup.sh" > "$CWD/templates/setup_tmp.sh"
         mv "$CWD/templates/setup_tmp.sh" "$CWD/templates/setup.sh"
     done
@@ -130,7 +172,6 @@ if [[ $DO_NOT_OVERRIDE -eq 1 ]]; then
             echo "Image $IMAGE:user exists, skipping..."
         fi
     done
-    echo $DBG $REL
 else
     for IMAGE in $IMAGES
     do
