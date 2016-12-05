@@ -3,6 +3,7 @@
 
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+
 # get image path and import into to machine
 echo "Importing docker image '@IMAGE_TAG@'"
 IMAGE_PATH=$CWD/data/@IMAGE_NAME@
@@ -14,3 +15,16 @@ IMAGE_TAG="@IMAGE_TAG@"
 IMAGE_TAG=${IMAGE_TAG#flow123d/}
 export IMAGE_TAG=${IMAGE_TAG}
 $CWD/bin/configure --skip-build --images "@IMAGE_TAG@"
+
+echo "--------------------------------------------"
+if [ $? -eq 0 ]; then
+    echo "Installation finished successfully"
+    if [[ $(uname) == *"MINGW"* ]]; then
+        echo "run Flow123d using file fterm.bat or flow123d.bat in bin folder"
+    else
+        echo "run Flow123d using script fterm.sh or flow123d.sh in bin folder"
+    fi
+else
+    echo "Error during installation"
+    exit 1
+fi
