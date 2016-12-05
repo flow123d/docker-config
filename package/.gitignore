@@ -4,3 +4,6 @@
 
 *.tag.gz
 *.zip
+/doc/
+/install/
+/tests/
