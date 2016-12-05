@@ -2,11 +2,12 @@
 
 CID=flow
 FLOW=/opt/flow123d/flow123d
+FLOW_MIN=/opt/flow123d
 DESTINATION=$(shell pwd)
 
 VERSION=$(strip $(shell docker exec $(CID) cat $(FLOW)/version))
 PACK_NAME=Flow123d-$(VERSION)-Linux.tar.gz
-IMG_NAME=Flow123d-$(VERSION)-image.tar.gz
+IMG_NAME=Flow123d-$(VERSION)-docker-image.tar.gz
 
 LIN_ARCH=Flow123d-$(VERSION)-linux-install.tar.gz
 WIN_ARCH=Flow123d-$(VERSION)-windows-install.zip
@@ -16,26 +17,35 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 	mkdir -p install-linux
 	mkdir -p install-windows
 	
+	
 	cd install-linux && cmake \
 		-DIS_WINDOWS=0 \
 		-DFLOW_VERSION="$(VERSION)" \
 		-DIMAGE_TAG="flow123d/v$(VERSION)" \
 		-DIMAGE_NAME="$(IMG_NAME)" \
-		-DIMAGE_PATH="$(DESTINATION)/$(IMG_NAME)" \
+		-DDEST="$(DESTINATION)" \
 		../project
 	make -C install-linux package
 	mv      install-linux/$(LIN_ARCH) $(DESTINATION)/$(LIN_ARCH)
-		
+	
+	# rm   -rf install
+	# mkdir -p install
+	# tar -xzf $(DESTINATION)/$(LIN_ARCH) -C install/ --strip-components=1
+	
 	cd install-windows && cmake \
 		-DIS_WINDOWS=1 \
 		-DFLOW_VERSION="$(VERSION)" \
 		-DIMAGE_TAG="flow123d/v$(VERSION)" \
 		-DIMAGE_NAME="$(IMG_NAME)" \
-		-DIMAGE_PATH="$(DESTINATION)/$(IMG_NAME)" \
+		-DDEST="$(DESTINATION)" \
 		../project
 	make -C install-windows package
 	mv      install-windows/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
-	
+
+# clean unwanted files in destination
+remove-unwanted:
+	rm -rf $(DESTINATION)/$(PACK_NAME)
+
 # create install image
 $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	-@docker rm -f flow_rel
@@ -47,7 +57,7 @@ $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	
 	docker exec flow_rel \
 	            tar -xvzf /tmp/$(PACK_NAME) \
-	            -C $(FLOW) --strip-components=1
+	            -C $(FLOW_MIN) --strip-components=1
 	
 	docker exec   flow_rel rm -rf /tmp/$(PACK_NAME)
 	docker export flow_rel > $(DESTINATION)/$(IMG_NAME)
@@ -55,11 +65,23 @@ $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	
 	
 # create flow123d package
-$(DESTINATION)/$(PACK_NAME):
+$(DESTINATION)/$(PACK_NAME): $(DESTINATION)/tests
 	docker exec $(CID) make -C $(FLOW) package
 	docker cp $(CID):$(FLOW)/build_tree/$(PACK_NAME) $(DESTINATION)/$(PACK_NAME)
 
 
+# copy tests and docs
+$(DESTINATION)/tests:
+	# create destination folders
+	mkdir -p $(DESTINATION)/doc/htmldoc
+	mkdir -p $(DESTINATION)/tests
+	
+	docker cp $(CID):$(FLOW)/build_tree/doc/reference_manual/flow123d_doc.pdf $(DESTINATION)/doc/flow123d_doc.pdf
+	docker cp $(CID):$(FLOW)/build_tree/htmldoc/html/src/. $(DESTINATION)/doc/htmldoc
+	docker cp $(CID):$(FLOW)/tests/. $(DESTINATION)/tests
+	
+	# delete runtest because we will have to create other runtest for docker
+	rm -rf    $(DESTINATION)/tests/runtest
 
 
 # PACKAGE_PATH=$(DESTINATION)/$(PACKAGE_NAME)

@@ -8,7 +8,8 @@ cmake_minimum_required(VERSION 2.8.8)
 # configurable via makefile
 SET(IMAGE_TAG           "flow123d/v200" CACHE STRING "Docker image name (how it will be tagged)")
 SET(IMAGE_NAME          "filename" CACHE STRING "Filename of docker image archive")
-SET(IMAGE_PATH          "path/to/image" CACHE STRING "Location of docker image")
+SET(DEST                "destination/folder" CACHE STRING "Destination folder, where tests and doc and images are stored")
+SET(IMAGE_PATH          "${DEST}/${IMAGE_NAME}" CACHE STRING "Location of docker image")
 SET(IS_WINDOWS          1 CACHE STRING "if 1 build windows install package otherwise linux package")
 SET(FLOW_VERSION        "1.0.0" CACHE STRING "Dot separated")
     
@@ -42,10 +43,16 @@ IF(IS_WINDOWS)
     configure_file(src/linux/install.sh     pack/install.sh     @ONLY)
     configure_file(src/linux/flow123d.sh    pack/flow123d.sh    @ONLY)
     configure_file(src/linux/fterm.sh       pack/fterm.sh       @ONLY)
+    configure_file(src/linux/runtest.sh     pack/runtest.sh     @ONLY)
     
     # install docker image
-    INSTALL(PROGRAMS ${IMAGE_PATH}                          DESTINATION data/ RENAME ${IMAGE_NAME})
+    INSTALL(PROGRAMS ${IMAGE_PATH}  DESTINATION data/ RENAME ${IMAGE_NAME})
     INSTALL(PROGRAMS ${DOCKER_TOOLBOX_PATH}                 DESTINATION data/)
+    
+    # install tests and docs
+    INSTALL(DIRECTORY ${DEST}/doc/                          DESTINATION doc/)
+    INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
+    INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
     # install scripts to root
     INSTALL(PROGRAMS src/windows/install.bat                DESTINATION ./)
@@ -70,10 +77,16 @@ ELSE()
     configure_file(src/linux/install.sh     pack/install.sh     @ONLY)
     configure_file(src/linux/flow123d.sh    pack/flow123d.sh    @ONLY)
     configure_file(src/linux/fterm.sh       pack/fterm.sh       @ONLY)
+    configure_file(src/linux/runtest.sh     pack/runtest.sh     @ONLY)
     
 
     # install docker image
     INSTALL(PROGRAMS ${IMAGE_PATH}  DESTINATION data/ RENAME ${IMAGE_NAME})
+    
+    # install tests and docs
+    INSTALL(DIRECTORY ${DEST}/doc/                          DESTINATION doc/)
+    INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
+    INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
     # install scripts to root
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.sh    DESTINATION ./)
