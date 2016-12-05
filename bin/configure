@@ -137,11 +137,11 @@ function alter_image {
     docker rm   $docker_cid
     rm -rf "$CIDFILE"
     echo "--------------------------------------------"
-    echo "Image created. To use this image use full image name: $1:user"
-    echo "To be automatically user $USER_NAME, use one of the following syntax:"
-    echo "    docker run -ti --rm -u \$(id -u):\$(id -g) $1:user"
-    echo "    docker run -ti --rm -u $(id -u):$(id -g) $1:user"
-    echo ""
+    # echo "Image created. To use this image use full image name: $1:user"
+    # echo "To be automatically user $USER_NAME, use one of the following syntax:"
+    # echo "    docker run -ti --rm -u \$(id -u):\$(id -g) $1:user"
+    # echo "    docker run -ti --rm -u $(id -u):$(id -g) $1:user"
+    # echo ""
 }
 
 
