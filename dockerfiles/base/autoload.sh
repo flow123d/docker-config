@@ -8,4 +8,4 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 alias ll="ls -lah"
-export PATH=$PATH:/opt/flow123d/flow123d/bin
+export PATH=$PATH:/opt/flow123d/flow123d/bin:/opt/flow123d/bin
