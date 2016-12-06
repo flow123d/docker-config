@@ -38,3 +38,15 @@ docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
 start "Flow123d" "$1" "$2\tests\runtest.sh"
 EOL
+
+
+# runtest.bat shortcut
+echo "=========================================================="
+echo "Creating runtest.bar shortcut"
+echo "----------------------------------------------------------"
+cat > bin/runtest.bat << EOL
+@echo off
+docker-machine start default
+@FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
+start "Flow123d" "$1" "$2\bin\runtest.sh"
+EOL
