@@ -45,6 +45,8 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 # clean unwanted files in destination
 remove-unwanted:
 	rm -rf $(DESTINATION)/$(PACK_NAME)
+	rm -rf $(DESTINATION)/tests
+	rm -rf $(DESTINATION)/doc
 
 # create install image
 $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
