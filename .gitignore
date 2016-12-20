@@ -3,6 +3,7 @@
 /cmakefiles/*/Release
 /cmakefiles/*/build_Debug
 /cmakefiles/*/build_Release
+/cmakefiles/config.cmake
 
 /flow123d/
 bin/templates/setup.sh
@@ -10,3 +11,4 @@ bin/templates/setup.sh
 *.tar.gz
 run_dbg
 run_rel
+
