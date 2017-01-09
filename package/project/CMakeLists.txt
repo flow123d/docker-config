@@ -41,6 +41,7 @@ IF(IS_WINDOWS)
     configure_file(src/windows/install.ps1  pack/install.ps1    @ONLY)
     
     configure_file(src/linux/install.sh     pack/install.sh     @ONLY)
+    configure_file(src/linux/uninstall.sh   pack/uninstall.sh   @ONLY)
     configure_file(src/linux/flow123d.sh    pack/flow123d.sh    @ONLY)
     configure_file(src/linux/fterm.sh       pack/fterm.sh       @ONLY)
     configure_file(src/linux/runtest.sh     pack/runtest.sh     @ONLY)
@@ -54,9 +55,10 @@ IF(IS_WINDOWS)
     INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
     INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
-    # install scripts to root
+    # install and uninstall scripts to root
     INSTALL(PROGRAMS src/windows/install.bat                DESTINATION ./)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.sh    DESTINATION ./)
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/uninstall.sh  DESTINATION ./)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.ps1   DESTINATION ./)
     # add shortcuts to bin
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/fterm.sh      DESTINATION bin/)
@@ -76,6 +78,7 @@ ELSE()
     
     # configure script so that IMAGE_TAG is correctly set
     configure_file(src/linux/install.sh     pack/install.sh     @ONLY)
+    configure_file(src/linux/uninstall.sh   pack/uninstall.sh   @ONLY)
     configure_file(src/linux/flow123d.sh    pack/flow123d.sh    @ONLY)
     configure_file(src/linux/fterm.sh       pack/fterm.sh       @ONLY)
     configure_file(src/linux/runtest.sh     pack/runtest.sh     @ONLY)
@@ -89,8 +92,9 @@ ELSE()
     INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
     INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
-    # install scripts to root
+    # install and uninstall scripts to root
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.sh    DESTINATION ./)
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/uninstall.sh  DESTINATION ./)
     # add shortcuts to bin
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/fterm.sh      DESTINATION bin/)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/flow123d.sh   DESTINATION bin/)
