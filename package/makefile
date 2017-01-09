@@ -47,12 +47,14 @@ remove-unwanted:
 	rm -rf $(DESTINATION)/$(PACK_NAME)
 	rm -rf $(DESTINATION)/tests
 	rm -rf $(DESTINATION)/doc
+	-@echo "Following files will be included in package: "
+	ls -la $(DESTINATION)
 
 # create install image
 $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	-@docker rm -f flow_rel
 	docker run -tid --name flow_rel flow123d/install
-	docker exec flow_rel mkdir -p $(FLOW)
+	docker exec flow_rel mkdir -p $(FLOW_MIN)
 	
 	docker cp   $(DESTINATION)/$(PACK_NAME) \
 	            flow_rel:/tmp/$(PACK_NAME)
@@ -61,7 +63,9 @@ $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	            tar -xvzf /tmp/$(PACK_NAME) \
 	            -C $(FLOW_MIN) --strip-components=1
 	
+	# remove tar.gz file and tests folder
 	docker exec   flow_rel rm -rf /tmp/$(PACK_NAME)
+	docker exec   flow_rel rm -rf $(FLOW_MIN)/tests
 	docker export flow_rel > $(DESTINATION)/$(IMG_NAME)
 	docker rm     -f flow_rel
 	

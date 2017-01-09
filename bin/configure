@@ -10,6 +10,7 @@ DOCKERFILES=$CWD/../dockerfiles
 YES_TO_ALL=0
 SKIP_BUILD=0
 DO_NOT_OVERRIDE=0
+REMOVE_ALL=0
 GROUP_ID=`id -g`
 USER_ID=`id -u`
 USER_NAME=`whoami`
@@ -43,6 +44,8 @@ function usage {
     echo "  -d|--do-not-override    If set will not override modified images (with)"
     echo "                          suffix 'user' will skip modification for"
     echo "                          the current image"
+    echo "  -r|--remove-all         Will search for any <none> images and containers"
+    echo "                          and propose their removal"
     echo "  -y|--yes-to-all         Will remove any <none> images and containers"
     echo "                          without asking"
     echo "  -h|--help               Print this help message"
@@ -77,6 +80,9 @@ case $key in
     ;;
     -s|--skip-build)
     SKIP_BUILD=1
+    ;;
+    -r|--remove-all)
+    REMOVE_ALL=1
     ;;
     -h|--help)
     usage
@@ -179,52 +185,53 @@ else
 fi
 
 
-# detect exited containers
-# ------------------------------------------------------------------------------
-EXITED=$(docker ps -q -f status=exited)
-if [[ -n $EXITED ]]; then
-    echo "--------------------------------------------"
-    echo "Note: You have exited containers present. Exited containers are usually"
-    echo "      left overs which can be safely removed."
-    echo "Containers are: "
-    docker images | grep "^<none>"
-    
-    if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rm -f $EXITED
-    else
-        read -p "Would you like to remove them? " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]
-        then
+if [[ $REMOVE_ALL -eq 1 ]]; then
+    # detect exited containers
+    # ------------------------------------------------------------------------------
+    EXITED=$(docker ps -q -f status=exited)
+    if [[ -n $EXITED ]]; then
+        echo "--------------------------------------------"
+        echo "Note: You have exited containers present. Exited containers are usually"
+        echo "      left overs which can be safely removed."
+        echo "Containers are: "
+        docker images | grep "^<none>"
+        
+        if [[ $YES_TO_ALL -eq 1 ]]; then
             docker rm -f $EXITED
+        else
+            read -p "Would you like to remove them? " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                docker rm -f $EXITED
+            fi
         fi
+        echo "--------------------------------------------"
     fi
-    echo "--------------------------------------------"
-fi
 
-# detect untagged images
-# ------------------------------------------------------------------------------
-UNNAMED=$(docker images | grep "^<none>" | awk "{print \$3}")
-if [[ -n $UNNAMED ]]; then
-    echo "--------------------------------------------"
-    echo "Note: You have untagged images present, this probably occured when images"
-    echo "      were reinstalled. Even though these images can still be used it is "
-    echo "      recommended to simply delete them."
-    echo "Images are: "
-    docker images | grep "^<none>"
-    
-    if [[ $YES_TO_ALL -eq 1 ]]; then
-        docker rmi -f $UNNAMED
-    else
-        read -p "Would you like to remove them? " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]
-        then
+    # detect untagged images
+    # ------------------------------------------------------------------------------
+    UNNAMED=$(docker images | grep "^<none>" | awk "{print \$3}")
+    if [[ -n $UNNAMED ]]; then
+        echo "--------------------------------------------"
+        echo "Note: You have untagged images present, this probably occured when images"
+        echo "      were reinstalled. Even though these images can still be used it is "
+        echo "      recommended to simply delete them."
+        echo "Images are: "
+        docker images | grep "^<none>"
+        
+        if [[ $YES_TO_ALL -eq 1 ]]; then
             docker rmi -f $UNNAMED
+        else
+            read -p "Would you like to remove them? " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                docker rmi -f $UNNAMED
+            fi
         fi
+        echo "--------------------------------------------"
     fi
-    echo "--------------------------------------------"
 fi
-
 
 docker images
