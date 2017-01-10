@@ -15,8 +15,8 @@ function check_image {
 
 # get image path and import into to machine
 echo "Importing docker image '@IMAGE_TAG@'"
-check_image "@IMAGE_NAME@"
-check_image "@IMAGE_NAME@:user"
+check_image "@IMAGE_TAG@"
+check_image "@IMAGE_TAG@:user"
 IMAGE_PATH=$CWD/data/@IMAGE_NAME@
 docker import $IMAGE_PATH @IMAGE_TAG@
 
