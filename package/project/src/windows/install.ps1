@@ -137,7 +137,7 @@ test-image "@IMAGE_TAG@:user"
 status-line "Adding bin folder to path"
 $binFolder = ";$cwd\bin;"
 $paths = [Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::User)
-[Environment]::SetEnvironmentVariable("Path", $paths + $binFolder, [System.EnvironmentVariableTarget]::User)
+[Environment]::SetEnvironmentVariable("Path", $binFolder + $paths, [System.EnvironmentVariableTarget]::User)
 
 # exit installation
 status-line "Installation finished, press any key to exit ..."
