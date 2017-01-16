@@ -12,7 +12,7 @@ cat > bin/fterm.bat << EOL
 @echo off
 docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
-start "Fterm" "$1" "$2\bin\fterm.sh"
+start "Fterm" "$1" "$2\bin\fterm.sh" %*
 EOL
 
 
@@ -24,7 +24,7 @@ cat > bin/flow123d.bat << EOL
 @echo off
 docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
-start "Flow123d" "$1" "$2\bin\flow123d.sh"
+start "Flow123d" "$1" "$2\bin\flow123d.sh" %*
 EOL
 
 
@@ -36,7 +36,7 @@ cat > tests/runtest.bat << EOL
 @echo off
 docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
-start "Flow123d" "$1" "$2\tests\runtest.sh"
+start "Flow123d" "$1" "$2\tests\runtest.sh" %*
 EOL
 
 
@@ -48,7 +48,7 @@ cat > bin/runtest.bat << EOL
 @echo off
 docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
-start "Flow123d" "$1" "$2\bin\runtest.sh"
+start "Flow123d" "$1" "$2\bin\runtest.sh" %*
 EOL
 
 # uninstall.bat shortcut
@@ -59,5 +59,6 @@ cat > uninstall.bat << EOL
 @echo off
 docker-machine start default
 @FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
-start "Flow123d" "$1" "$2\uninstall.sh"
+start "uninstall" "powershell.exe" "-ExecutionPolicy" "Unrestricted" "-File" "$2\uninstall.ps1" "$1"
+pause
 EOL

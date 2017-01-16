@@ -133,6 +133,12 @@ test-image "@IMAGE_TAG@"
 status-line "Testing image '@IMAGE_TAG@:user'"
 test-image "@IMAGE_TAG@:user"
 
+
+status-line "Adding bin folder to path"
+$binFolder = ";$cwd\bin;"
+$paths = [Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::User)
+[Environment]::SetEnvironmentVariable("Path", $paths + $binFolder, [System.EnvironmentVariableTarget]::User)
+
 # exit installation
 status-line "Installation finished, press any key to exit ..."
 #$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

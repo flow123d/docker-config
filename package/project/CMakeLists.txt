@@ -38,7 +38,8 @@ IF(IS_WINDOWS)
     
     
     # configure script so that IMAGE_TAG is correctly set
-    configure_file(src/windows/install.ps1  pack/install.ps1    @ONLY)
+    configure_file(src/windows/install.ps1    pack/install.ps1    @ONLY)
+    configure_file(src/windows/uninstall.ps1  pack/uninstall.ps1  @ONLY)
     
     configure_file(src/linux/install.sh     pack/install.sh     @ONLY)
     configure_file(src/linux/uninstall.sh   pack/uninstall.sh   @ONLY)
@@ -60,6 +61,7 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.sh    DESTINATION ./)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/uninstall.sh  DESTINATION ./)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/install.ps1   DESTINATION ./)
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/uninstall.ps1 DESTINATION ./)
     # add shortcuts to bin
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/fterm.sh      DESTINATION bin/)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/flow123d.sh   DESTINATION bin/)
