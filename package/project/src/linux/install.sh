@@ -5,9 +5,9 @@ CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function check_image {
     if [[ "$(docker images -q $1 2> /dev/null)" != "" ]]; then
-        read -p "Image with name $1 already exists. Do you want to remove this image? (y/n): " -n 1 -r
+        read -r -p "Image with name $1 already exists. Do you want to remove this image? (y/n): " response
         echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[ $response =~ ^[Yy]$ ]]; then
             docker rmi -f $1
         fi
     fi

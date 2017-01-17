@@ -57,6 +57,9 @@ function exec-install-shell($bash) {
     
     $command = '"' + $bash + '" --login -i "bin\create_shortcuts.sh" ' + '"' + $bash + '" ' + '"' + $cwd + '"'
     iex "& $command"
+    
+    $command = '"' + $bash + '" --login -i "bin\mounts.sh" '
+    iex "& $command"
 }
 
 # run docker image given by name

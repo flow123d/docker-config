@@ -67,6 +67,7 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/flow123d.sh   DESTINATION bin/)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/pack/runtest.sh    DESTINATION bin/)
     INSTALL(PROGRAMS src/windows/create_shortcuts.sh        DESTINATION bin/)
+    INSTALL(PROGRAMS src/windows/mounts.sh                  DESTINATION bin/)
     
     # install configure
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/configure    DESTINATION bin/)
