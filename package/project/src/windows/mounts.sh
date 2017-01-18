@@ -51,6 +51,46 @@ EXTRA_MOUNT="-v //$unix:/$unix \$EXTRA_MOUNT"
 EOL
 }
 
+function CheckExec() {
+    BIN=$1
+    VAR=$2
+    eval VAR_VALUE=\$${VAR}
+    if [ -z "$VAR_VALUE" ]
+    then 
+      if [ -x "${BIN}" ]
+      then
+    	eval ${VAR}=\$BIN
+      else
+      	FULL_BIN=`which ${BIN} 2>/dev/null`
+      	if [ -n "${FULL_BIN}" ] && [ -x "${FULL_BIN}" ]
+      	then
+      	  eval ${VAR}=\$BIN
+      	fi
+      fi	
+    fi  
+}
+
+function ExecNotFound () {
+    BIN=$1
+    VAR=$2
+    eval VAR_VALUE=\$${VAR}
+    if [ -z "$VAR_VALUE" ]
+    then 
+      echo "Can not locate executable: $BIN"
+      exit
+    fi  	
+}
+
+set -x
+
+# check location of VBoxManage
+VBM="VBoxManage"
+CheckExec "$VBM" VBOX_MANAGE
+VBM="/c/Program Files/Oracle/VirtualBox/VBoxManage.exe"
+CheckExec "$VBM" VBOX_MANAGE
+ExecNotFound "VBoxManage" VBOX_MANAGE
+
+echo "VBM: $VBOX_MANAGE"
 
 echo "All files and folders under $HOME are accessible."
 echo "-------------------------------------------------"
@@ -76,7 +116,7 @@ do
             echo "Mounting path '$windows' -> '/$unix'"
             
             # create this path in VBoxManage
-            VBoxManage sharedfolder add default --name "$unix" --hostpath "$windows" --automount
+            "$VBOX_MANAGE" sharedfolder add default --name "$unix" --hostpath "$windows" --automount
             
             # write mount commant to the local bootlocal file
             write2bootlocal "$windows" "$unix"
