@@ -17,6 +17,9 @@ IMG_NAME=flow123d_$(VERSION)_docker_image.tar.gz
 LIN_ARCH=flow123d_$(VERSION)_linux_install.tar.gz
 WIN_ARCH=flow123d_$(VERSION)_windows_install.zip
 
+# get current date for json files
+CURRENT_DATE=$(shell date +"%d-%m-%Y %T")
+
 # create install packages
 create-packages: $(DESTINATION)/$(IMG_NAME)
 	mkdir -p install-linux
@@ -32,6 +35,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		../project
 	make -C install-linux package
 	mv      install-linux/$(LIN_ARCH) $(DESTINATION)/$(LIN_ARCH)
+	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(LIN_ARCH:.tar.gz=.json)
 	
 	# rm   -rf install
 	# mkdir -p install
@@ -46,6 +50,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		../project
 	make -C install-windows package
 	mv      install-windows/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
+	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
 
 # clean unwanted files in destination
 remove-unwanted:
@@ -73,6 +78,7 @@ $(DESTINATION)/$(IMG_NAME): $(DESTINATION)/$(PACK_NAME)
 	docker exec   flow_rel rm -rf $(FLOW_MIN)/tests
 	docker export flow_rel > $(DESTINATION)/$(IMG_NAME)
 	docker rm     -f flow_rel
+	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(IMG_NAME:.tar.gz=.json)
 	
 	
 # create flow123d package
