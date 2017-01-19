@@ -16,7 +16,7 @@ SET(FLOW_VERSION        "1.0.0" CACHE STRING "Dot separated")
 # get docker-config root
 get_filename_component(DOCKER_CONFIG_ROOT ${CMAKE_SOURCE_DIR}/../.. ABSOLUTE)
 
-message(STATUS "Packaging Flow123d version ${Flow123d_VERSION}")
+message(STATUS "Packaging Flow123d version ${FLOW_VERSION}")
 message(STATUS "Docker image tag name: '${IMAGE_NAME}'")
 message(STATUS "Docker image location: '${IMAGE_PATH}'")
 
@@ -52,7 +52,9 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${DOCKER_TOOLBOX_PATH}                 DESTINATION data/)
     
     # install tests and docs
-    INSTALL(DIRECTORY ${DEST}/doc/                          DESTINATION doc/)
+    INSTALL(DIRECTORY ${DEST}/htmldoc/                          DESTINATION doc/htmldoc/)
+    INSTALL(FILES     ${DEST}/flow123d_${FLOW_VERSION}_doc.pdf  DESTINATION doc/)
+    
     INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
     INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
@@ -74,7 +76,7 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
     
     
-    set(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-windows-install")
+    set(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}_windows_install")
     SET(CPACK_GENERATOR "ZIP")
 ELSE()
     message(STATUS "Creating Linux package")
@@ -91,7 +93,9 @@ ELSE()
     INSTALL(PROGRAMS ${IMAGE_PATH}  DESTINATION data/ RENAME ${IMAGE_NAME})
     
     # install tests and docs
-    INSTALL(DIRECTORY ${DEST}/doc/                          DESTINATION doc/)
+    INSTALL(DIRECTORY ${DEST}/htmldoc/                          DESTINATION doc/htmldoc/)
+    INSTALL(FILES     ${DEST}/flow123d_${FLOW_VERSION}_doc.pdf  DESTINATION doc/)
+    
     INSTALL(DIRECTORY ${DEST}/tests/                        DESTINATION tests/)
     INSTALL(PROGRAMS  ${CMAKE_BINARY_DIR}/pack/runtest.sh   DESTINATION tests/)
     
@@ -106,7 +110,9 @@ ELSE()
     # install configure
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/configure    DESTINATION bin/)
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
-    SET(CPACK_PACKAGE_FILE_NAME "Flow123d-${FLOW_VERSION}-linux-install")
+    
+    
+    SET(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}_linux_install")
     SET(CPACK_GENERATOR "TGZ")
 ENDIF()
 

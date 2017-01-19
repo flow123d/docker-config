@@ -5,12 +5,17 @@ FLOW=/opt/flow123d/flow123d
 FLOW_MIN=/opt/flow123d
 DESTINATION=$(shell pwd)
 
+# take version from running docker
 VERSION=$(strip $(shell docker exec $(CID) cat $(FLOW)/version))
-PACK_NAME=Flow123d-$(VERSION)-Linux.tar.gz
-IMG_NAME=Flow123d-$(VERSION)-docker-image.tar.gz
 
-LIN_ARCH=Flow123d-$(VERSION)-linux-install.tar.gz
-WIN_ARCH=Flow123d-$(VERSION)-windows-install.zip
+PACK_NAME=Flow123d-$(VERSION)-Linux.tar.gz
+
+# Following files will be published
+# LIN_ARCH and WIN_ARCH values MUST be the same as in the 
+# 	project/CMakeLists.txt cmake file
+IMG_NAME=flow123d_$(VERSION)_docker_image.tar.gz
+LIN_ARCH=flow123d_$(VERSION)_linux_install.tar.gz
+WIN_ARCH=flow123d_$(VERSION)_windows_install.zip
 
 # create install packages
 create-packages: $(DESTINATION)/$(IMG_NAME)
@@ -79,12 +84,14 @@ $(DESTINATION)/$(PACK_NAME): $(DESTINATION)/tests
 # copy tests and docs
 $(DESTINATION)/tests:
 	# create destination folders
-	mkdir -p $(DESTINATION)/doc/htmldoc
+	mkdir -p $(DESTINATION)/htmldoc
 	mkdir -p $(DESTINATION)/tests
+	mkdir -p $(DESTINATION)/doxygen
 	
-	docker cp $(CID):$(FLOW)/build_tree/doc/reference_manual/flow123d_doc.pdf $(DESTINATION)/doc/flow123d_doc.pdf
-	docker cp $(CID):$(FLOW)/build_tree/htmldoc/html/src/. $(DESTINATION)/doc/htmldoc
-	docker cp $(CID):$(FLOW)/tests/. $(DESTINATION)/tests
+	docker cp $(CID):$(FLOW)/build_tree/doc/reference_manual/flow123d_doc.pdf $(DESTINATION)/flow123d_$(VERSION)_doc.pdf
+	docker cp $(CID):$(FLOW)/build_tree/htmldoc/html/src/.                    $(DESTINATION)/htmldoc
+	docker cp $(CID):$(FLOW)/build_tree/doc/online-doc/flow123d/.             $(DESTINATION)/doxygen
+	docker cp $(CID):$(FLOW)/tests/.                                          $(DESTINATION)/tests
 	
 	# delete runtest because we will have to create other runtest for docker
 	rm -rf    $(DESTINATION)/tests/runtest
