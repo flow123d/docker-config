@@ -76,7 +76,7 @@ IF(IS_WINDOWS)
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
     
     
-    set(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}_windows_install")
+    set(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}")
     SET(CPACK_GENERATOR "ZIP")
 ELSE()
     message(STATUS "Creating Linux package")
@@ -112,7 +112,7 @@ ELSE()
     INSTALL(PROGRAMS ${DOCKER_CONFIG_ROOT}/bin/templates/setup.template.sh    DESTINATION bin/templates/)
     
     
-    SET(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}_linux_install")
+    SET(CPACK_PACKAGE_FILE_NAME "flow123d_${FLOW_VERSION}")
     SET(CPACK_GENERATOR "TGZ")
 ENDIF()
 

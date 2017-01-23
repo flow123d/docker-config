@@ -13,9 +13,10 @@ PACK_NAME=Flow123d-$(VERSION)-Linux.tar.gz
 # Following files will be published
 # LIN_ARCH and WIN_ARCH values MUST be the same as in the 
 # 	project/CMakeLists.txt cmake file
-IMG_NAME=flow123d_$(VERSION)_docker_image.tar.gz
-LIN_ARCH=flow123d_$(VERSION)_linux_install.tar.gz
-WIN_ARCH=flow123d_$(VERSION)_windows_install.zip
+RAW_NAME=flow123d_$(VERSION)
+IMG_NAME=$(RAW_NAME)_docker_image.tar.gz
+LIN_ARCH=$(RAW_NAME)_linux_install.tar.gz
+WIN_ARCH=$(RAW_NAME)_windows_install.zip
 
 # get current date for json files
 CURRENT_DATE=$(shell date +"%d-%m-%Y %T")
@@ -34,7 +35,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		-DDEST="$(DESTINATION)" \
 		../project
 	make -C install-linux package
-	mv      install-linux/$(LIN_ARCH) $(DESTINATION)/$(LIN_ARCH)
+	mv      install-linux/$(RAW_NAME).tar.gz $(DESTINATION)/$(LIN_ARCH)
 	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(LIN_ARCH:.tar.gz=.json)
 	
 	# rm   -rf install
@@ -49,7 +50,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		-DDEST="$(DESTINATION)" \
 		../project
 	make -C install-windows package
-	mv      install-windows/$(WIN_ARCH) $(DESTINATION)/$(WIN_ARCH)
+	mv      install-windows/$(RAW_NAME).zip $(DESTINATION)/$(WIN_ARCH)
 	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
 
 # clean unwanted files in destination
