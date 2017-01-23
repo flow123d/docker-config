@@ -31,5 +31,15 @@ ls -la /opt/flow123d/flow123d
 
 IMAGE_TAG="@IMAGE_TAG@"
 if [[ -n "${IMAGE_TAG}" ]]; then
-    echo -e "\nexport PS1=\"\u@${IMAGE_TAG}:\w\$ \"\n" >> /etc/profile.d/autoload.sh 
+    # echo -e "\nexport PS1=\"\u@${IMAGE_TAG}:\w\$ \"\n" >> /etc/profile.d/autoload.sh
+    echo -e "\nexport PS1=\"\[\033[01;32m\]\u@${IMAGE_TAG}\[\033[01;36m\] \w \$ \[\033[00m\]\"\n" >> /etc/profile.d/autoload.sh
 fi
+
+cat >> /etc/profile.d/autoload.sh  << EOL
+# shortcuts
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+EOL
