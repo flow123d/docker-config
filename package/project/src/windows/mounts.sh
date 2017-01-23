@@ -81,7 +81,6 @@ function ExecNotFound () {
     fi  	
 }
 
-set -x
 
 # check location of VBoxManage
 VBM="VBoxManage"
