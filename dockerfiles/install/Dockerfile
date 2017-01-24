@@ -24,3 +24,7 @@ RUN sudo pip install \
     simplejson \
     formic \
     pymongo
+
+# install pandoc tools
+RUN sudo apt-get update && sudo apt-get install -y  \
+    lib32z1

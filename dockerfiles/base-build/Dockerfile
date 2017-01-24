@@ -52,3 +52,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 RUN pip install \
     pandoc-fignos \
     pandoc-tablenos
+
+# install pandoc tools
+RUN sudo apt-get update && sudo apt-get install -y  \
+    lib32z1 \
+    lib32z1-dev
