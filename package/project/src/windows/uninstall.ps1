@@ -3,7 +3,7 @@
 
 # get script location
 $cwd = split-path -parent $MyInvocation.MyCommand.Definition
-cd $cwd
+cd "$cwd"
 
 # executes mingw shell command
 function exec-install-shell($bash) {
@@ -33,7 +33,7 @@ function which($name) {
 # get bash location from arguments
 $bash = $args[0]
 status-line "Executing shell using $bash"
-exec-install-shell $bash
+exec-install-shell "$bash"
 
 # remove from Path
 status-line "Removing bin folder from path"

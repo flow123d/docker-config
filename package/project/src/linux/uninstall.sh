@@ -10,4 +10,4 @@ docker rmi -f "@IMAGE_TAG@"
 docker rmi -f "@IMAGE_TAG@:user"
 
 echo "Removing install dir: $CWD"
-rm -rfI $CWD
+rm -rfI "$CWD"

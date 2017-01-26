@@ -3,7 +3,7 @@
 # to mount custom folders
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $SCRIPT_DIR
+cd "$SCRIPT_DIR"
 
 local_inject=.inject.sh
 local_bootlocal=.bootlocal.sh

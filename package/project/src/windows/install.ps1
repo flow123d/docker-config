@@ -3,7 +3,7 @@
 
 # get script location
 $cwd = split-path -parent $MyInvocation.MyCommand.Definition
-cd $cwd
+cd "$cwd"
 
 # finds executable in path and return it (or null)
 function which($name) {
@@ -121,7 +121,7 @@ Foreach ($bash in $BashLocations) {
         Write-Host "Testing path: $bash"
         if (Test-Path $bash) {
             status-line "Executing shell using $bash"
-            exec-install-shell $bash
+            exec-install-shell "$bash"
             Break
         }
     }

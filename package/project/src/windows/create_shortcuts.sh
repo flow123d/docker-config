@@ -4,10 +4,11 @@
 # 2nd argument: path to install dir
 
 
-# fterm.bat shortcut
 echo "=========================================================="
-echo "Creating fterm.bat shortcut"
-echo "----------------------------------------------------------"
+echo "Creating shortcuts:"
+
+
+echo " - fterm.bat"
 cat > bin/fterm.bat << EOL
 @echo off
 docker-machine start default
@@ -17,9 +18,7 @@ EOL
 
 
 # flow123d.bat shortcut
-echo "=========================================================="
-echo "Creating flow123d.bat shortcut"
-echo "----------------------------------------------------------"
+echo " - flow123d.bat"
 cat > bin/flow123d.bat << EOL
 @echo off
 docker-machine start default
@@ -29,9 +28,7 @@ EOL
 
 
 # runtest.bat shortcut
-echo "=========================================================="
-echo "Creating runtest.bar shortcut"
-echo "----------------------------------------------------------"
+echo " - runtest.bat"
 cat > tests/runtest.bat << EOL
 @echo off
 docker-machine start default
@@ -41,9 +38,7 @@ EOL
 
 
 # runtest.bat shortcut
-echo "=========================================================="
-echo "Creating runtest.bat shortcut"
-echo "----------------------------------------------------------"
+echo " - runtest.bat"
 cat > bin/runtest.bat << EOL
 @echo off
 docker-machine start default
@@ -52,9 +47,7 @@ start "Flow123d" "$1" "$2\bin\runtest.sh" %*
 EOL
 
 # uninstall.bat shortcut
-echo "=========================================================="
-echo "Creating uninstall.bat shortcut"
-echo "----------------------------------------------------------"
+echo " - uninstall.bat"
 cat > uninstall.bat << EOL
 @echo off
 docker-machine start default
@@ -62,3 +55,4 @@ docker-machine start default
 start "uninstall" "powershell.exe" "-ExecutionPolicy" "Unrestricted" "-File" "$2\uninstall.ps1" "$1"
 pause
 EOL
+echo "=========================================================="

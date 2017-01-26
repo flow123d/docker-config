@@ -18,14 +18,14 @@ echo "Importing docker image '@IMAGE_TAG@'"
 check_image "@IMAGE_TAG@"
 check_image "@IMAGE_TAG@:user"
 IMAGE_PATH=$CWD/data/@IMAGE_NAME@
-docker import $IMAGE_PATH @IMAGE_TAG@
+docker import "$IMAGE_PATH" @IMAGE_TAG@
 
 # run configure on this image to personalise the image
 echo "Modifying docker image '@IMAGE_TAG@'"
 IMAGE_TAG="@IMAGE_TAG@"
 IMAGE_TAG=${IMAGE_TAG#flow123d/}
 export IMAGE_TAG=${IMAGE_TAG}
-$CWD/bin/configure --skip-build --images "@IMAGE_TAG@"
+"$CWD/bin/configure" --skip-build --images "@IMAGE_TAG@"
 
 echo "--------------------------------------------"
 if [ $? -eq 0 ]; then
