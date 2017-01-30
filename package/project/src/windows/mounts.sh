@@ -46,7 +46,7 @@ function write2inject() {
     windows=$1
     unix=$2
     cat >> $local_inject << EOL
-echo "- $windows directory mounted to '/$unix'"
+echo "- $windows disk mounted to '/$unix'"
 EXTRA_MOUNT="-v //$unix:/$unix \$EXTRA_MOUNT"
 EOL
 }
@@ -110,7 +110,8 @@ do
             fi
             
             # prompt for location
-            read -r -p "Enter directory location (e.g. d:\Data): " windows
+            read -r -p "Enter letter of disk you want to mount (e.g. d): " windows
+            windows="$windows:\\"
             unix=$(win2unix "$windows")
             echo "Mounting path '$windows' -> '/$unix'"
             
