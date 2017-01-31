@@ -51,7 +51,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		../project
 	make -C install-windows package
 	mv      install-windows/$(RAW_NAME).zip $(DESTINATION)/$(WIN_ARCH)
-	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
+	echo "{\"build\": \"$(CURRENT_DATE),\" \"hash\": \"$(FLOW_GIT_HASH)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
 
 # clean unwanted files in destination
 remove-unwanted:
