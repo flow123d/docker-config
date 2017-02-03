@@ -15,13 +15,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libhwloc5 \
     openmpi*
 
-    
-# create shortcut for python and pip
-RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN ln -s /usr/bin/pip3 /usr/bin/pip
-
 # install python basic tools
-RUN sudo pip install \
+RUN sudo pip3 install \
     pyyaml \
     markdown \
     psutil \

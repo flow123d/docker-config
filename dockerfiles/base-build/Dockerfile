@@ -27,10 +27,6 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libboost-regex-dev \
     libboost-filesystem-dev 
 
-# create shortcut for python and pip
-RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN ln -s /usr/bin/pip3 /usr/bin/pip
-    
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
     libblas* \
@@ -38,7 +34,7 @@ RUN sudo apt-get update && sudo apt-get install -y \
     libopenmpi*
 
 # install python basic libs and install pandoc tools
-RUN sudo pip install \
+RUN sudo pip3 install \
     pyyaml \
     markdown \
     psutil \
