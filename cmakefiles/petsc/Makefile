@@ -8,7 +8,7 @@ BUILD_TREE = build_$(BUILD_TYPE)
 # get pwd
 SOURCE_TREE = $(shell pwd)
 # set PETSC_DIR (where petsc will be installed to)
-PETSC_DIR = /usr/lib/petsc
+#PETSC_DIR = /usr/lib/petsc
 # default package name
 PACKAGE_NAME = PETSC_3.6.1
 # given by docker -v option
@@ -23,7 +23,7 @@ MAKE_NUMCPUS = 2
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMAKE_NUMCPUS=$(MAKE_NUMCPUS) -DPETSC_DIR=$(PETSC_DIR) $(SOURCE_TREE)
+	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DMAKE_NUMCPUS=$(MAKE_NUMCPUS) -DCONFIG_OPTIONS=$(CONFIG_OPTIONS) -DPETSC_DIR=$(PETSC_DIR) $(SOURCE_TREE)
 
 
 .PHONY : build
