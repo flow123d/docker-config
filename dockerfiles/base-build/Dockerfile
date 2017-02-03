@@ -50,3 +50,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     graphviz \
     texlive-full \
     imagemagick
+
+    
+# install python3
+RUN sudo apt-get update && sudo apt-get install -y  \
+    libpython3.4 
