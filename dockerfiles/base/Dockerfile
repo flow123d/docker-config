@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y  \
     sudo \
     make \
     wget  \
-    python \
+    python3 \
     bash-completion \
     apt-utils \
     nano \

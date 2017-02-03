@@ -12,9 +12,9 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libgfortran3 \
     libblas3 \
     liblapack3 \
-    libmpich12 \
+    libopenmpi1.10 \
     libhwloc5 \
-    mpich
+    openmpi*
 
 # install python basic tools
 RUN sudo pip install \
