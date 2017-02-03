@@ -6,7 +6,6 @@ MAINTAINER Jan Hybs
 RUN sudo apt-get update && sudo apt-get install -y  \
     cmake \
     git \
-    python \
     python3-dev \
     python3-pip \
     valgrind \
