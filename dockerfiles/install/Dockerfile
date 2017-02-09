@@ -11,9 +11,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libgfortran3 \
     libblas3 \
     liblapack3 \
-    libopenmpi1.10 \
-    libhwloc5 \
-    openmpi*
+    libhwloc5 
 
 # install python basic tools
 RUN sudo pip3 install \
@@ -27,3 +25,6 @@ RUN sudo pip3 install \
 # install pandoc tools
 RUN sudo apt-get update && sudo apt-get install -y  \
     lib32z1
+
+# clear apt cache
+RUN rm -rf /var/lib/apt

@@ -30,8 +30,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
     libblas* \
-    liblapack* \
-    libopenmpi*
+    liblapack* 
 
 # install python basic libs and install pandoc tools
 RUN sudo pip3 install \
