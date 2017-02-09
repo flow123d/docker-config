@@ -12,9 +12,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libgfortran3 \
     libblas3 \
     liblapack3 \
-    libmpich12 \
-    libhwloc5 \
-    mpich
+    libhwloc5 
 
 # install python basic tools
 RUN sudo pip install \
@@ -28,3 +26,6 @@ RUN sudo pip install \
 # install pandoc tools
 RUN sudo apt-get update && sudo apt-get install -y  \
     lib32z1
+
+# clear apt cache
+RUN rm -rf /var/lib/apt

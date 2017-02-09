@@ -22,8 +22,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
     libblas* \
-    liblapack* \
-    libmpich*
+    liblapack* 
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \

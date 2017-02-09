@@ -20,5 +20,10 @@ RUN apt-get update && apt-get install -y  \
 # add auto bash-completion load
 COPY autoload.sh /etc/profile.d/autoload.sh
 
+# add auto bash-completion load
+COPY install-mpich.sh /tmp/install-mpich.sh
+RUN /tmp/install-mpich.sh
+RUN rm -f /tmp/install-mpich.sh
+
 # default entrypoint will be login bash
 CMD ["/bin/bash", "-l"]
