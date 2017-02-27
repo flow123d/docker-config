@@ -36,7 +36,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		../project
 	make -C install-linux package
 	mv      install-linux/$(RAW_NAME).tar.gz $(DESTINATION)/$(LIN_ARCH)
-	echo "{\"build\": \"$(CURRENT_DATE)\"}" > $(DESTINATION)/$(LIN_ARCH:.tar.gz=.json)
+	echo "{\"build\": \"$(CURRENT_DATE)\", \"hash\": \"$(FLOW_GIT_HASH)\"}" > $(DESTINATION)/$(LIN_ARCH:.tar.gz=.json)
 	
 	# rm   -rf install
 	# mkdir -p install
@@ -51,7 +51,7 @@ create-packages: $(DESTINATION)/$(IMG_NAME)
 		../project
 	make -C install-windows package
 	mv      install-windows/$(RAW_NAME).zip $(DESTINATION)/$(WIN_ARCH)
-	echo "{\"build\": \"$(CURRENT_DATE),\" \"hash\": \"$(FLOW_GIT_HASH)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
+	echo "{\"build\": \"$(CURRENT_DATE)\", \"hash\": \"$(FLOW_GIT_HASH)\"}" > $(DESTINATION)/$(WIN_ARCH:.zip=.json)
 
 # clean unwanted files in destination
 remove-unwanted:
