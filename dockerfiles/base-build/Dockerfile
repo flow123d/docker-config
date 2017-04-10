@@ -18,7 +18,10 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     vim \
     ccache \
     lib32z1 \
-    lib32z1-dev
+    lib32z1-dev \
+    libpugixml-dev \
+    libpugixml1v5 \
+    libpython3.4
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \
@@ -49,8 +52,3 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     graphviz \
     texlive-full \
     imagemagick
-
-    
-# install python3
-RUN sudo apt-get update && sudo apt-get install -y  \
-    libpython3.4 
