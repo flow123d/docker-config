@@ -16,9 +16,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     pandoc \
     clang \
     vim \
-    ccache \
-    lib32z1 \
-    lib32z1-dev
+    ccache 
 
 # install boost
 RUN sudo apt-get update && sudo apt-get install -y  \
@@ -30,7 +28,11 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 # install additional tools and libs
 RUN sudo apt-get update && sudo apt-get install -y \
     libblas* \
-    liblapack* 
+    liblapack* \
+    lib32z1 \
+    lib32z1-dev \
+    libpugixml1v5 \    
+    libpugixml-dev    
 
 # install python basic libs and install pandoc tools
 RUN sudo pip3 install \
@@ -47,10 +49,23 @@ RUN sudo pip3 install \
 RUN sudo apt-get update && sudo apt-get install -y  \
     doxygen \
     graphviz \
-    texlive-full \
+    texlive \
+    texlive-base \
+    texlive-binaries \
+    texlive-extra-utils \
+    texlive-font-utils \
+    texlive-fonts-extra \
+    texlive-fonts-recommended \
+    texlive-generic-recommended \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-pictures \
+    texlive-pstricks \
+    texlive-science \        
     imagemagick
 
     
-# install python3
+# install libpython3
 RUN sudo apt-get update && sudo apt-get install -y  \
     libpython3.4 
