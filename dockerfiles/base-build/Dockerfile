@@ -32,7 +32,8 @@ RUN sudo apt-get update && sudo apt-get install -y \
     lib32z1 \
     lib32z1-dev \
     libpugixml1v5 \    
-    libpugixml-dev    
+    libpugixml-dev \
+    libpython3.4   
 
 # install python basic libs and install pandoc tools
 RUN sudo pip3 install \
@@ -65,7 +66,4 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     texlive-science \        
     imagemagick
 
-    
-# install libpython3
-RUN sudo apt-get update && sudo apt-get install -y  \
-    libpython3.4 
+

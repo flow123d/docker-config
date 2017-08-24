@@ -11,7 +11,9 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libgfortran3 \
     libblas3 \
     liblapack3 \
-    libhwloc5 
+    libhwloc5 \
+    libpugixml1v5 \
+    lib32z1
 
 # install python basic tools
 RUN sudo pip3 install \
@@ -21,10 +23,6 @@ RUN sudo pip3 install \
     simplejson \
     formic \
     pymongo
-
-# install pandoc tools
-RUN sudo apt-get update && sudo apt-get install -y  \
-    lib32z1
 
 # clear apt cache
 RUN rm -rf /var/lib/apt
