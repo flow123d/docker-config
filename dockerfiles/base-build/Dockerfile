@@ -47,7 +47,7 @@ RUN sudo pip3 install \
     pandoc-tablenos
 
 # install doxygen and graphviz, latex
-RUN sudo apt-get update && sudo apt-get install -y  \
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     doxygen \
     graphviz \
     texlive \
@@ -65,5 +65,15 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     texlive-pstricks \
     texlive-science \        
     imagemagick
+
+
+# install latex
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
+    texlive-base 
+
+#    texlive-binaries \
+#    texlive-lang-czechslovak \
+#    texlive-latex-base \
+#    texlive-latex-recommended 
 
 
