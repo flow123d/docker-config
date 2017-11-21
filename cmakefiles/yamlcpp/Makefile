@@ -11,6 +11,9 @@ SOURCE_TREE = $(shell pwd)
 PACKAGE_NAME = YAMLCPP_0.5.2
 # given by docker -v option
 PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
+# Number of jobs to use for build
+NJOBS ?= 2
+
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -18,7 +21,7 @@ PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(SOURCE_TREE)
+	cd $(BUILD_TREE) && cmake -DNJOBS=$(NJOBS) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(SOURCE_TREE) 
 
 
 .PHONY : build

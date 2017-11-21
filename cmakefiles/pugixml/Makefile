@@ -1,22 +1,19 @@
-# Simple makefile for building and packaging project Petsc
+# Simple makefile for building and packaging project Yaml cpp
 
 
 # default build type
 BUILD_TYPE = Debug
 # default location for building
-BUILD_TREE = build_$(BUILD_TYPE)
-# get pwd
+BUILD_TREE = /usr/lib/yamlcpp
+# get cwd
 SOURCE_TREE = $(shell pwd)
-# set PETSC_DIR (where petsc will be installed to)
-PETSC_INSTALL_DIR = /usr/lib/petsc
-
 # default package name
-PACKAGE_NAME = PETSC_3.6.1
+PACKAGE_NAME = PUGIXML_0.5.2
 # given by docker -v option
 PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
+# Default number of jobs to use for build
+NJOBS = 2
 
-# default parallel run
-NJOBS ?= 2
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -24,17 +21,16 @@ NJOBS ?= 2
 .PHONY : cmake
 cmake:
 	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DNJOBS=$(NJOBS)  $(SOURCE_TREE)
+	cd $(BUILD_TREE) && cmake -DNJOBS=$(NJOBS) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(SOURCE_TREE) 
 
 
 .PHONY : build
 build: cmake
-	cd $(BUILD_TREE) && make petsc-lib
-
+	cd $(BUILD_TREE) && make pugixml
 
 .PHONY : package
-package:
-	cd $(BUILD_TREE) && make package
+package: build
+	cd $(BUILD_TREE) && make package	
 	# copy out packages
 	mkdir -p $(PACKAGE_DIR)
 	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
@@ -62,5 +58,5 @@ help:
 	@echo "   BUILD_TYPE - e.g. make BUILD_TYPE=Release package"
 	@echo "To change package copy location (default in /package dir) set variable"
 	@echo "   PACKAGE_DIR - e.g. make PACKAGE_DIR=/var/www/html package"
-	@echo "To change configuration and compilation process of petsc set variable"
-	@echo "   MAKE_NUMCPUS - parallel processing (default is 2)"
+	
+	

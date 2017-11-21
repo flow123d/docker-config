@@ -1,0 +1,15 @@
+#!/bin/bash
+#mkdir -p @PETSC_DIR@
+#cp -r @INSTALL_DIR@/src/* @PETSC_DIR@
+
+# The script is located and executed in BUILD_TREE, PETSC_DIR should be BUILD_TREE/src
+cd @PETSC_DIR@
+export PETSC_DIR=@PETSC_DIR@
+export PETSC_ARCH=@PETSC_ARCH@
+
+echo "Configure PETSC in @PETSC_DIR@"
+./configure \        
+        --download-metis=yes --download-parmetis=yes \
+        --download-blacs=yes --download-scalapack=yes --download-mumps=yes --download-hypre=yes \
+        --with-debugging=1 --with-shared-libraries=0 \
+        --with-make-np @NJOBS@ --CFLAGS="-g" --CXXFLAGS="-g -Wall -Wno-unused-local-typedefs -std=c++11"
