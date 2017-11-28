@@ -1,8 +1,8 @@
 # docker files
 /cmakefiles/*/Debug
 /cmakefiles/*/Release
-/cmakefiles/*/build_Debug
-/cmakefiles/*/build_Release
+/cmakefiles/*/build*
+/cmakefiles/*/package*
 /cmakefiles/config.cmake
 
 /flow123d/
@@ -11,4 +11,3 @@ bin/templates/setup.sh
 *.tar.gz
 run_dbg
 run_rel
-
