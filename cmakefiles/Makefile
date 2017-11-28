@@ -15,7 +15,7 @@ publish:
 	@/bin/echo -e "\n=== Publishing image $(DID) ===\n"
 	-docker exec $(DID) chown -R $(shell id -u) /tmp/work
 	docker rm -f $(DID)
-	scp -r $(CURDIR)/$(@)/packages/* builder@ciflow.nti.tul.cz:$(PACKAGE_DIR_REMOTE)/
+	scp -r $(CURDIR)/$(LIBRARY)/packages/* builder@ciflow.nti.tul.cz:$(PACKAGE_DIR_REMOTE)/
 
 .PHONY : start-image
 start-image:
