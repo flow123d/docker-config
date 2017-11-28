@@ -1,68 +1,71 @@
 # Simple makefile for building and packaging project Armadillo
 
+library       = armadillo
+version       = 3.4.3
+package_name  = $(library)-$(version)
 
-# default build type
-BUILD_TYPE = Debug
-# default location for building
-BUILD_TREE = /usr/lib/armadillo
-# get cwd
-SOURCE_TREE = $(shell pwd)
-# default package name
-PACKAGE_NAME = ARMADILLO_3.4.3
-# given by docker -v option
-PACKAGE_DIR = /packages/$(PACKAGE_NAME)_$(BUILD_TYPE)
+build_type    = Debug
+build_dir     = $(CURDIR)/build-$(build_type)
+package_dir   = $(CURDIR)/packages/$(library)_$(version)_$(build_type)
+cmake         = cmake
+clear         = false
 
+install_prefix = /usr/local
+prefix         = $(install_prefix)/$(package_name)
 
 # use petsc lapack and blas instead of system's
 USE_PETSC = Off
 # where is petsc installed (only viable if PETSC_DIR is set)
-PETSC_DIR  = /usr/lib/petsc
-PETSC_ARCH = linux-$(BUILD_TYPE)
+PETSC_DIR  =
+PETSC_ARCH =
 
 
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-
-.PHONY : cmake
-cmake:
-	mkdir -p $(BUILD_TREE)
-	cd $(BUILD_TREE) && cmake -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) -DUSE_PETSC=$(USE_PETSC) -DPETSC_DIR=$(PETSC_DIR) -DPETSC_ARCH=$(PETSC_ARCH) $(SOURCE_TREE)
-
+.PHONY : configure
+configure:
+	@if [ "$(clear)" = "true" ]; then\
+			rm -rf $(build_dir);\
+	fi
+	mkdir -p $(build_dir)
+	cd $(build_dir) && $(cmake) \
+				-DCMAKE_BUILD_TYPE=$(build_type) \
+				-DCMAKE_INSTALL_PREFIX=$(prefix) \
+				-DLIBRARY_VERSION=$(version) \
+				-DLIBRARY_NAME=$(library) \
+				-DUSE_PETSC=$(USE_PETSC) \
+				-DPETSC_DIR=$(PETSC_DIR) \
+				-DPETSC_ARCH=$(PETSC_ARCH) \
+				$(CURDIR)
 
 .PHONY : build
-build: cmake
-	cd $(BUILD_TREE) && make external-lib
+build: configure
+	cd $(build_dir) && make external-lib
 
-
-.PHONY : package
 package: build
-	cd $(BUILD_TREE) && make package	
-	# copy out packages
-	mkdir -p $(PACKAGE_DIR)
-	cp $(BUILD_TREE)/$(PACKAGE_NAME).deb     $(PACKAGE_DIR)/$(PACKAGE_NAME).deb
-	cp $(BUILD_TREE)/$(PACKAGE_NAME).tar.gz  $(PACKAGE_DIR)/$(PACKAGE_NAME).tar.gz
-	cp $(BUILD_TREE)/$(PACKAGE_NAME).zip     $(PACKAGE_DIR)/$(PACKAGE_NAME).zip
-	cp $(BUILD_TREE)/_CPack_Packages/Linux/DEB/$(PACKAGE_NAME)/md5sums $(PACKAGE_DIR)/$(PACKAGE_NAME).md5sums
+	cd $(build_dir) && make package
+
+	mkdir -p $(package_dir)
+	cp $(build_dir)/$(package_name).deb     $(package_dir)/$(package_name).deb
+	cp $(build_dir)/$(package_name).tar.gz  $(package_dir)/$(package_name).tar.gz
+	cp $(build_dir)/$(package_name).zip     $(package_dir)/$(package_name).zip
+	cp $(build_dir)/_CPack_Packages/Linux/DEB/$(package_name)/md5sums $(package_dir)/$(package_name).md5sums
 
 
 .PHONY : clean
 clean:
-	rm -rf $(BUILD_TREE)
-	rm -rf build_*
-
+	rm -rf $(build_dir)
+	rm -rf $(prefix)
+	rm -rf $(package_dir)/$(package_name)*
 
 .PHONE : help
 help:
-	@echo "Valid targets for this Makefile:"
-	@echo "   cmake   - run cmake in BUILD_TREE dir"
-	@echo "   build   - downloads external lib and runs compilation"
-	@echo "   package - packs library and copies packages to PACKAGE_DIR"
-	@echo "   clean   - deletes BUILD_TREE dir and all build_*"
-	@echo "   help    - prints this message"
+	@echo "Valid targets for this Makefile: "
+	@echo "   configure - run cmake in BUILD_TREE dir"
+	@echo "   build     - downloads external lib and runs compilation"
+	@echo "   package   - packs library and copies packages to package_dir"
+	@echo "   clean     - deletes build_dir dir and all build_*"
+	@echo "   help      - prints this message"
 	@echo ""
 	@echo "To change buildy type (default Debug) set variable"
-	@echo "   BUILD_TYPE - e.g. make BUILD_TYPE=Release package"
-	@echo "To change package copy location (default in /package dir) set variable"
-	@echo "   PACKAGE_DIR - e.g. make PACKAGE_DIR=/var/www/html package"
-	
-	
+	@echo "   build_type - e.g. make build_type=Release package (default is $(build_type))"
+	@echo "To change package copy location (default is $(package_dir)) set variable"
+	@echo "   package_dir - e.g. make package_dir=/var/www/html package"

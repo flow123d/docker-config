@@ -1,29 +1,50 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
 project(PETSC CXX C Fortran)
-find_program (MAKE_EXECUTABLE NAMES make gmake)
+set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
+set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
-# used when --with-mpi-dir=<MPI_DIR>
-find_package(MPI REQUIRED)
-# find_package(MPI REQUIRED)
-get_filename_component(MPI_DIR ${MPI_CXX_COMPILER} DIRECTORY)
-# set(MPI_DIR "/usr/lib/openmpi")
-
-set(PETSC_VERSION_MAJOR "3")
-set(PETSC_VERSION_MINOR "6")
-set(PETSC_VERSION_PATCH "1")
-set(PETSC_VERSION "${PETSC_VERSION_MAJOR}.${PETSC_VERSION_MINOR}.${PETSC_VERSION_PATCH}")
-
-# default variables
-SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${PETSC_VERSION}.tar.gz")
-SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${PETSC_VERSION}.tar.gz")
+# default values
+set(LIBRARY_VERSION   "3.6.1" CACHE STRING "Version of the library")
+set(LIBRARY_NAME      "petsc" CACHE STRING "Name of the library")
+set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
+set(INSTALL_PREFIX    "${CMAKE_INSTALL_PREFIX}/${LIBRARY_FULL_NAME}")
 
 # set petsc arch based on CMAKE_BUILD_TYPE
 #     linux-Debug or linux-Release
-SET(PETSC_ARCH      "linux-${CMAKE_BUILD_TYPE}")
-#SET(PETSC_DIR       "${INSTALL_DIR}/src/")
-SET(MAKE_NUMCPUS    2)
+# this is a location where petsc will be installed to
+# in will be something like a /usr/local/petsc-3.6.1/
+SET(PETSC_DIR     "${CMAKE_INSTALL_PREFIX}" CACHE STRING "Petsc dir value (must end with slash)")
+SET(PETSC_ARCH    "linux-${CMAKE_BUILD_TYPE}"   CACHE STRING "Petsc arch value")
+SET(MAKE_NUMCPUS   4)
+
+
+# default variables
+set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
+set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
+
+
+message(STATUS "------------------------------------------------------")
+message(STATUS "LIBRARY_NAME          = ${LIBRARY_NAME}")
+message(STATUS "LIBRARY_VERSION       = ${LIBRARY_VERSION}")
+message(STATUS "CMAKE_INSTALL_PREFIX  = ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "PETSC_DIR             = ${PETSC_DIR}")
+message(STATUS "PETSC_ARCH            = ${PETSC_ARCH}")
+message(STATUS "------------------------------------------------------")
+
+# --------------------------------------------------------------------
+
+
+# used when --with-mpi-dir=<MPI_DIR>
+find_program (MAKE_EXECUTABLE NAMES make gmake)
+find_package(MPI REQUIRED)
+get_filename_component(MPI_DIR ${MPI_CXX_COMPILER} DIRECTORY)
+
+# default variables
+SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
+SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${LIBRARY_VERSION}.tar.gz")
+SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${LIBRARY_VERSION}.tar.gz")
+
 
 # setup external project with target petsc-lib
 include(ExternalProject)
@@ -34,8 +55,8 @@ ExternalProject_Add(external-lib
     BINARY_DIR          ${INSTALL_DIR}/src
 
     CONFIGURE_COMMAND   bash ${INSTALL_DIR}/conf.sh
-    BUILD_COMMAND       make -C ${PETSC_DIR} all
-    INSTALL_COMMAND     make -C ${PETSC_DIR} test
+    BUILD_COMMAND       make MAKE_NP=${MAKE_NUMCPUS}
+    INSTALL_COMMAND     make install
 )
 
 # prepare configure script for petsc and copy if different to isntall dir
@@ -46,32 +67,17 @@ configure_file(
 execute_process(COMMAND
     ${CMAKE_COMMAND} -E copy_if_different "${INSTALL_DIR}/conf_tmp.sh" "${INSTALL_DIR}/conf.sh")
 
-# patch paths to /usr/lib/petsc
-#install(
-#    CODE "execute_process(COMMAND make -C ${CMAKE_BINARY_DIR} patch-path)"
-#)
 
-# add install rule, for now we copy everything in src dir
+# install all which is located in the INSTALL_PREFIX value
 install(
-	DIRECTORY ${PETSC_DIR}
-	DESTINATION lib
+    DIRECTORY ${CMAKE_INSTALL_PREFIX}/
+    DESTINATION ./
+    USE_SOURCE_PERMISSIONS
 )
 
-#set(PETSC_OLD_PATH "${INSTALL_DIR}/src")
-#set(PETSC_NEW_PATH "/usr/lib/petsc")
-#set(PETSC_REPLACE_FILES
-#    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/include/petscconf.h"
-#    "${PETSC_DIR}/linux-${CMAKE_BUILD_TYPE}/lib/petsc/conf/petscvariables")
-
-#add_custom_target(patch-path
-#    COMMAND sed -i "s#${PETSC_OLD_PATH}#${PETSC_NEW_PATH}#g" ${PETSC_REPLACE_FILES}
-#)
-
-
 # CPack configuration
-# SET(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
-SET(CPACK_PACKAGE_FILE_NAME "PETSC_${PETSC_VERSION}")
-SET(CPACK_GENERATOR "DEB;TGZ;ZIP")
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jan Hybs") #required
+set(CPACK_PACKAGE_FILE_NAME "${LIBRARY_FULL_NAME}")
+set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+set(CPACK_GENERATOR "DEB;TGZ;ZIP")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jan Hybs") #required
 INCLUDE(CPack)
-
