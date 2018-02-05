@@ -5,7 +5,7 @@ set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
 set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
 # default values
-set(LIBRARY_VERSION   "3.6.1" CACHE STRING "Version of the library")
+set(LIBRARY_VERSION   "3.8.3" CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "petsc" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 set(INSTALL_PREFIX    "${CMAKE_INSTALL_PREFIX}/${LIBRARY_FULL_NAME}")
@@ -13,15 +13,10 @@ set(INSTALL_PREFIX    "${CMAKE_INSTALL_PREFIX}/${LIBRARY_FULL_NAME}")
 # set petsc arch based on CMAKE_BUILD_TYPE
 #     linux-Debug or linux-Release
 # this is a location where petsc will be installed to
-# in will be something like a /usr/local/petsc-3.6.1/
+# in will be something like a /usr/local/petsc-3.8.3/
 SET(PETSC_DIR     "${CMAKE_INSTALL_PREFIX}" CACHE STRING "Petsc dir value (must end with slash)")
 SET(PETSC_ARCH    "linux-${CMAKE_BUILD_TYPE}"   CACHE STRING "Petsc arch value")
 SET(MAKE_NUMCPUS   4)
-
-
-# default variables
-set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
 
 
 message(STATUS "------------------------------------------------------")
@@ -42,8 +37,9 @@ get_filename_component(MPI_DIR ${MPI_CXX_COMPILER} DIRECTORY)
 
 # default variables
 SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${LIBRARY_VERSION}.tar.gz")
-SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${LIBRARY_VERSION}.tar.gz")
+SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${LIBRARY_VERSION}.tar.gz")
+# SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${LIBRARY_VERSION}.tar.gz")
+# SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${LIBRARY_VERSION}.tar.gz")
 
 
 # setup external project with target petsc-lib

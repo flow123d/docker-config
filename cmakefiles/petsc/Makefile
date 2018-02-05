@@ -1,7 +1,7 @@
 # Simple makefile for building and packaging project Petsc
 
 library       = petsc
-version       = 3.6.1
+version       = 3.8.3
 package_name  = $(library)-$(version)
 
 build_type    = Debug

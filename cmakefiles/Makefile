@@ -1,14 +1,22 @@
-# This Makefile server for building and publish libraries
+# Makefile server for building and publish libraries
 # using image flow123d/base-env (by default)
+
 LIBRARY=$(@)
 BUILD_TYPE=Debug
 PACKAGE_DIR_REMOTE=/var/www/html/static/packages
+DEB_ROOT=http://ciflow.nti.tul.cz/static/packages
 
 DID=lib-$(LIBRARY)
 IMAGE=flow123d/base-env
 
 URL=
 DEB_NAME=$(notdir $(URL))
+
+LIB_MPICH=3.2.0
+LIB_YAMLCPP=0.5.2
+LIB_PETSC=3.8.3
+LIB_ARMADILLO=3.4.3
+LIB_BDDCML=2.4.0
 
 .PHONY : publish
 publish:
@@ -42,14 +50,14 @@ mpich:
 .PHONY : petsc armadillo yamlcpp
 petsc armadillo yamlcpp:
 	$(MAKE) LIBRARY=$(LIBRARY) CURDIR=$(CURDIR) IMAGE=$(IMAGE) start-image
-	$(MAKE) LIBRARY=$(LIBRARY) URL=http://ciflow.nti.tul.cz/static/packages/mpich_3.2.0_$(BUILD_TYPE)/mpich-3.2.0.deb install-lib
-	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-3.2.0/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
+	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/mpich_$(LIB_MPICH)_$(BUILD_TYPE)/mpich-$(LIB_MPICH).deb install-lib
+	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
 	$(MAKE) LIBRARY=$(LIBRARY) PACKAGE_DIR_REMOTE=$(PACKAGE_DIR_REMOTE) publish
 
 .PHONY : bddcml
 bddcml:
 	$(MAKE) LIBRARY=$(LIBRARY) CURDIR=$(CURDIR) IMAGE=$(IMAGE) start-image
-	$(MAKE) LIBRARY=$(LIBRARY) URL=http://ciflow.nti.tul.cz/static/packages/mpich_3.2.0_$(BUILD_TYPE)/mpich-3.2.0.deb install-lib
-	$(MAKE) LIBRARY=$(LIBRARY) URL=http://ciflow.nti.tul.cz/static/packages/petsc_3.6.1_$(BUILD_TYPE)/petsc-3.6.1.deb install-lib
-	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-3.2.0/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
+	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/mpich_$(LIB_MPICH)_$(BUILD_TYPE)/mpich-$(LIB_MPICH).deb install-lib
+	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/petsc_$(LIB_PETSC)_$(BUILD_TYPE)/petsc-$(LIB_PETSC).deb install-lib
+	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
 	$(MAKE) LIBRARY=$(LIBRARY) PACKAGE_DIR_REMOTE=$(PACKAGE_DIR_REMOTE) publish

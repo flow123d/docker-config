@@ -39,7 +39,7 @@
  - `/usr/lib/armadillo/share`
 
 
-## Petsc library ![info](https://img.shields.io/badge/petsc--3.6.1-110 MB / 22k files-blue.svg)
+## Petsc library ![info](https://img.shields.io/badge/petsc--3.8.3-110 MB / 22k files-blue.svg)
 
 ### Depends on:
  - system dev installation of `blas`, `lapack` and mpi lib (`mpich` or `openmpi`)
