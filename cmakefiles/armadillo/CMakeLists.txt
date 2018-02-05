@@ -5,7 +5,7 @@ set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
 set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
 # default values
-set(LIBRARY_VERSION   "3.4.3"     CACHE STRING "Version of the library")
+set(LIBRARY_VERSION   "8.3.4"     CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "armadillo" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 
@@ -13,11 +13,6 @@ set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 SET(USE_PETSC   OFF  CACHE STRING "Use petsc installation")
 SET(PETSC_DIR   ""   CACHE STRING "Petsc dir value (must end with slash)")
 SET(PETSC_ARCH  ""   CACHE STRING "Petsc arch value")
-
-
-# default variables
-set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
 
 
 message(STATUS "------------------------------------------------------")
@@ -51,10 +46,10 @@ ExternalProject_Add(external-lib
     URL                 ${INSTALL_URL}
     SOURCE_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
     BINARY_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
-    # patch to build .a lib instead of .so libs
-    PATCH_COMMAND patch ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}/CMakeLists.txt ${EXTRAS}/Patches/armadillo_patch
     CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
                               -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
+                              -DBUILD_SHARED_LIBS=Off
+                              -DDETECT_HDF5=Off
                               -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                               .
     BUILD_COMMAND       make

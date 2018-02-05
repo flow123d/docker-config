@@ -1,7 +1,7 @@
 # Simple makefile for building and packaging project Armadillo
 
 library       = armadillo
-version       = 3.4.3
+version       = 8.3.4
 package_name  = $(library)-$(version)
 
 build_type    = Debug
