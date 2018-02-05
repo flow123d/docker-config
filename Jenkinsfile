@@ -3,8 +3,8 @@ def debug_libs = [
     // 'mpich',
     // 'petsc',
     // 'yamlcpp',
-    'armadillo',
-    // 'bddcml',
+    // 'armadillo',
+    'bddcml',
 ]
 
 // which release libs to build
@@ -12,8 +12,8 @@ def release_libs = [
     // 'mpich',
     // 'petsc',
     // 'yamlcpp',
-    'armadillo',
-    // 'bddcml',
+    // 'armadillo',
+    'bddcml',
 ]
 
 // start of the pipeline script
