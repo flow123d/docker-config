@@ -51,7 +51,7 @@ mpich:
 petsc armadillo yamlcpp:
 	$(MAKE) LIBRARY=$(LIBRARY) CURDIR=$(CURDIR) IMAGE=$(IMAGE) start-image
 	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/mpich_$(LIB_MPICH)_$(BUILD_TYPE)/mpich-$(LIB_MPICH).deb install-lib
-	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
+	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH MPICH_DIR=/usr/local/mpich-3.2.0 make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
 	$(MAKE) LIBRARY=$(LIBRARY) PACKAGE_DIR_REMOTE=$(PACKAGE_DIR_REMOTE) publish
 
 .PHONY : bddcml
@@ -59,5 +59,5 @@ bddcml:
 	$(MAKE) LIBRARY=$(LIBRARY) CURDIR=$(CURDIR) IMAGE=$(IMAGE) start-image
 	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/mpich_$(LIB_MPICH)_$(BUILD_TYPE)/mpich-$(LIB_MPICH).deb install-lib
 	$(MAKE) LIBRARY=$(LIBRARY) URL=$(DEB_ROOT)/petsc_$(LIB_PETSC)_$(BUILD_TYPE)/petsc-$(LIB_PETSC).deb install-lib
-	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
+	-docker exec $(DID) /bin/bash -c "PATH=/usr/local/mpich-$(LIB_MPICH)/bin:\$$PATH MPICH_DIR=/usr/local/mpich-3.2.0 make -C /tmp/work/$(@) build_type=$(BUILD_TYPE) package"
 	$(MAKE) LIBRARY=$(LIBRARY) PACKAGE_DIR_REMOTE=$(PACKAGE_DIR_REMOTE) publish
