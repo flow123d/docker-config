@@ -1,7 +1,7 @@
 # Simple makefile for building and packaging project BDDCML and Blobex
 
 library       = bddcml
-version       = 2.4.0
+version       = 2.5.0
 package_name  = $(library)-$(version)
 
 build_type    = Debug

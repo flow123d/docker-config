@@ -6,7 +6,7 @@ set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
 set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
 # default values
-set(LIBRARY_VERSION   "2.4.0"  CACHE STRING "Version of the library")
+set(LIBRARY_VERSION   "2.5.0"  CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "bddcml" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 
