@@ -1,18 +1,18 @@
 // which debug libs to build
 def debug_libs = [
-    // 'mpich',
-    // 'petsc',
-    // 'yamlcpp',
-    // 'armadillo',
+    'mpich',
+    'petsc',
+    'yamlcpp',
+    'armadillo',
     'bddcml',
 ]
 
 // which release libs to build
 def release_libs = [
-    // 'mpich',
-    // 'petsc',
-    // 'yamlcpp',
-    // 'armadillo',
+    'mpich',
+    'petsc',
+    'yamlcpp',
+    'armadillo',
     'bddcml',
 ]
 
