@@ -13,7 +13,7 @@ clear         = false
 install_prefix = /usr/local
 prefix         = $(install_prefix)/$(package_name)
 
-CONFIGURE_OPTS=
+configure_opts=--with-mpi-dir=/usr/local/mpich-3.2.0
 
 
 .PHONY : configure
@@ -27,7 +27,7 @@ configure:
 				-DCMAKE_INSTALL_PREFIX=$(prefix) \
 				-DLIBRARY_VERSION=$(version) \
 				-DLIBRARY_NAME=$(library) \
-				-DCONFIGURE_OPTS=$(CONFIGURE_OPTS) \
+				-DCONFIGURE_OPTS=$(configure_opts) \
 				$(CURDIR)
 
 .PHONY : build
