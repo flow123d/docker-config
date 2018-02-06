@@ -9,6 +9,7 @@ set(LIBRARY_VERSION   "3.8.3" CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "petsc" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 set(INSTALL_PREFIX    "${CMAKE_INSTALL_PREFIX}/${LIBRARY_FULL_NAME}")
+set(CONFIGURE_OPTS    ""      CACHE STRING "Additonal options passed to the configure")
 
 # set petsc arch based on CMAKE_BUILD_TYPE
 #     linux-Debug or linux-Release
@@ -25,6 +26,7 @@ message(STATUS "LIBRARY_VERSION       = ${LIBRARY_VERSION}")
 message(STATUS "CMAKE_INSTALL_PREFIX  = ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "PETSC_DIR             = ${PETSC_DIR}")
 message(STATUS "PETSC_ARCH            = ${PETSC_ARCH}")
+message(STATUS "CONFIGURE_OPTS        = ${CONFIGURE_OPTS}")
 message(STATUS "------------------------------------------------------")
 
 # --------------------------------------------------------------------

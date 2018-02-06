@@ -13,6 +13,7 @@ clear         = false
 install_prefix = /usr/local
 prefix         = $(install_prefix)/$(package_name)
 
+CONFIGURE_OPTS=
 
 
 .PHONY : configure
@@ -26,6 +27,7 @@ configure:
 				-DCMAKE_INSTALL_PREFIX=$(prefix) \
 				-DLIBRARY_VERSION=$(version) \
 				-DLIBRARY_NAME=$(library) \
+				-DCONFIGURE_OPTS=$(CONFIGURE_OPTS) \
 				$(CURDIR)
 
 .PHONY : build
