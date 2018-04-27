@@ -1,3 +1,6 @@
+// Syntax of the Jenkinsfile can be found:
+// https://jenkins.io/doc/book/pipeline/syntax/
+
 // which debug libs to build
 def debug_libs = [
     'mpich',

@@ -56,7 +56,4 @@
 ## BDDCML (2.5.0) and Blopex library
 
 #### Depends on:
- - system dev installation of `blas` and `lapack`
-
-or
  - petsc installation with `metis`, `parmetis`, `blacs`, `scalapack`, `mumps`
