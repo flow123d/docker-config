@@ -33,15 +33,13 @@ message(STATUS "------------------------------------------------------")
 
 
 # used when --with-mpi-dir=<MPI_DIR>
-find_program (MAKE_EXECUTABLE NAMES make gmake)
+find_program(MAKE_EXECUTABLE NAMES make gmake)
 find_package(MPI REQUIRED)
 get_filename_component(MPI_DIR ${MPI_CXX_COMPILER} DIRECTORY)
 
 # default variables
 SET(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${LIBRARY_VERSION}.tar.gz")
-# SET(INSTALL_URL "http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-${LIBRARY_VERSION}.tar.gz")
-# SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${LIBRARY_VERSION}.tar.gz")
+SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/petsc-lite-${LIBRARY_VERSION}.tar.gz")
 
 
 # setup external project with target petsc-lib
