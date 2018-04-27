@@ -13,12 +13,6 @@ clear         = false
 install_prefix = /usr/local
 prefix         = $(install_prefix)/$(package_name)
 
-# use petsc lapack and blas instead of system's
-USE_PETSC = Off
-# where is petsc installed (only viable if PETSC_DIR is set)
-PETSC_DIR  =
-PETSC_ARCH =
-
 
 .PHONY : configure
 configure:
@@ -31,9 +25,6 @@ configure:
 				-DCMAKE_INSTALL_PREFIX=$(prefix) \
 				-DLIBRARY_VERSION=$(version) \
 				-DLIBRARY_NAME=$(library) \
-				-DUSE_PETSC=$(USE_PETSC) \
-				-DPETSC_DIR=$(PETSC_DIR) \
-				-DPETSC_ARCH=$(PETSC_ARCH) \
 				$(CURDIR)
 
 .PHONY : build

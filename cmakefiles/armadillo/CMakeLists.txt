@@ -9,10 +9,8 @@ set(LIBRARY_VERSION   "8.3.4"     CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "armadillo" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 
-# This value can se be using makefile
+# ARMADILLO will not depend on PETSc installation
 SET(USE_PETSC   OFF  CACHE STRING "Use petsc installation")
-SET(PETSC_DIR   ""   CACHE STRING "Petsc dir value (must end with slash)")
-SET(PETSC_ARCH  ""   CACHE STRING "Petsc arch value")
 
 
 message(STATUS "------------------------------------------------------")
