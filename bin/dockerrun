@@ -99,7 +99,7 @@ function make_work_images() {
 function remove_custom_images() {
   for image in $flow123d_images
   do
-    docker rm -f flow123d/$image:user
+    docker rmi -f flow123d/$image:user
   done
 }
 

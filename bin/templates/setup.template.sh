@@ -75,3 +75,6 @@ cp -r /tmp/.gitconfig /home/@uname@/
 
 # copy ssh keys
 cp -r /tmp/.ssh /home/@uname@/
+
+# clear the terminal  
+printf '\033[2J'  
