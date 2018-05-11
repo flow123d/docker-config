@@ -1,6 +1,6 @@
 
 
-SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/bddcml-2.4.tar.gz")
+SET(INSTALL_URL "http://flow.nti.tul.cz/libraries/bddcml-2.5.tar.gz")
 set(MAKE_INC ${INSTALL_DIR}/bddcml_make_inc)
 set(FC_MAGLE_INCLUDE ${BDDCML_DIR})
 

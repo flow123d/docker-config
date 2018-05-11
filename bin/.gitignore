@@ -1,3 +1,4 @@
 /libs/
 /publish/
+/dockerfile/*
 /Flow123d-docker-windows.zip

@@ -1,45 +1,80 @@
 #!/bin/bash
 # author: Jan Hybs
-# 
+#
 # this is template file for following docker images
 #  - flow-libs-dev-dbg
 #  - flow-libs-dev-rel
-#  
+#
 # purpose of this file is to create more easy to use
 # environment in docker images
+# variables surrounded with @ will be replaced later, available variables are:
+#     uname     - string username
+#     gid       - group id
+#     uid       - user id
+#     git_email - result from `git config --global user.email`
+#     uname - result from `git config --global user.name`
+#
+# this script will be executed inside running docker container
+# right now you are a root with unlimited privileges
+
 
 
 # CREATE USER AND GROUP
 # ------------------------------------------------------------------------------
-echo 'group: @USER_NAME@(@GROUP_ID@)'
-echo 'user:  @USER_NAME@(@USER_ID@)'
+echo 'group: @uname@(@gid@)'
+echo 'user:  @uname@(@uid@)'
 
-addgroup --gid @GROUP_ID@ --force-badname @USER_NAME@
-adduser  --home /home/@USER_NAME@ --shell /bin/bash --uid @USER_ID@ --gid @GROUP_ID@ --disabled-password --system --force-badname @USER_NAME@
+addgroup  --gid @gid@ --force-badname @uname@
+adduser   --home /home/@uname@ --shell /bin/bash \
+          --uid @uid@ --gid @gid@ \
+          --disabled-password --system --force-badname @uname@
 
-# echo -e "\n . /etc/profile.d/autoload.sh\n" >> ~/.profile
 
 # BUILDER COMMANDS
 # ------------------------------------------------------------------------------
 # create folder where user will have access to
 mkdir -p /opt/flow123d/flow123d
-chown -R @USER_NAME@ /opt/flow123d/
+chown -R @uid@:@gid@ /opt/flow123d/
 
-ls -la /opt
-ls -la /opt/flow123d
-ls -la /opt/flow123d/flow123d
+# allow sudo for user
+cat >> /etc/sudoers  << EOL
+@uname@ ALL=NOPASSWD: ALL
+EOL
 
-IMAGE_TAG="@IMAGE_TAG@"
-if [[ -n "${IMAGE_TAG}" ]]; then
-    # echo -e "\nexport PS1=\"\u@${IMAGE_TAG}:\w\$ \"\n" >> /etc/profile.d/autoload.sh
-    echo -e "\nexport PS1=\"\[\033[01;32m\]\u@${IMAGE_TAG}\[\033[01;36m\] \w \$ \[\033[00m\]\"\n" >> /etc/profile.d/autoload.sh
+# edit main bash.bashrc file
+cat >> /etc/bash.bashrc << EOL
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
-
-cat >> /etc/profile.d/autoload.sh  << EOL
 # shortcuts
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-
 EOL
+
+
+# edit .bashrc ($PS1 variable) so the version is visible
+image_tag="@image_tag@"
+if [[ -n "${image_tag}" ]]; then
+    cat >> /etc/bash.bashrc << EOL
+export PS1="\e[1;32m\u\e[0m@\e[0;32m${image_tag}\e[1;33m \w \e[0m\$ "
+EOL
+else
+  cat >> /etc/bash.bashrc << EOL
+export PS1="\u@flow\e \w \$ "
+EOL
+fi
+
+# copy git configuration
+cp -r /tmp/.gitconfig /home/@uname@/
+
+# copy ssh keys
+cp -r /tmp/.ssh /home/@uname@/
+
+# clear the terminal  
+printf '\033[2J'  

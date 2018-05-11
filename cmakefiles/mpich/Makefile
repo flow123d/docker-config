@@ -1,7 +1,7 @@
-# Simple makefile for building and packaging project Armadillo
+# Simple makefile for building and packaging project
 
-library       = armadillo
-version       = 8.3.4
+library       = mpich
+version       = 3.2.0
 package_name  = $(library)-$(version)
 
 build_type    = Debug
@@ -12,6 +12,7 @@ clear         = false
 
 install_prefix = /usr/local
 prefix         = $(install_prefix)/$(package_name)
+
 
 
 .PHONY : configure
@@ -31,6 +32,7 @@ configure:
 build: configure
 	cd $(build_dir) && make external-lib
 
+.PHONY : package
 package: build
 	cd $(build_dir) && make package
 
@@ -44,7 +46,6 @@ package: build
 .PHONY : clean
 clean:
 	rm -rf $(build_dir)
-	rm -rf $(prefix)
 	rm -rf $(package_dir)/$(package_name)*
 
 .PHONE : help

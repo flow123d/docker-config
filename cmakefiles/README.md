@@ -1,59 +1,59 @@
 # Libs structure
-<pre>
-/usr/lib
-    ├── <strong>armadillo</strong>
+```
+/usr/local
+    ├── mpich-3.2.0
     │   ├── include
     │   ├── lib
     │   └── share
-    ├── <strong>bddcml_blopex</strong>
+    │   └── bin
+    ├── armadillo-8.4.3
+    │   ├── include
+    │   ├── lib
+    │   └── share
+    ├── bddcml-2.5.0
     │   ├── bddcml
     │   └── blopex
-    ├── <strong>yamlcpp</strong>
+    ├── yamlcpp-0.5.2
     │   ├── include
     │   └── lib
-    └── <strong>petsc</strong>
-
-</pre>
+    └── petsc-3.8.3
+        ├── include
+        ├── lib
+        ├── bin
+        └── share
+```
 
 ---
 
-## Yaml-cpp library ![info](https://img.shields.io/badge/yaml--cpp--0.5.2-612 kB / 38 files-blue.svg)
+## MPICH (3.2.0) library
 
-### Depends on:
+#### Depends on:
  - *no dependencies*
 
-### Deb package content
- - `/usr/lib/yamlcpp/lib`
- - `/usr/lib/yamlcpp/include`
+---
+
+## Yaml-cpp (0.5.2) library
+
+#### Depends on:
+ - *no dependencies*
 
 ---
 
-## Armadillo library ![info](https://img.shields.io/badge/armadillo--3.4.3-309 kB / 340 files-blue.svg)
+## Armadillo (8.3.4) library
 
-### Depends on:
+#### Depends on:
  - system dev installation of `blas` and `lapack`
 
-### Deb package content
- - `/usr/lib/armadillo/lib`
- - `/usr/lib/armadillo/include`
- - `/usr/lib/armadillo/share`
+---
 
+## Petsc (3.8.3) library
 
-## Petsc library ![info](https://img.shields.io/badge/petsc--3.6.1-110 MB / 22k files-blue.svg)
-
-### Depends on:
+#### Depends on:
  - system dev installation of `blas`, `lapack` and mpi lib (`mpich` or `openmpi`)
 
-### Deb package content
- - `/usr/lib/petsc/`
+---
 
-## BDDCML and Blopex library ![info](https://img.shields.io/badge/bddcml--2.4.0-1.1 MB / 386 files-blue.svg)
+## BDDCML (2.5.0) and Blopex library
 
-### Depends on:
- - system dev installation of `blas` and `lapack`
+#### Depends on:
  - petsc installation with `metis`, `parmetis`, `blacs`, `scalapack`, `mumps`
-
-### Deb package content
- - `/usr/lib/bddcml_blopex/bddcml/`
- - `/usr/lib/bddcml_blopex/blopex/`
-
