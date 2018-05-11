@@ -60,21 +60,24 @@ EOL
 
 # edit .bashrc ($PS1 variable) so the version is visible
 image_tag="@image_tag@"
-if [[ -n "${image_tag}" ]]; then
-    cat >> /etc/bash.bashrc << EOL
-export PS1="\e[1;32m\u\e[0m@\e[0;32m${image_tag}\e[1;33m \w \e[0m\$ "
-EOL
-else
-  cat >> /etc/bash.bashrc << EOL
-export PS1="\u@flow\e \w \$ "
-EOL
+if [[ -z "${image_tag}" ]]; then
+    image_tag="@docker_image@"
 fi
+
+cat >> /etc/bash.bashrc << EOL
+export PS1="\e[1;32m\u\e[0m@\e[0;32m${image_tag}\e[1;33m \w \e[0m\$ "
+# clear the terminal  
+printf '\033[2J'
+echo "___ _            _ ___ ____    _  "
+echo "| __| |_____ __ _/ |_  )__ / __| |"
+echo "| _|| / _ \ V  V / |/ / |_ \/ _  |"
+echo "|_| |_\___/\_/\_/|_/___|___/\__,_|"
+echo "                                  "
+echo ""
+EOL
 
 # copy git configuration
 cp -r /tmp/.gitconfig /home/@uname@/
 
 # copy ssh keys
 cp -r /tmp/.ssh /home/@uname@/
-
-# clear the terminal  
-printf '\033[2J'  

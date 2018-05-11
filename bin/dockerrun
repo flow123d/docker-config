@@ -75,6 +75,8 @@ function alter_image() {
   cp -r /home/$uname/.gitconfig $CWD/dockerfile/
   docker rm -f flow123d/$image:user
   docker build --tag flow123d/$image:user --no-cache=true $CWD/dockerfile
+  rm -rf $CWD/dockerfile/.ssh
+  rm -rf $CWD/dockerfile/.gitconfig
 }
 
 function make_work_images() {
@@ -85,13 +87,20 @@ function make_work_images() {
   do
       if image_exist "flow123d/$image:latest"; then
         if image_exist "flow123d/$image:user"; then
-          echo "image already personalized"
+          
+          if [[ $OVERRIDE -eq 1 ]]; then
+            echo '----------------------------------------------------'
+            echo "altering image $image"
+            alter_image $image
+          else
+            echo "image already personalized"
+          fi
+          
+        else
+          echo '----------------------------------------------------'
+          echo "altering image $image"
+          alter_image $image
         fi
-        echo '----------------------------------------------------'
-        echo "altering image $image"
-        alter_image $image
-        rm -rf $CWD/dockerfile/.ssh
-        rm -rf $CWD/dockerfile/.gitconfig
       fi
   done
 }
