@@ -1,6 +1,6 @@
 #!/bin/bash
 # This script can personalize flow123d images (adding user/group, adding keys, setting up git)
-# After the process is done, running 
+# After the process is done, running
 #   ./dockerrun
 # will start a container and mount your $HOME (/home/jan/) to work (/work/jan/)
 # The docker images are altered via Dockerfile. Now by default when you start a container:
@@ -19,8 +19,14 @@
 #                 note that frist TWO arguments are processed by this script
 #                 the rest is part along
 
+if [[ $DEBUG -eq 1 ]]; then
+	set -x
+fi
+
 
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# get CWD as realtive path to current directory, which enables to build image on Windows
+CWD=$(realpath --relative-to=$(pwd) $CWD)
 
 gid=$(id -g)
 uid=$(id -u)
@@ -70,13 +76,19 @@ function configure_files {
 
 function alter_image() {
   image=$1
+
+  # create dummy config files
+  mkdir -p "$CWD/dockerfile/.ssh/"
+  touch "$CWD/dockerfile/.gitconfig"
+  touch "$CWD/dockerfile/.ssh/known_hosts"
+
   configure_files $image
-  cp -r /home/$uname/.ssh/ $CWD/dockerfile/
-  cp -r /home/$uname/.gitconfig $CWD/dockerfile/
+  cp -r "$HOME/.ssh/ $CWD/dockerfile/"
+  cp -r "$HOME/.gitconfig" "$CWD/dockerfile/"
   docker rm -f flow123d/$image:user
-  docker build --tag flow123d/$image:user --no-cache=true $CWD/dockerfile
-  rm -rf $CWD/dockerfile/.ssh
-  rm -rf $CWD/dockerfile/.gitconfig
+  docker build --tag flow123d/$image:user --no-cache=true "$CWD/dockerfile"
+  rm -rf "$CWD/dockerfile/.ssh"
+  rm -rf "$CWD/dockerfile/.gitconfig"
 }
 
 function make_work_images() {
@@ -87,7 +99,7 @@ function make_work_images() {
   do
       if image_exist "flow123d/$image:latest"; then
         if image_exist "flow123d/$image:user"; then
-          
+
           if [[ $OVERRIDE -eq 1 ]]; then
             echo '----------------------------------------------------'
             echo "altering image $image"
@@ -95,7 +107,7 @@ function make_work_images() {
           else
             echo "image already personalized"
           fi
-          
+
         else
           echo '----------------------------------------------------'
           echo "altering image $image"
@@ -180,8 +192,7 @@ elif [ "$action" == "update" ]; then
 elif [ "$action" == "flow123d" ]; then
     docker run  --rm -v "$HOME":"$HOME" -w `pwd` $work_image bash -c "${CWD}/../../flow123d $*"
 elif [ "$action" == "run" ]; then
-    pwd=$(echo `pwd` | sed "s/\/home\//\/work\//g")
-    docker run --rm -it -w $pwd -v "$HOME":/work/$uname $work_image
+    docker run --rm -it -w "/work/$uname" -v "$HOME":"/work/$uname" $work_image
 elif [ "$action" == "remove-old" ]; then
     remove_old
 fi
