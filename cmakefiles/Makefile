@@ -122,4 +122,4 @@ yamlcpp-no-docker:
 	$(MAKE) -C yamlcpp build_type=$(BUILD_TYPE) install_prefix=$(INSTALL_PREFIX) package
 
 bddcml-no-docker:
-	$(MAKE) -C petsc build_type=$(BUILD_TYPE) install_prefix=$(INSTALL_PREFIX) package
+	$(MAKE) -C bddcml build_type=$(BUILD_TYPE) install_prefix=$(INSTALL_PREFIX) package
