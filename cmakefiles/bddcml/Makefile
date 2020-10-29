@@ -41,6 +41,10 @@ build: configure
 	cd $(build_dir) && make blopex-lib
 	cd $(build_dir) && make bddcml-lib
 
+.PHONY : install
+install: build
+	cd $(build_dir) && make install
+	
 package: build
 	cd $(build_dir) && make package
 

@@ -5,13 +5,13 @@ set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
 set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
 # default values
-set(LIBRARY_VERSION   "0.5.2"   CACHE STRING "Version of the library")
+set(LIBRARY_VERSION   "0.6.3"   CACHE STRING "Version of the library")
 set(LIBRARY_NAME      "yamlcpp" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 
 # default variables
 set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-set(INSTALL_URL "http://flow.nti.tul.cz/libraries/yaml-cpp-master.zip")
+set(INSTALL_URL "https://flow.nti.tul.cz/libraries/yaml-cpp-yaml-cpp-${LIBRARY_VERSION}.zip")
 
 
 message(STATUS "------------------------------------------------------")

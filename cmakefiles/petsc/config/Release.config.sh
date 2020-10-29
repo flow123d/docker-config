@@ -5,7 +5,7 @@ unset MAKEFLAGS
         --prefix=@PETSC_DIR@ \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
-        --download-mumps=yes --download-hypre=yes \
+        --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v2.12.0.tar.gz \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np @MAKE_NUMCPUS@ \
         --CFLAGS="-O3" \

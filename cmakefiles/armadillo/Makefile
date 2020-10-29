@@ -31,6 +31,10 @@ configure:
 build: configure
 	cd $(build_dir) && make external-lib
 
+.PHONY : install
+install: build
+	cd $(build_dir) && make install
+	
 package: build
 	cd $(build_dir) && make package
 
