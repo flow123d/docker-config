@@ -1,9 +1,6 @@
-# docker files
-/cmakefiles/*/Debug
-/cmakefiles/*/Release
-/cmakefiles/*/build*
-/cmakefiles/*/package*
-/cmakefiles/config.cmake
+#Main build
+build/**
+
 
 /flow123d/
 bin/templates/setup.sh
@@ -11,3 +8,6 @@ bin/templates/setup.sh
 *.tar.gz
 run_dbg
 run_rel
+
+# Python
+**/__pycache__

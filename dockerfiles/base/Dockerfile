@@ -1,29 +1,45 @@
 # BASE Dockerfile for running flow123d
-FROM ubuntu:16.04
-MAINTAINER Jan Hybs
+FROM ubuntu:20.04
+ARG images_version
 
-# fix bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+MAINTAINER Jan Březina, Jan Hybš
+
+ENV LANG C.UTF-8
+
+# disable interactive tzdata config during apt install
+ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe" 
+
+#(??)
+# OMPI_CC=${DEFAULT_MPICC} OMPI_CXX=${DEFAULT_MPICXX}
+
+# fix bash (??)
+# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # install basic set of tools
 RUN apt-get update && apt-get install -y  \
-    sudo \
+    sudo \    
+    gosu \
     make \
-    wget  \
-    python3 \
+    wget  \    
     bash-completion \
-    apt-utils \
+    apt-utils \         
     nano \
     less \
-    man
+    tzdata
 
-# add auto bash-completion load
-COPY autoload.sh /etc/profile.d/autoload.sh
+# basic libraries
+RUN apt-get update && apt-get install -y  \
+    libblas3 \
+    liblapack3
+    
+# Script used later in interactive images as the entry point.
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh
+RUN ls -l /usr/local/bin/entrypoint.sh
 
-# add auto bash-completion load
-COPY install-mpich.sh /tmp/install-mpich.sh
-RUN /tmp/install-mpich.sh
-RUN rm -f /tmp/install-mpich.sh
 
-# default entrypoint will be login bash
-CMD ["/bin/bash", "-l"]
+# set entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# and default argument
+CMD ["/bin/bash"]

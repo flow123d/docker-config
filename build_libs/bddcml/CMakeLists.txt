@@ -1,16 +1,23 @@
+
 cmake_minimum_required(VERSION 3.2)
 
-project(ARMADILLO CXX C Fortran)
+project(BDDCML CXX C Fortran)
 set(EXTRAS ${CMAKE_SOURCE_DIR}/../_CMake)
 set(CMAKE_MODULE_PATH "${EXTRAS}/Modules" "${CMAKE_MODULE_PATH}")
 
 # default values
-set(LIBRARY_VERSION   "8.3.4"     CACHE STRING "Version of the library")
-set(LIBRARY_NAME      "armadillo" CACHE STRING "Name of the library")
+set(LIBRARY_VERSION   "2.6.0"  CACHE STRING "Version of the library")
+set(LIBRARY_NAME      "bddcml" CACHE STRING "Name of the library")
 set(LIBRARY_FULL_NAME "${LIBRARY_NAME}-${LIBRARY_VERSION}")
 
-# ARMADILLO will not depend on PETSc installation
+# This value can se be using makefile
 SET(USE_PETSC   OFF  CACHE STRING "Use petsc installation")
+SET(PETSC_DIR   ""   CACHE STRING "Petsc dir value (must end with slash)")
+SET(PETSC_ARCH  ""   CACHE STRING "Petsc arch value")
+
+
+# default variables
+set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
 
 
 message(STATUS "------------------------------------------------------")
@@ -22,6 +29,11 @@ message(STATUS "------------------------------------------------------")
 
 # --------------------------------------------------------------------
 
+message(STATUS "PATH=$ENV{PATH}")
+message(STATUS "MPI_C_LIBRARIES=${MPI_C_LIBRARIES}")
+message(STATUS "MPI_C_INCLUDE_PATH=${MPI_C_INCLUDE_PATH}")
+find_package(MPI REQUIRED)
+
 
 # if set we use petsc installation
 # otherwise we try to look for system libraries of blas and lapack
@@ -32,28 +44,27 @@ message(STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}")
 message(STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}")
 
 
-# default variables
-set(INSTALL_DIR "${CMAKE_BINARY_DIR}")
-set(INSTALL_URL "http://flow.nti.tul.cz/libraries/armadillo-${LIBRARY_VERSION}.tar.gz")
+
+# set petsc arch based on CMAKE_BUILD_TYPE
+#     linux-Debug or linux-Release
+SET(MAKE_NUMCPUS    2)
+set(PETSC_EXPORT_LIST
+  MPIFC_SHOW MPICXX_SHOW MPICC_SHOW CC FC CC_FLAGS PCC_FLAGS FC_FLAGS CPP_FLAGS
+  METIS_INCLUDE BLASLAPACK_INCLUDE PARMETIS_INCLUDE MUMPS_INCLUDE
+  MPI_LIB MUMPS_LIB METIS_LIB PARMETIS_LIB BLASLAPACK_LIB SCALAPACK_LIB
+  UMFPACK_LIB)
 
 
-# setup external project with target external-lib
-include(ExternalProject)
-ExternalProject_Add(external-lib
-    DOWNLOAD_DIR        ${INSTALL_DIR}
-    URL                 ${INSTALL_URL}
-    SOURCE_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
-    BINARY_DIR          ${INSTALL_DIR}/${CMAKE_BUILD_TYPE}
-    CONFIGURE_COMMAND   cmake -DBLAS_LIBRARY=${BLAS_LIBRARIES}
-                              -DLAPACK_LIBRARY=${LAPACK_LIBRARIES}
-                              -DBUILD_SHARED_LIBS=Off
-                              -DDETECT_HDF5=Off
-                              -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-                              .
-    BUILD_COMMAND       make
-    INSTALL_COMMAND     make install
-)
+find_package(PETSc 3.6.0 REQUIRED)
 
+
+set(BLOPEX_DIR ${CMAKE_INSTALL_PREFIX}/blopex/)
+set(BLOPEX_ROOT ${BLOPEX_DIR})
+include(Install/Blopex)
+
+set(BDDCML_DIR ${CMAKE_INSTALL_PREFIX}/bddcml/)
+set(BDDCML_ROOT ${BDDCML_DIR})
+include(Install/BDDCML)
 
 # install all which is located in the LIBRARY_FULL_NAME value
 install(

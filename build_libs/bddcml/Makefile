@@ -1,7 +1,7 @@
-# Simple makefile for building and packaging project Armadillo
+# Simple makefile for building and packaging project BDDCML and Blobex
 
-library       = armadillo
-version       = 8.3.4
+library       = bddcml
+version       = 2.6.0
 package_name  = $(library)-$(version)
 
 build_type    = Debug
@@ -12,6 +12,12 @@ clear         = false
 
 install_prefix = /usr/local
 prefix         = $(install_prefix)/$(package_name)
+
+# use petsc lapack and blas instead of system's
+USE_PETSC = On
+# use petsc lapack and blas instead of system's
+PETSC_DIR  = /usr/local/petsc-3.15.1/
+PETSC_ARCH =
 
 
 .PHONY : configure
@@ -25,11 +31,15 @@ configure:
 				-DCMAKE_INSTALL_PREFIX=$(prefix) \
 				-DLIBRARY_VERSION=$(version) \
 				-DLIBRARY_NAME=$(library) \
+				-DUSE_PETSC=$(USE_PETSC) \
+				-DPETSC_DIR=$(PETSC_DIR) \
+				-DPETSC_ARCH=$(PETSC_ARCH) \
 				$(CURDIR)
 
 .PHONY : build
 build: configure
-	cd $(build_dir) && make external-lib
+	cd $(build_dir) && make blopex-lib
+	cd $(build_dir) && make bddcml-lib
 
 .PHONY : install
 install: build
