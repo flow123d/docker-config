@@ -10,8 +10,9 @@
 
 
 package_name  ?= $(library)_$(build_type)
-build_dir     = /build_dir/build_libs/$(library)/build_$(build_type)
-package_dir   = /build_dir/build_libs
+build_root=/build_dir
+build_dir     = $(build_root)/$(library)/build_$(build_type)
+package_dir   = $(build_root)/packages
 package=$(package_dir)/$(package_name).tar.gz
 
 cmake         = cmake

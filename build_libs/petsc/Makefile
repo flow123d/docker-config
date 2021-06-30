@@ -2,14 +2,14 @@
 # PETSC build is specific do not use common makefile.
 
 library       = petsc
-version       = 3.15.1
 url=http://flow.nti.tul.cz/libraries/petsc-$(version).tar.gz
 base_name=petsc-$(version)
-package_name  = $(library)_$(version)
+package_name  = $(library)_$(build_type)
 clear=false
 
-build_dir     = /build_dir/build_libs/$(library)/build_$(build_type)
-package_dir   = /build_dir/build_libs
+build_root=/build_dir
+build_dir     = $(build_root)/$(library)/build_$(build_type)
+package_dir   = $(build_root)/packages
 n_jobs	      = 5
 
 
@@ -22,9 +22,9 @@ cfg_opt_Debug= \
         --download-blacs=yes --download-scalapack=yes \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v2.21.0.tar.gz \
         --with-debugging=1 --with-shared-libraries=1 \
-          $(n_jobs) \
-        --CFLAGS="-O3 -DNDEBUG" \
-        --CXXFLAGS="-O3 -DNDEBUG -Wall -Wno-unused-local-typedefs -std=c++11"
+        --with-make-np $(n_jobs) \
+        --CFLAGS="-O" \
+        --CXXFLAGS="-O -Wall -Wno-unused-local-typedefs -std=c++11"
 
 cfg_opt_Release= \
         --download-metis=yes --download-parmetis=yes \
@@ -32,8 +32,8 @@ cfg_opt_Release= \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v2.21.0.tar.gz \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
-        --CFLAGS="-O3" \
-        --CXXFLAGS="-O3 -Wall -Wno-unused-local-typedefs -std=c++11"
+        --CFLAGS="-O3 -DNDEBUG" \
+        --CXXFLAGS="-O3 -DNDEBUG -Wall -Wno-unused-local-typedefs -std=c++11"
 
 # Somehow we run under root's SUID even if as the 'flow' user. 
 # So the simplest way is to install directly into /usr/local and then build packages from there.

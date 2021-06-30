@@ -1,76 +1,135 @@
 # Simple makefile for building and packaging project BDDCML and Blobex
 
-library       = bddcml
-version       = 2.6.0
-package_name  = $(library)-$(version)
+library=bddcml
+bddcml_url=http://flow.nti.tul.cz/libraries/bddcml-$(version).tar.gz
+base_name=bddcml-$(version)
+clear=false
 
-build_type    = Debug
-build_dir     = $(CURDIR)/build-$(build_type)
-package_dir   = $(CURDIR)/packages/$(library)_$(version)_$(build_type)
-cmake         = cmake
-clear         = false
-
-install_prefix = /usr/local
-prefix         = $(install_prefix)/$(package_name)
-
-# use petsc lapack and blas instead of system's
-USE_PETSC = On
-# use petsc lapack and blas instead of system's
-PETSC_DIR  = /usr/local/petsc-3.15.1/
-PETSC_ARCH =
+build_root=/build_dir
+build_dir     = $(build_root)/$(library)/build_$(build_type)
+package_dir   = $(build_root)/packages
+package_name  = $(library)_$(build_type)
+package=$(package_dir)/$(package_name).tar.gz
+n_jobs	      = 5
 
 
-.PHONY : configure
-configure:
-	@if [ "$(clear)" = "true" ]; then\
-			rm -rf $(build_dir);\
+bddcml_install_file=$(notdir $(bddcml_url))
+
+prefix=/usr/local/$(library)_$(version)
+
+FC_FLAGS_Debug=-O3 -DNDEBUG -g
+FC_FLAGS_Release=-O3 -DNDEBUG
+CC_FLAGS_Debug=$(FC_FLAGS_Debug)
+CC_FLAGS_Release=$(FC_FLAGS_Release)
+
+
+# ********** BLOPEX build
+blopex_build_dir=$(build_root)/bddcml/blopex_$(build_type)
+blopex_make_inc=$(blopex_build_dir)/makefile.inc
+blopex_url=http://flow.nti.tul.cz/libraries/blopex-read-only.tar.gz
+blopex_install_file=$(notdir $(blopex_url))
+
+$(blopex_install_file):
+	wget $(blopex_url)
+
+.PHONY : blopex_dir
+blopex_dir: $(blopex_install_file)
+	if [ ! -d $(blopex_build_dir) ]; then \
+		cmake -E tar x $(blopex_install_file); \
+		mv blopex-read-only blopex_$(build_type); \
 	fi
-	mkdir -p $(build_dir)
-	cd $(build_dir) && $(cmake) \
-				-DCMAKE_BUILD_TYPE=$(build_type) \
-				-DCMAKE_INSTALL_PREFIX=$(prefix) \
-				-DLIBRARY_VERSION=$(version) \
-				-DLIBRARY_NAME=$(library) \
-				-DUSE_PETSC=$(USE_PETSC) \
-				-DPETSC_DIR=$(PETSC_DIR) \
-				-DPETSC_ARCH=$(PETSC_ARCH) \
-				$(CURDIR)
+
+$(blopex_make_inc): blopex_dir
+	echo CC=/usr/bin/gcc >>$(blopex_make_inc)
+	echo CC_FLAGS=$(CC_FLAGS_$(build_type)) >>$(blopex_make_inc)
+	echo include $(blopex_build_dir)/../blopex_make_inc.common >>$(blopex_make_inc)
+	
+	
+.PHONY: blopex_build
+blopex_build: $(blopex_make_inc)
+	cd $(blopex_build_dir) && make all
+	
+###################
+
+
+.PHONY : clean_build
+clean_build:
+	@if [ "$(clear)" = "true" ]; then\
+		rm -rf $(build_dir);\
+	fi
+
+
+$(bddcml_install_file):
+	wget $(bddcml_url)
+	
+
+tmp_install_dir=$(build_dir)/installation_$(build_type)
+.PHONY: build_dir
+build_dir:  clean_build $(bddcml_install_file)
+	if [ ! -d $(build_dir) ]; then \
+		cmake -E tar x $(bddcml_install_file); \
+		mv $(base_name) build_$(build_type); \
+	fi
+	# link prefix into mounted volume in order to preserve it 
+	
+	#However it seems that PETSC links all used libraries into single libpetsc.so, since all used libraries are static libraries.
+	mkdir -p $(tmp_install_dir)
+	
+	# remove previous link
+	if [ -d $(prefix) ]; then rm -rf $(prefix); fi
+	
+	sudo ln -s $(tmp_install_dir) $(prefix)
+	ls -l $(prefix)
+
+mpi_dir=/usr/local/$(mpich_lib)
+full_mpich_lib=$(mpi_dir)/lib/libmpi.so
+$(full_mpich_lib):
+	cd /usr/local && sudo tar xzf $(package_dir)/mpich_$(build_type).tar.gz
+	ls /usr/local
+
+petsc_dir=/usr/local/$(petsc_lib)
+full_petsc_lib=$(petsc_dir)/usr/local/$(petsc_lib)/lib/libpetsc.so
+$(full_petsc_lib):
+	cd /usr/local && sudo tar xzf $(package_dir)/petsc_$(build_type).tar.gz
+	ls /usr/local
+	
+make_inc=$(build_dir)/make.inc
+$(make_inc): clean_build build_dir blopex_build $(full_mpich_lib) $(full_petsc_lib)
+	echo mpi_dir=$(mpi_dir) >$(make_inc)
+	echo petsc_dir=$(petsc_dir) >>$(make_inc)
+	echo blopex_dir=$(blopex_build_dir) >>$(make_inc)
+	echo build_dir=$(build_dir) >>$(make_inc)
+	echo fc_flags=$(FC_FLAGS_$(build_type)) >>$(make_inc)
+	echo cc_flags=$(CC_FLAGS_$(build_type)) >>$(make_inc)
+	echo include $(build_dir)/../bddcml_make_inc.common >>$(make_inc)
+
 
 .PHONY : build
-build: configure
-	cd $(build_dir) && make blopex-lib
-	cd $(build_dir) && make bddcml-lib
+build: $(make_inc)
+	ls $(petsc_dir)/include 
+	cd $(build_dir) && make all
+
 
 .PHONY : install
 install: build
-	cd $(build_dir) && make install
+	#mkdir -p $(tmp_install_prefix)
+	cp -r $(build_dir)/lib $(tmp_install_dir)
+	mkdir -p $(tmp_install_dir)/include 
+	cp $(build_dir)/src/bddcml_interface_c.h $(tmp_install_dir)/include
 	
-package: build
-	cd $(build_dir) && make package
 
+$(package): install
 	mkdir -p $(package_dir)
-	cp $(build_dir)/$(package_name).deb     $(package_dir)/$(package_name).deb
-	cp $(build_dir)/$(package_name).tar.gz  $(package_dir)/$(package_name).tar.gz
-	cp $(build_dir)/$(package_name).zip     $(package_dir)/$(package_name).zip
-	cp $(build_dir)/_CPack_Packages/Linux/DEB/$(package_name)/md5sums $(package_dir)/$(package_name).md5sums
+	ls -l $(prefix)
+	# dereference symlinked prefix directory
+	cd /usr/local && tar cfvz  $(package) --dereference $(library)_$(version)
+	ls /usr/local/$(library)_$(version)
+
+.PHONY : package
+package: $(package)
 
 
-.PHONY : clean
-clean:
-	rm -rf $(build_dir)
-	rm -rf $(prefix)
-	rm -rf $(package_dir)/$(package_name)*
 
-.PHONE : help
-help:
-	@echo "Valid targets for this Makefile: "
-	@echo "   configure - run cmake in BUILD_TREE dir"
-	@echo "   build     - downloads external lib and runs compilation"
-	@echo "   package   - packs library and copies packages to package_dir"
-	@echo "   clean     - deletes build_dir dir and all build_*"
-	@echo "   help      - prints this message"
-	@echo ""
-	@echo "To change buildy type (default Debug) set variable"
-	@echo "   build_type - e.g. make build_type=Release package (default is $(build_type))"
-	@echo "To change package copy location (default is $(package_dir)) set variable"
-	@echo "   package_dir - e.g. make package_dir=/var/www/html package"
+	
+	
+

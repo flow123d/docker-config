@@ -10,9 +10,10 @@
 
 
 package_name  ?= $(library)_$(build_type)
-build_dir     = /build_dir/build_libs/$(library)/build_$(build_type)
+build_root=/build_dir
+build_dir     = $(build_root)/$(library)/build_$(build_type)
 
-package_dir   = /build_dir/build_libs
+package_dir   = $(build_root)/packages
 package=$(package_dir)/$(package_name).tar.gz
 
 clear         = false
@@ -21,6 +22,7 @@ n_jobs	      = 5
 install_prefix= /usr/local/$(library)_$(version)
 
 tmp_install_prefix=$(build_dir)/INSTALLATION_ROOT/
+#TODO: use installation to /usr/local with mpich subdir symlinked into build dir
 
 install_file=$(notdir $(url))
 
@@ -37,7 +39,7 @@ $(CURDIR)/$(install_file):
 	wget $(url)
 
 $(build_dir)/configure: clean_build $(CURDIR)/$(install_file) 
-	if [ ! $(build_dir) ]; then \
+	if [ ! -d $(build_dir) ]; then \
 		cmake -E tar x $(install_file); \
 		mv $(base_name) build_$(build_type); \
 	fi
