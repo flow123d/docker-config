@@ -7,7 +7,7 @@ base_name=petsc-$(version)
 package_name  = $(library)_$(build_type)
 clear=false
 
-build_root=/build_dir
+build_root=/libs-build
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 package_dir   = $(build_root)/packages
 n_jobs	      = 5
@@ -64,22 +64,23 @@ $(configure_bin):  clean_build $(install_file)
 	# link prefix into mounted volume in order to preserve it 
 	
 	#However it seems that PETSC links all used libraries into single libpetsc.so, since all used libraries are static libraries.
-	mkdir -p $(build_dir)/installation_$(build_type)
+	#mkdir -p $(build_dir)/installation_$(build_type)
 	
 	# remove previous link
-	if [ -d $(prefix) ]; then rm -rf $(prefix); fi
+	#if [ -d $(prefix) ]; then rm -rf $(prefix); fi
 	
-	sudo ln -s $(build_dir)/installation_$(build_type) $(prefix)
-	ls -l $(prefix)
+	#sudo ln -s $(build_dir)/installation_$(build_type) $(prefix)
+	#ls -l $(prefix)
 
-
-mpich_lib=/usr/local/mpich_$(build_type)/lib/libmpi.la
-$(mpich_lib):
-	cd /usr/local && sudo tar xzf $(package_dir)/mpich_$(build_type).tar.gz
-	ls /usr/local
+# 
+# mpich_lib=/usr/local/mpich_$(build_type)/lib/libmpi.la
+# $(mpich_lib):
+# 	cd /usr/local && sudo tar xzf $(package_dir)/mpich_$(build_type).tar.gz
+# 	ls /usr/local
+# 
 
 lib_config=$(build_dir)/$(petsc_arch)/include/petscconf.h
-$(lib_config): clean_build $(configure_bin) $(mpich_lib)
+$(lib_config): clean_build $(configure_bin)
 	cd $(build_dir) && ./configure $(configure_options)
 
 .PHONY: build
@@ -94,7 +95,7 @@ install: build
 $(package): install
 	mkdir -p $(package_dir)
 	ls -l $(prefix)
-	# dereference symlinked prefix directory
+	dereference symlinked prefix directory
 	cd /usr/local && tar cfvz  $(package) --dereference $(library)_$(version)
 
 .PHONY : package

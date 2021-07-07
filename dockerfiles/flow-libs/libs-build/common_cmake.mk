@@ -10,16 +10,16 @@
 
 
 package_name  ?= $(library)_$(build_type)
-build_root=/build_dir
+build_root=/libs-build
 build_dir     = $(build_root)/$(library)/build_$(build_type)
-package_dir   = $(build_root)/packages
-package=$(package_dir)/$(package_name).tar.gz
+# package_dir   = $(build_root)/packages
+# package=$(package_dir)/$(package_name).tar.gz
 
 cmake         = cmake
 n_jobs	      = 5
 
 # Armadillo fails to install to CPack temporary prefix. 
-tmp_install_prefix = $(build_dir)/_CPack_Packages/TGZ/$(library)_$(version)/
+#tmp_install_prefix = $(build_dir)/_CPack_Packages/TGZ/$(library)_$(version)/
 #prefix         = $(tmp_install_prefix)/$(package_name)
 
 install_file=$(notdir $(url))
@@ -46,7 +46,7 @@ $(sources_dir): $(CURDIR)/$(install_file)
 configure: $(build_dir) $(sources_dir)
 	cd $(build_dir) && $(cmake) \
 				-DCMAKE_BUILD_TYPE=$(build_type) \
-				-DCMAKE_INSTALL_PREFIX=$(tmp_install_prefix) \
+				-DCMAKE_INSTALL_PREFIX=/usr/local/$(library)_$(version) \
 				-DCMAKE_CXX_FLAGS=$(CXX_FLAGS) \
 				$(sources_dir)
 
@@ -54,34 +54,34 @@ configure: $(build_dir) $(sources_dir)
 build: configure
 	cd $(build_dir) && make -j$(n_jobs)
 
-# .PHONY : install
-# install: build
-# 	cd $(build_dir) && sudo make install
+.PHONY : install
+install: build
+	cd $(build_dir) && sudo make install
 
-$(cpack_config): ../common_cmake.mk
-	echo "set(CPACK_PACKAGE_NAME \"$(library)\")" > $(cpack_config)
-	echo "set(CPACK_PACKAGE_VERSION \"$(version)\")"  >> $(cpack_config)	
-	#echo "set(CPACK_GENERATOR \"DEB\")"  >> $(cpack_config)
-	echo "set(CPACK_GENERATOR \"TGZ\")"  >> $(cpack_config)	
-	echo "set(CPACK_INSTALL_PREFIX \"$(tmp_install_prefix)\")"  >> $(cpack_config)	
-	echo "set(CPACK_PACKAGE_FILE_NAME \"$(library)_$(build_type)\")" >> $(cpack_config)	
-	#echo "SET(CPACK_INSTALLED_DIRECTORIES \"$(tmp_install_prefix)\")"  >> $(cpack_config)	
-	# required variables
-	echo "set(CPACK_INSTALL_CMAKE_PROJECTS \"$(build_dir);$(library);all;/\")" >> $(cpack_config)	
-	echo "set(CPACK_PACKAGE_DESCRIPTION \"Auxiliary $(library) package.\")" >> $(cpack_config) 
-	echo "set(CPACK_CMAKE_GENERATOR \"Unix Makefiles\")" >> $(cpack_config) 	
-	echo "set(CPACK_DEBIAN_PACKAGE_MAINTAINER \"Jan Brezina\")" >> $(cpack_config) 
-
-
-$(package): build $(cpack_config)
-	cd $(build_dir) && cpack --debug -C $(build_type) 
-	mkdir -p $(package_dir)
-	mv $(build_dir)/$(package_name).tar.gz  $(package)   
-
-	
-	
-.PHONY : package
-package: $(package)
+# $(cpack_config): ../common_cmake.mk
+# 	echo "set(CPACK_PACKAGE_NAME \"$(library)\")" > $(cpack_config)
+# 	echo "set(CPACK_PACKAGE_VERSION \"$(version)\")"  >> $(cpack_config)	
+# 	echo "set(CPACK_GENERATOR \"DEB\")"  >> $(cpack_config)
+# 	echo "set(CPACK_GENERATOR \"TGZ\")"  >> $(cpack_config)	
+# 	echo "set(CPACK_INSTALL_PREFIX \"$(tmp_install_prefix)\")"  >> $(cpack_config)	
+# 	echo "set(CPACK_PACKAGE_FILE_NAME \"$(library)_$(build_type)\")" >> $(cpack_config)	
+# 	echo "SET(CPACK_INSTALLED_DIRECTORIES \"$(tmp_install_prefix)\")"  >> $(cpack_config)	
+# 	required variables
+# 	echo "set(CPACK_INSTALL_CMAKE_PROJECTS \"$(build_dir);$(library);all;/\")" >> $(cpack_config)	
+# 	echo "set(CPACK_PACKAGE_DESCRIPTION \"Auxiliary $(library) package.\")" >> $(cpack_config) 
+# 	echo "set(CPACK_CMAKE_GENERATOR \"Unix Makefiles\")" >> $(cpack_config) 	
+# 	echo "set(CPACK_DEBIAN_PACKAGE_MAINTAINER \"Jan Brezina\")" >> $(cpack_config) 
+# 
+# 
+# $(package): build $(cpack_config)
+# 	cd $(build_dir) && cpack --debug -C $(build_type) 
+# 	mkdir -p $(package_dir)
+# 	mv $(build_dir)/$(package_name).tar.gz  $(package)   
+# 
+# 	
+# 	
+# .PHONY : package
+# package: $(package)
 
 
 .PHONY : clean

@@ -2,19 +2,16 @@
 ARG images_version
 FROM flow123d/base:${images_version}
 MAINTAINER Jan Hybs
-ARG images_version´
+ARG images_version
 
 # Environment variables are part of the images.
 # We will use the same base boost package when selectiong specific parts of the BOOST for the install image.
-ENV BOOST_VERSION=1.71
 
-ARG BV=${BOOST_VERSION}
-ARG boost-libs= \
-    libboost-program-options${BV}-dev \
-    libboost-serialization${BV}-dev \
-    libboost-regex${BV}-dev \
-    libboost-filesystem${BV}-dev 
-
+# Boost version
+ARG BV=1.71
+ENV boostlibs= 
+ENV boost_version=$BV
+    
 # [gcc]
 #  0  /usr/bin/gcc-9     9   auto mode
 #  1  /usr/bin/gcc-6     6   manual mode
@@ -40,12 +37,13 @@ ARG DEFAULT_CXX=/usr/bin/g++-9
 
 # install basic set of tools and pandoc tools
 RUN sudo apt-get update && sudo apt-get install -y  \
+    make \ 
     cmake \
+    wget \
     git \
     python3-dev \
     python3-pip \
-    build-essential \    
-    ${boost_libs} \    
+    build-essential \          
     python3 \
     python2 \
     apt-utils \
@@ -57,10 +55,13 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     gcc-9 g++-9 \
     clang \
     valgrind \
+    oprofile
+
+# libraries
+RUN sudo apt-get update && sudo apt-get install -y  \
+    libboost-dev libboost-program-options-dev libboost-serialization-dev libboost-regex-dev libboost-filesystem-dev \    
     libblas-dev \
     liblapack-dev 
-
-    
 
 # /usr/bin/c++ |-> /etc/alternatives/c++ -> /usr/bin/g++ -> /etc/alternatives/g++ |-> /usr/bin/g++-9
 #              |                                                                  |-> /usr/bin/g++-8
@@ -101,10 +102,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc ${DEFAULT_GCC} 100 \
 
 # some pip packages
 RUN pip3 install \
-    pyyaml \
     markdown \
-    psutil \
-    simplejson \
     formic \
     pymongo \
     pandoc-fignos \

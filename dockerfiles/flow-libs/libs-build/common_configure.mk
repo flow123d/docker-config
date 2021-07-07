@@ -9,19 +9,19 @@
 # 'package-name' - optional, default is $(library)
 
 
+build_root=/libs-build
 package_name  ?= $(library)_$(build_type)
-build_root=/build_dir
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 
-package_dir   = $(build_root)/packages
-package=$(package_dir)/$(package_name).tar.gz
+# package_dir   = $(build_root)/packages
+# package=$(package_dir)/$(package_name).tar.gz
 
 clear         = false
 n_jobs	      = 5
 
 install_prefix= /usr/local/$(library)_$(version)
 
-tmp_install_prefix=$(build_dir)/INSTALLATION_ROOT/
+#tmp_install_prefix=$(build_dir)/INSTALLATION_ROOT/
 #TODO: use installation to /usr/local with mpich subdir symlinked into build dir
 
 install_file=$(notdir $(url))
@@ -55,18 +55,18 @@ build: $(lib_makefile)
 
 .PHONY : install
 install: build
-	mkdir -p $(tmp_install_prefix)
-	cd $(build_dir) && make DESTDIR=$(tmp_install_prefix) install
+	#mkdir -p $(tmp_install_prefix)
+	cd $(build_dir) && make  install
 
-
-$(package): install	
-	mkdir -p $(package_dir)
-	cd $(tmp_install_prefix)/usr/local && tar cfvz  $(package) $(library)_$(version)
-	
-	
-
-.PHONY : package
-package: $(package)
+# 
+# $(package): install	
+# 	mkdir -p $(package_dir)
+# 	cd $(tmp_install_prefix)/usr/local && tar cfvz  $(package) $(library)_$(version)
+# 	
+# 	
+# 
+# .PHONY : package
+# package: $(package)
 
 
 .PHONY : clean

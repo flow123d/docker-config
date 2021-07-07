@@ -19,18 +19,22 @@ ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe"
 RUN apt-get update && apt-get install -y  \
     sudo \    
     gosu \
-    make \
     wget  \    
     bash-completion \
     apt-utils \         
     nano \
     less \
-    tzdata
-
-# basic libraries
-RUN apt-get update && apt-get install -y  \
+    tzdata \
+    python3 \
     libblas3 \
     liblapack3
+
+RUN pip3 install \
+    pyyaml \
+    simplejson \
+    psutil \
+    loguru
+
     
 # Script used later in interactive images as the entry point.
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
