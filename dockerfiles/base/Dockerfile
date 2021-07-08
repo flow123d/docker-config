@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y  \
     less \
     tzdata \
     python3 \
+    python3-pip \
     libblas3 \
     liblapack3
 

@@ -1,9 +1,8 @@
 # FLOW-LIBS-DEV-DBG Dockerfile for running flow123d
 ARG images_version
 ARG BUILD_TYPE
-
-ARG sourceimg="flow123d/libs-build-debug:latest"
-FROM $sourceimg as builder
+ARG source_image
+FROM ${source_image} as builder
 
 
 ARG images_version
