@@ -54,7 +54,7 @@ $(blopex_make_inc): blopex_dir
 	
 .PHONY: blopex_build
 blopex_build: $(blopex_make_inc)
-	cd $(blopex_build_dir) && make all
+	cd $(blopex_build_dir) && make -j$(n_jobs) all
 
 ###################
 
@@ -113,7 +113,7 @@ $(make_inc): clean_build build_dir blopex_build
 
 .PHONY : build
 build: $(make_inc)
-	cd $(build_dir) && make all
+	cd $(build_dir) && make -j$(n_jobs) all
 
 # shared library setting
 SHARED_FLAGS= -fPIC

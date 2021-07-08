@@ -16,7 +16,7 @@ ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe"
 # RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # install basic set of tools
-RUN apt-get update && apt-get install -y  \
+RUN apt-get update && apt-get install -y \
     sudo \    
     gosu \
     wget  \    
@@ -25,10 +25,43 @@ RUN apt-get update && apt-get install -y  \
     nano \
     less \
     tzdata \
-    python3 \
-    python3-pip \
+    perl \
+    python3.9 \
+    python3-pip \    
+    libboost-program-options1.71.0 \
+    libboost-serialization1.71.0 \
+    libboost-regex1.71.0 \
+    libboost-filesystem1.71.0 \    
     libblas3 \
-    liblapack3
+    liblapack3 \
+    lib32z1 \
+    libpugixml1v5 \
+    libpython3.9
+
+# Basic cmd line tools and APT package manager
+#   sudo \    
+#   gosu \
+#   wget  \    
+#   bash-completion \
+#   apt-utils \         
+#   nano \
+#   less \
+#   tzdata \    # necessary to avoid problems with time zone of installed packages
+
+# Necessary libraries and tools for the production image (available in development images as well)
+#     perl \      # necessary for ndiff
+#     python3.7 \
+#     python3-pip \    
+#     libboost-program-options1.71.0 \
+#     libboost-serialization1.71.0 \
+#     libboost-regex1.71.0 \
+#     libboost-filesystem1.71.0 \    
+#     libblas3 \
+#     liblapack3 \
+#     lib32z1 \
+#     libpugixml1v5 \
+#     libpython3.7
+
 
 RUN pip3 install \
     pyyaml \
@@ -36,11 +69,14 @@ RUN pip3 install \
     psutil \
     loguru
 
-    
+
+
 # Script used later in interactive images as the entry point.
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod 755 /usr/local/bin/entrypoint.sh
-RUN ls -l /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh \
+    && echo ${BUILD_TYPE} ${images_version} >/.dockerversion
+    
+#RUN ls -l /usr/local/bin/entrypoint.sh
 
 
 # set entrypoint script

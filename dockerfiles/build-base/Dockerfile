@@ -7,10 +7,6 @@ ARG images_version
 # Environment variables are part of the images.
 # We will use the same base boost package when selectiong specific parts of the BOOST for the install image.
 
-# Boost version
-ARG BV=1.71
-ENV boostlibs= 
-ENV boost_version=$BV
     
 # [gcc]
 #  0  /usr/bin/gcc-9     9   auto mode
@@ -40,12 +36,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     make \ 
     cmake \
     wget \
-    git \
-    python3-dev \
-    python3-pip \
-    build-essential \          
-    python3 \
-    python2 \
+    git \    
+    build-essential \              
     apt-utils \
     man \
     tree \
@@ -55,14 +47,49 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     gcc-9 g++-9 \
     clang \
     valgrind \
-    oprofile
-
-# libraries
-RUN sudo apt-get update && sudo apt-get install -y  \
-    libboost-dev libboost-program-options-dev libboost-serialization-dev libboost-regex-dev libboost-filesystem-dev \    
+    oprofile \
+    pandoc \
+    ccache \
+    libboost1.71-dev \
+    libboost-program-options1.71-dev \
+    libboost-serialization1.71-dev \
+    libboost-regex1.71-dev \
+    libboost-filesystem1.71-dev \    
     libblas-dev \
-    liblapack-dev 
+    liblapack-dev \    
+    lib32z1-dev \   
+    libpugixml-dev \
+    libpython3.9-dev
 
+# install doxygen and graphviz, latex
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
+    doxygen \
+    graphviz \
+    texlive \
+    texlive-base \
+    texlive-binaries \
+    texlive-extra-utils \
+    texlive-font-utils \
+    texlive-fonts-extra \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-pictures \
+    texlive-pstricks \
+    texlive-science \        
+    imagemagick
+
+# some pip packages
+RUN pip3 install \
+    markdown \
+    formic \
+    pymongo \
+    pandoc-fignos \
+    pandoc-tablenos
+
+    
 # /usr/bin/c++ |-> /etc/alternatives/c++ -> /usr/bin/g++ -> /etc/alternatives/g++ |-> /usr/bin/g++-9
 #              |                                                                  |-> /usr/bin/g++-8
 #              |                                                                  |-> /usr/bin/g++-7
@@ -70,10 +97,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
 #              |-> /etc/alternatives/c++ -> /usr/bin/clang++
 
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
- && update-alternatives --install /usr/bin/python python /usr/bin/python2 20 \
- && update-alternatives --display python \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9 \
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9 \
  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 \
  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 7 \
  && update-alternatives --display g++ \
@@ -88,25 +112,18 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
 
 
 # set desired compilers
-RUN update-alternatives --install /usr/bin/gcc gcc ${DEFAULT_GCC} 100 \
- && update-alternatives --install /usr/bin/g++ g++ ${DEFAULT_GXX} 100 \
- && update-alternatives --install /usr/bin/c++ c++ ${DEFAULT_CXX} 100 \
- && update-alternatives --auto gcc \
- && update-alternatives --auto g++ \
- && update-alternatives --auto c++ \
- && echo "gcc   " && gcc --version \
- && echo "g++   " && g++ --version \
- && echo "c++   " && c++ --version \
- && echo "update-alternatives requested version set"
+# RUN update-alternatives --install /usr/bin/gcc gcc ${DEFAULT_GCC} 100 \
+#  && update-alternatives --install /usr/bin/g++ g++ ${DEFAULT_GXX} 100 \
+#  && update-alternatives --install /usr/bin/c++ c++ ${DEFAULT_CXX} 100 \
+#  && update-alternatives --auto gcc \
+#  && update-alternatives --auto g++ \
+#  && update-alternatives --auto c++ \
+#  && echo "gcc   " && gcc --version \
+#  && echo "g++   " && g++ --version \
+#  && echo "c++   " && c++ --version \
+#  && echo "update-alternatives requested version set"
 
 
-# some pip packages
-RUN pip3 install \
-    markdown \
-    formic \
-    pymongo \
-    pandoc-fignos \
-    pandoc-tablenos
 
     
 

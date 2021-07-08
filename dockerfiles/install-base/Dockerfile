@@ -1,16 +1,15 @@
 # FLOW-LIBS-DEV-DBG Dockerfile for running flow123d
 ARG images_version
-ARG BUILD_TYPE
 ARG source_image
 FROM ${source_image} as builder
 
 
 ARG images_version
-FROM flow123d/build-base:${images_version}
-MAINTAINER Jan Hybs
+FROM flow123d/base:${images_version}
+MAINTAINER Jan Brezina
 
 ARG images_version
-ARG BUILD_TYPE
+ARG BUILD_TYPE=Release
 
 
 ARG ver_yamlcpp=0.6.3

@@ -46,13 +46,16 @@ How to build new images?
 2. Download source packages for own build libraries (YAMLCPP, Armadillo, MPICH, PETSC, BDDCML), 
    upload them to: `astra.nti.tul.cz/Projekty/Modelari/flow123d/libraries`
 
-3. Modify `dockerfiles` for the images, in particular `dockerfiles/flow-libc/Dockerfile` to set versions of the libraries to build.
+3. Modify `dockerfiles` for the images,
+   in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-base`
+   
 
 4. Upload images (flow-libs-dev-TYPE, install):
 
     ```
     docker push flow123d/IMAGE_NAME:VERSION
     ```
+    
 5. Update `config.default.cmake` in flow123d.
 6. Try to build flow123d:
     ```
