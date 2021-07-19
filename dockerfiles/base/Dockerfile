@@ -36,7 +36,9 @@ RUN apt-get update && apt-get install -y \
     liblapack3 \
     lib32z1 \
     libpugixml1v5 \
-    libpython3.9
+    libpython3.9 \
+    python3-vtk7 \
+    python3-numpy
 
 # Basic cmd line tools and APT package manager
 #   sudo \    
@@ -60,8 +62,8 @@ RUN apt-get update && apt-get install -y \
 #     liblapack3 \
 #     lib32z1 \
 #     libpugixml1v5 \
-#     libpython3.7
-
+#     libpython3.7 \
+#     python3-vtk9    # Mainly for ndiff replacement, but usefull in general for manipulation with outputs. Trying to not include whole paraview.
 
 RUN pip3 install \
     pyyaml \

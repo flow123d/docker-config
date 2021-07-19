@@ -70,7 +70,6 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     texlive-binaries \
     texlive-extra-utils \
     texlive-font-utils \
-    texlive-fonts-extra \
     texlive-fonts-recommended \
     texlive-plain-generic \
     texlive-latex-base \
@@ -78,7 +77,8 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     texlive-latex-recommended \
     texlive-pictures \
     texlive-pstricks \
-    texlive-science \        
+    texlive-science \
+    lmodern \
     imagemagick
 
 # some pip packages

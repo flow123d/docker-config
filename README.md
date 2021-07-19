@@ -37,7 +37,7 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
 
 How to build new images?
 
-1. Set new version of images, according to the Flow123d version they are meant to be used first time:
+1. Set new version of images, according to the first Flow123d version that will use them.
 
     ```
     makefile: images_version=X.Y.Z
@@ -57,6 +57,7 @@ How to build new images?
     ```
     
 5. Update `config.default.cmake` in flow123d.
+
 6. Try to build flow123d:
     ```
     bin/fterm dbg @VERSION
@@ -72,7 +73,7 @@ How to build new images?
    
 8. Fix package builds.
     
-9. Mark images as *latest*:
+9. Mark images as *latest*, (possibly deprecated, no need for the latest, but latest is default version for the docker)
 
     docker tag flow123d/IMAGE_NAME:VERSION flow123d/IMAGE_NAME:latest
 
