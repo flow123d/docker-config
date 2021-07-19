@@ -1,29 +1,88 @@
 # BASE Dockerfile for running flow123d
-FROM ubuntu:16.04
-MAINTAINER Jan Hybs
+FROM ubuntu:20.04
+ARG images_version
 
-# fix bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+MAINTAINER Jan Březina, Jan Hybš
+
+ENV LANG C.UTF-8
+
+# disable interactive tzdata config during apt install
+ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe" 
+
+#(??)
+# OMPI_CC=${DEFAULT_MPICC} OMPI_CXX=${DEFAULT_MPICXX}
+
+# fix bash (??)
+# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # install basic set of tools
-RUN apt-get update && apt-get install -y  \
-    sudo \
-    make \
-    wget  \
-    python3 \
+RUN apt-get update && apt-get install -y \
+    sudo \    
+    gosu \
+    wget  \    
     bash-completion \
-    apt-utils \
+    apt-utils \         
     nano \
     less \
-    man
+    tzdata \
+    perl \
+    python3.9 \
+    python3-pip \    
+    libboost-program-options1.71.0 \
+    libboost-serialization1.71.0 \
+    libboost-regex1.71.0 \
+    libboost-filesystem1.71.0 \    
+    libblas3 \
+    liblapack3 \
+    lib32z1 \
+    libpugixml1v5 \
+    libpython3.9 \
+    python3-vtk7 \
+    python3-numpy
 
-# add auto bash-completion load
-COPY autoload.sh /etc/profile.d/autoload.sh
+# Basic cmd line tools and APT package manager
+#   sudo \    
+#   gosu \
+#   wget  \    
+#   bash-completion \
+#   apt-utils \         
+#   nano \
+#   less \
+#   tzdata \    # necessary to avoid problems with time zone of installed packages
 
-# add auto bash-completion load
-COPY install-mpich.sh /tmp/install-mpich.sh
-RUN /tmp/install-mpich.sh
-RUN rm -f /tmp/install-mpich.sh
+# Necessary libraries and tools for the production image (available in development images as well)
+#     perl \      # necessary for ndiff
+#     python3.7 \
+#     python3-pip \    
+#     libboost-program-options1.71.0 \
+#     libboost-serialization1.71.0 \
+#     libboost-regex1.71.0 \
+#     libboost-filesystem1.71.0 \    
+#     libblas3 \
+#     liblapack3 \
+#     lib32z1 \
+#     libpugixml1v5 \
+#     libpython3.7 \
+#     python3-vtk9    # Mainly for ndiff replacement, but usefull in general for manipulation with outputs. Trying to not include whole paraview.
 
-# default entrypoint will be login bash
-CMD ["/bin/bash", "-l"]
+RUN pip3 install \
+    pyyaml \
+    simplejson \
+    psutil \
+    loguru
+
+
+
+# Script used later in interactive images as the entry point.
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh \
+    && echo ${BUILD_TYPE} ${images_version} >/.dockerversion
+    
+#RUN ls -l /usr/local/bin/entrypoint.sh
+
+
+# set entrypoint script
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# and default argument
+CMD ["/bin/bash"]
