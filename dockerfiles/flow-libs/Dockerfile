@@ -30,7 +30,7 @@ RUN     echo "*** building Armadillo ***"; \
 
 RUN     echo "*** building PETSC ***"; \
 	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build/petsc build_type=${BUILD_TYPE} version=${ver_petsc}  install; \
+	make -C libs-build/petsc build_type=${BUILD_TYPE} version=${ver_petsc}  install
 
 
 RUN     echo "*** building BDDCML ***"; \
