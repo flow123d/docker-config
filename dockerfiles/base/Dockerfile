@@ -40,6 +40,18 @@ RUN apt-get update && apt-get install -y \
     python3-vtk7 \
     python3-numpy
 
+# install intel compiler and mpi
+RUN apt-get update && apt-get install -y \
+  gnupg2 && \
+  wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
+  apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
+  rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
+  echo "deb https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list && \
+  apt-get update && apt-get install -y \
+  intel-basekit \
+  intel-hpckit && \
+  rm -rf /var/lib/apt/lists/*
+
 # Basic cmd line tools and APT package manager
 #   sudo \    
 #   gosu \

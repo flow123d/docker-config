@@ -24,7 +24,7 @@ cfg_opt_Debug= \
         --with-debugging=1 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O" \
-        --CXXFLAGS="-O -Wall -Wno-unused-local-typedefs -std=c++11"
+        --CXXFLAGS="-O -Wall -std=c++11"
 
 cfg_opt_Release= \
         --download-metis=yes --download-parmetis=yes \
@@ -33,7 +33,7 @@ cfg_opt_Release= \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O3 -DNDEBUG" \
-        --CXXFLAGS="-O3 -DNDEBUG -Wall -Wno-unused-local-typedefs -std=c++11"
+        --CXXFLAGS="-O3 -DNDEBUG -Wall -std=c++11"
 
 # Somehow we run under root's SUID even if as the 'flow' user. 
 # So the simplest way is to install directly into /usr/local and then build packages from there.
@@ -42,7 +42,7 @@ prefix=/usr/local/$(library)_$(version)
 configure_options= \
 	PETSC_ARCH=$(petsc_arch) \
 	--prefix=$(prefix) \
-	--with-mpi-dir=/usr/local/$(mpich_lib) \
+	--with-cc=mpiicc --with-cxx=mpiicpc --with-fc=mpiifort \
 	$(cfg_opt_$(build_type))
 
 .PHONY : clean_build

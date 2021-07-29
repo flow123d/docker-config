@@ -48,12 +48,12 @@ BDDCML_INC           = -I$(BDDCML_ROOT)/src -I@FC_MAGLE_INCLUDE@
 
 
 #*********** Compilers
-BDDCML_MPFC = $(mpi_dir)/bin/mpif90
+BDDCML_MPFC = $(mpi_dir)/bin/mpiifort
 BDDCML_MPFFLAGS = $(fc_flags)
 # BDDCML_FC = @BDDCML_Fortran_COMPILER@
 # BDDCML_FFLAGS = @BDDCML_Fortran_FLAGS@
 
-BDDCML_MPCC = $(mpi_dir)/bin/mpicc
+BDDCML_MPCC = $(mpi_dir)/bin/mpiicc
 BDDCML_MPCFLAGS = $(cc_flags)
 # BDDCML_CC = @CMAKE_C_COMPILER@
 # BDDCML_CFLAGS = @PETSC_VAR_CC_FLAGS@

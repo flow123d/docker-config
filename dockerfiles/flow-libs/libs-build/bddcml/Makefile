@@ -47,8 +47,9 @@ blopex_dir: $(blopex_install_file)
 	fi
 
 $(blopex_make_inc): blopex_dir
-	echo CC=/usr/bin/gcc >$(blopex_make_inc)
+	echo CC=icc >$(blopex_make_inc)
 	echo CFLAGS=$(CC_FLAGS_$(build_type)) >>$(blopex_make_inc)
+	echo FC=ifort >>$(blopex_make_inc)
 	echo include $(blopex_build_dir)/../blopex_make_inc.common >>$(blopex_make_inc)
 	
 	
@@ -88,7 +89,7 @@ build_dir:  clean_build $(bddcml_install_file)
 # 	sudo ln -s $(install_dir) $(prefix)
 # 	ls -l $(prefix)
 
-mpi_dir=/usr/local/$(mpich_lib)
+mpi_dir=/opt/intel/oneapi/mpi/latest
 # full_mpich_lib=$(mpi_dir)/lib/libmpi.so
 # $(full_mpich_lib):
 # 	cd /usr/local && sudo tar xzf $(package_dir)/mpich_$(build_type).tar.gz
@@ -106,7 +107,9 @@ $(make_inc): clean_build build_dir blopex_build
 	echo petsc_dir=$(petsc_dir) >>$(make_inc)
 	echo blopex_dir=$(blopex_build_dir) >>$(make_inc)
 	echo build_dir=$(build_dir) >>$(make_inc)
+	echo fc=ifort >>$(make_inc)
 	echo fc_flags=$(FC_FLAGS_$(build_type)) >>$(make_inc)
+	echo cc=icc >>$(make_inc)
 	echo cc_flags=$(CC_FLAGS_$(build_type)) >>$(make_inc)
 	cat $(build_dir)/../bddcml_make_inc.common >>$(make_inc)
 

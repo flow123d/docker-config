@@ -48,6 +48,8 @@ configure: $(build_dir) $(sources_dir)
 				-DCMAKE_BUILD_TYPE=$(build_type) \
 				-DCMAKE_INSTALL_PREFIX=/usr/local/$(library)_$(version) \
 				-DCMAKE_CXX_FLAGS=$(CXX_FLAGS) \
+				-DCMAKE_C_COMPILER=icc \
+				-DCMAKE_CXX_COMPILER=icpc \
 				$(sources_dir)
 
 .PHONY : build
