@@ -161,7 +161,7 @@ BDDCML_LINK_SEQUENCE = \
 	-L$(petsc_dir)/lib -lparmetis \
 	-L$(petsc_dir)/lib -lmetis \
 	-L$(petsc_dir)/lib -lscalapack \
-	-L/usr/lib -lblas -llapack \
+	-L/opt/intel/oneapi/mkl/latest/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential \
 	-lpthread
 
 

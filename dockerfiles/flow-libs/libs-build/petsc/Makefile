@@ -43,6 +43,7 @@ configure_options= \
 	PETSC_ARCH=$(petsc_arch) \
 	--prefix=$(prefix) \
 	--with-cc=mpiicc --with-cxx=mpiicpc --with-fc=mpiifort \
+	--with-blaslapack-dir=/opt/intel/oneapi/mkl/latest \
 	$(cfg_opt_$(build_type))
 
 .PHONY : clean_build
