@@ -84,13 +84,17 @@ function _runtest() {
 complete -o nospace -F _flow123d flow123d
 complete -o nospace -F _runtest runtest
 version=\$(cat /.dockerversion)
+short_version=\${version/Debug/dbg}
+short_version=\${short_version/Release/rel}
 
 if [[ "$theme" == "light" ]]; then
-  export PS1="${bldgrn}\u${txtrst}@${bldgrn}flow:\${version}${bldylw} \w ${txtrst}"
+  export PS1="${bldgrn}\u${txtrst}@${bldgrn}flow:\${short_version}${bldylw} \w ${txtrst}"
 elif [[ "$theme" == "dark" ]]; then
-  export PS1="${bldpur}\u${txtrst}@${bldpur}flow:\${version}${bldblu} \w ${txtrst}"
+  #export PS1="${bldpur}\u${txtrst}@${bldpur}flow:\${short_version}${bldblu} \w ${txtrst}"  # Problems with line editting.
+  export PS1="\[\033[38;5;40m\]\${version} \[\$(tput sgr0)\] \[\$(tput sgr0)\]\[\033[38;5;220m\]\w \[\$(tput sgr0)\]"
 else
-  export PS1="\u@flow:\${version} \w "
+  export PS1="\${short_version} \w "
+  
 fi
 
 # clear the terminal  
@@ -100,6 +104,7 @@ echo "| __| |_____ __ _/ |_  )__ / __| |"
 echo "| _|| / _ \ V  V / |/ / |_ \/ _  |"
 echo "|_| |_\___/\_/\_/|_/___|___/\__,_|"
 echo "                         \$version"
+export HOME="\${GOSU_HOME}"
 EOL
   
   # switch to the user and execute what was given
