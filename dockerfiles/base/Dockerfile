@@ -32,25 +32,18 @@ RUN apt-get update && apt-get install -y \
     libboost-serialization1.71.0 \
     libboost-regex1.71.0 \
     libboost-filesystem1.71.0 \    
-    libblas3 \
-    liblapack3 \
     lib32z1 \
     libpugixml1v5 \
     libpython3.9 \
     python3-vtk7 \
-    python3-numpy
+    python3-numpy \
+    gnupg2
 
-# install intel compiler and mpi
-RUN apt-get update && apt-get install -y \
-  gnupg2 && \
-  wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
+# add intel repository
+RUN wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
   apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
   rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB && \
-  echo "deb https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list && \
-  apt-get update && apt-get install -y \
-  intel-basekit \
-  intel-hpckit && \
-  rm -rf /var/lib/apt/lists/*
+  echo "deb https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
 
 # Basic cmd line tools and APT package manager
 #   sudo \    

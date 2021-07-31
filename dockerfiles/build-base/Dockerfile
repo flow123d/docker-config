@@ -8,43 +8,15 @@ ARG images_version
 # We will use the same base boost package when selectiong specific parts of the BOOST for the install image.
 
     
-# [gcc]
-#  0  /usr/bin/gcc-9     9   auto mode
-#  1  /usr/bin/gcc-6     6   manual mode
-#  2  /usr/bin/gcc-7     7   manual mode
-#  3  /usr/bin/gcc-8     8   manual mode
-#  4  /usr/bin/gcc-9     9   manual mode
-ARG DEFAULT_GCC=/usr/bin/gcc-9
-
-# [g++]
-# 0   /usr/bin/g++-9     9  auto mode
-# 1   /usr/bin/g++-6     6  manual mode
-# 2   /usr/bin/g++-7     7  manual mode
-# 3   /usr/bin/g++-8     8  manual mode
-# 4   /usr/bin/g++-9     9  manual mode
-ARG DEFAULT_GXX=/usr/bin/g++-9
-
-# [c++]
-# 0   /usr/bin/g++      20  auto mode
-# 1   /usr/bin/clang++  10  manual mode
-# 2   /usr/bin/g++      20  manual mode
-ARG DEFAULT_CXX=/usr/bin/g++-9
-
-
 # install basic set of tools and pandoc tools
 RUN sudo apt-get update && sudo apt-get install -y  \
     make \ 
     cmake \
     wget \
     git \    
-    build-essential \              
     apt-utils \
     man \
     tree \
-    gfortran \
-    gcc-7 g++-7 \
-    gcc-8 g++-8 \
-    gcc-9 g++-9 \
     clang \
     valgrind \
     oprofile \
@@ -55,11 +27,17 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libboost-serialization1.71-dev \
     libboost-regex1.71-dev \
     libboost-filesystem1.71-dev \    
-    libblas-dev \
-    liblapack-dev \    
-    lib32z1-dev \   
+    lib32z1-dev \
     libpugixml-dev \
     libpython3.9-dev
+
+# install intel compiler, mkl and mpi
+RUN apt-get update && apt-get install -y \
+  intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
+  intel-oneapi-compiler-fortran \
+  intel-oneapi-mkl-devel \
+  intel-oneapi-mpi-devel && \
+  rm -rf /var/lib/apt/lists/*
 
 # install doxygen and graphviz, latex
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
@@ -96,16 +74,6 @@ RUN pip3 install \
 #              |                                                                  |-> /usr/bin/g++-6
 #              |-> /etc/alternatives/c++ -> /usr/bin/clang++
 
-
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9 \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 \
- && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 7 \
- && update-alternatives --display g++ \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9 \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8 \
- && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 7 \
- && update-alternatives --display gcc \
- && echo "update-alternatives default value set"
 
 #  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 6 \
 #  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 6 \

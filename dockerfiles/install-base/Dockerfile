@@ -18,6 +18,13 @@ ARG ver_armadillo=10.5.2
 ARG ver_petsc=3.15.1
 ARG ver_bddcml=2.6
 
+# install intel runtime
+RUN apt-get update && apt-get install -y \
+  intel-oneapi-runtime-mkl \
+  intel-oneapi-mpi \
+  intel-oneapi-runtime-fortran && \
+  rm -rf /var/lib/apt/lists/*
+
 # install libraries
 COPY --from=builder /usr/local/yamlcpp_$ver_yamlcpp /usr/local/yamlcpp_$ver_yamlcpp
 COPY --from=builder /usr/local/armadillo_${ver_armadillo} /usr/local/armadillo_${ver_armadillo}
