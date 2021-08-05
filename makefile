@@ -73,7 +73,7 @@ latest:
 	
 .PHONY: clean
 clean:
-	docker system prune	# remov dangling images (= without name)
+	docker system prune	# remove dangling images (= without name)
 
 
 # .PHONY: build-libs-dbg
