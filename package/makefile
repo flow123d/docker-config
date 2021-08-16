@@ -139,6 +139,9 @@ $(destination)/tests:
 	mkdir -p $(destination)/tests
 	# clean and copy tests folder
 	$(dexec) make -C $(flow_repo_location) clean-tests
+	
+	$(dexec) ls -l $(flow_repo_location)  #@TODO: remove ASAP
+
 	$(dcp):$(flow_repo_location)/tests/. $(destination)/tests
 
 	# delete runtest because we will have to create other runtest for docker
