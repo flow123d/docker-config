@@ -14,27 +14,16 @@ function check_image {
 }
 
 # get image path and import into to machine
-echo "Importing docker image '@IMAGE_TAG@'"
+echo "Pulling docker image '@IMAGE_TAG@'"
 check_image "@IMAGE_TAG@"
-check_image "@IMAGE_TAG@:user"
-IMAGE_PATH=$CWD/data/@IMAGE_NAME@
-docker import "$IMAGE_PATH" @IMAGE_TAG@
+docker pull "@IMAGE_TAG@"
+docker images | grep "@IMAGE_TAG@"
 
-# run configure on this image to personalise the image
-echo "Modifying docker image '@IMAGE_TAG@'"
-IMAGE_TAG="@IMAGE_TAG@"
-IMAGE_TAG=${IMAGE_TAG#flow123d/}
-export IMAGE_TAG=${IMAGE_TAG}
-"$CWD/bin/configure" --skip-build --images "@IMAGE_TAG@"
-
-echo "--------------------------------------------"
 if [ $? -eq 0 ]; then
     echo "Installation finished successfully"
-    if [[ $(uname) == *"MINGW"* ]]; then
-        echo "run Flow123d using file fterm.bat or flow123d.bat in bin folder"
-    else
-        echo "run Flow123d using script fterm.sh or flow123d.sh in bin folder"
-    fi
+    echo "run Flow123d using script fterm.sh or flow123d.sh in bin folder"
+    echo "For start try printing version of the flow123d"
+    echo "  bin/fterm.sh flow123d --version"
 else
     echo "Error during installation"
     exit 1

@@ -95,6 +95,7 @@ $(destination)/$(win_arch_name): $(destination)/$(docker_arch_name)
 
 # create docker image for linux users
 $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
+
 	mkdir -p install-linux
 	#  mkdir -p make parent directories as needed
 	cd install-linux && cmake \
@@ -106,7 +107,7 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 		../project
 
 	make -C install-linux package
-	mv      install-linux/$(base_name).tar.gz $(destination)/$(lin_arch_name)
+	mv install-linux/$(base_name).tar.gz $(destination)/$(lin_arch_name)
 	echo "{\"build\": \"$(current_date)\", \"hash\": \"$(git_hash)\"}" > $(destination)/$(lin_arch_name:.tar.gz=.json)
 
 
@@ -131,7 +132,7 @@ $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
 # create package from flow123d project
 $(destination)/$(cmake_package_name): $(destination)/tests $(destination)/flow123d_$(flow_version)_doc.pdf
 	$(dexec) make -C $(flow_repo_location) package
-	$(dcp):$(flow_repo_location)/build_tree/$(cmake_package_name) $(destination)/$(cmake_package_name)
+	docker cp contrelease:$(flow_repo_location)/build_tree/$(cmake_package_name) $(destination)/$(cmake_package_name)
 
 # copy tests outside
 $(destination)/tests:
@@ -142,7 +143,7 @@ $(destination)/tests:
 	
 	$(dexec) ls -l $(flow_repo_location)  #@TODO: remove ASAP
 
-	$(dcp):$(flow_repo_location)/tests/. $(destination)/tests
+	docker cp contrelease:$(flow_repo_location)/tests/. $(destination)/tests
 
 	# delete runtest because we will have to create other runtest for docker
 	rm -rf $(destination)/tests/runtest
@@ -160,11 +161,13 @@ $(destination)/flow123d_$(flow_version)_doc.pdf:
 	mkdir -p $(destination)/config/docker/
 	mkdir -p $(destination)/bin/
 
-	$(dcp):$(flow_repo_location)/build_tree/$(pdf_location)             $(destination)/flow123d_$(flow_version)_doc.pdf
-	$(dcp):$(flow_repo_location)/build_tree/htmldoc/html/src/.          $(destination)/htmldoc
-	$(dcp):$(flow_repo_location)/build_tree/doc/online-doc/flow123d/.   $(destination)/doxygen
-	$(dcp):$(flow_repo_location)/$(ist_location)                        $(destination)/input_reference.json
-	$(dcp):$(flow_repo_location)/bin/fterm                              $(destination)/bin/fterm
+	$(dexec) ls -l $(flow_repo_location)
+
+	docker cp contrelease:$(flow_repo_location)/build_tree/$(pdf_location)             $(destination)/flow123d_$(flow_version)_doc.pdf
+	docker cp contrelease:$(flow_repo_location)/build_tree/htmldoc/html/src/.          $(destination)/htmldoc
+	docker cp contrelease:$(flow_repo_location)/build_tree/doc/online-doc/flow123d/.   $(destination)/doxygen
+	docker cp contrelease:$(flow_repo_location)/$(ist_location)                        $(destination)/input_reference.json
+	docker cp contrelease:$(flow_repo_location)/bin/fterm                              $(destination)/bin/fterm
 
 
 # will push the images to the hub
