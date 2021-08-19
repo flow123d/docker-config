@@ -1,4 +1,4 @@
-# This Dockerfile will install flow123d into a flow123d/install image
+# This Dockerfile will install flow123d into a flow123d/install-gnu image
 
 FROM flow123d/install-geomop
 

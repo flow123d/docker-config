@@ -33,7 +33,6 @@ $(libs_dbg): img-base-build-gnu
 img-flow-dev-gnu-dbg: $(libs_dbg)
 	cd dockerfiles/flow-dev-gnu && $(build) --build-arg BUILD_TYPE=Debug --build-arg source_image=flow123d/$(libs_dbg):$(images_version) --tag flow123d/flow-dev-gnu-dbg:$(images_version) .
 
-	
 libs_rel=libs-build-rel
 .PHONY: $(libs_rel)
 $(libs_rel): img-base-build-gnu
@@ -46,19 +45,19 @@ img-flow-dev-gnu-rel: $(libs_rel)
 .PHONY: flow-dev-gnu
 flow-dev-gnu: img-flow-dev-gnu-dbg img-flow-dev-gnu-rel
 
--PHONY: img-install-base
-img-install-base: img-base $(libs_rel)
-	cd dockerfiles/install-base && $(build) --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/install:$(images_version) .
+-PHONY: img-install-gnu
+img-install-gnu: img-base-gnu $(libs_rel)
+	cd dockerfiles/install-gnu && $(build) --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/install-gnu:$(images_version) .
 
 # Push all public images.
 .PHONY: push
 push:
 	docker push flow123d/flow-dev-gnu-dbg:$(images_version)
 	docker push flow123d/flow-dev-gnu-rel:$(images_version)
-	docker push flow123d/install:$(images_version)
+	docker push flow123d/install-gnu:$(images_version)
 
 .PHONY: all
-all: flow-dev-gnu img-install-base push
+all: flow-dev-gnu img-install-gnu push
 	
 
 # Mark built images as latest.

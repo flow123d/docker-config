@@ -14,7 +14,7 @@ REMOVE_ALL=0
 GROUP_ID=`id -g`
 USER_ID=`id -u`
 USER_NAME=`whoami`
-IMAGES="flow123d/flow-dev-gnu-dbg flow123d/flow-dev-gnu-rel flow123d/install"
+IMAGES="flow123d/flow-dev-gnu-dbg flow123d/flow-dev-gnu-rel flow123d/install-gnu"
 
 function usage {
     echo "Configure script which will install all docker images"
@@ -106,7 +106,7 @@ function build_images {
     docker build --tag flow123d/base-build-gnu         base-build-gnu
     docker build --tag flow123d/flow-dev-gnu-dbg  flow-dev-gnu-dbg
     docker build --tag flow123d/flow-dev-gnu-rel  flow-dev-gnu-rel
-    docker build --tag flow123d/install            install
+    docker build --tag flow123d/install-gnu            install-gnu
     echo "============================================"
     echo "Images built"
     echo ""

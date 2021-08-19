@@ -38,9 +38,9 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
      FROM: `build-base`, copy from: `lib-build-base`
      Release development image.
      
-  -  [`flow123d/install`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/install) 
+  -  [`flow123d/install-gnu`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/install) 
      [![](https://images.microbadger.com/badges/image/flow123d/install.svg)](https://microbadger.com/images/flow123d/install "analysed by microbadger")
-     FROM: `base`, copy from: lib-build-base-rel
+     FROM: `base-gnu`, copy from: lib-build-base-rel
      Base of release images.
      
 
@@ -56,7 +56,7 @@ How to build new images?
    upload them to: `astra.nti.tul.cz/Projekty/Modelari/flow123d/libraries`
 
 3. Modify `dockerfiles` for the images,
-   in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-base`
+   in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-gnu`
    
 
 4. Upload images (flow-dev-gnu-TYPE, install):
