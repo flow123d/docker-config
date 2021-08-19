@@ -4,14 +4,23 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
 
 
 ## Resulting Images (to be updated):  
-  -  [`flow123d/base`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base) 
-     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base "analysed by microbadger")
-     Auxiliary base of all other images.
+  -  [`flow123d/base-gnu`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base-gnu) 
+     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base-gnu "analysed by microbadger")
+     Auxiliary base of all gnu images.
+     
+   -  [`flow123d/base-intel`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base-gnu) 
+     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base-gnu "analysed by microbadger")
+     Auxiliary base of all intel images.
    
-  -  [`flow123d/build-base`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/build-base)
-     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/build-base "analysed by microbadger")
-     FROM: `base`
-     Auxiliary base of the development images. Contains common build tools: compilers, cmake, git, valgrind, ...
+  -  [`flow123d/base-build-gnu`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base-build-gnu)
+     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/base-build-gnu "analysed by microbadger")
+     FROM: `base-gnu`
+     Auxiliary base of the development gnu images. Contains common build tools: compilers, cmake, git, valgrind, ...
+     
+  -  [`flow123d/base-build-intel`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base-build-intel)
+     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/base-build-intel "analysed by microbadger")
+     FROM: `base-intel`
+     Auxiliary base of the development intel images. Contains common build tools: compilers, cmake, git, valgrind, ...
 
   -  [`flow123d/lib-build-base-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/lib-build-base)
      [![](https://images.microbadger.com/badges/image/flow123d/lib-build-base.svg)](https://microbadger.com/images/flow123d/lib-build-base "analysed by microbadger")
