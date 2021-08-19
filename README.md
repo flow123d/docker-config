@@ -27,12 +27,12 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
      FROM: `build-base`
      Auxiliary image for building necessary libraries for Flow123d.
 
-  -  [`flow123d/flow-libs-dev-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-dbg) 
+  -  [`flow123d/flow-dev-gnu-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-dbg) 
      [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-dbg.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-dbg "analysed by microbadger")
      FROM: `build-base`, copy from: `lib-build-base`
      Debug development image.
      
-  -  [`flow123d/flow-libs-dev-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-rel) 
+  -  [`flow123d/flow-dev-gnu-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-rel) 
      [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-rel.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-rel "analysed by microbadger")
      **depends on**: lib-build-base, release libraries
      FROM: `build-base`, copy from: `lib-build-base`
@@ -59,7 +59,7 @@ How to build new images?
    in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-base`
    
 
-4. Upload images (flow-libs-dev-TYPE, install):
+4. Upload images (flow-dev-gnu-TYPE, install):
 
     ```
     docker push flow123d/IMAGE_NAME:VERSION
