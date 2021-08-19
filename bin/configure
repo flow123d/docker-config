@@ -102,8 +102,8 @@ function build_images {
     cd $DOCKERFILES
     echo "Building images..."
     echo "============================================"
-    docker build --tag flow123d/base               base
-    docker build --tag flow123d/base-build         base-build
+    docker build --tag flow123d/base-gnu               base-gnu
+    docker build --tag flow123d/base-build-gnu         base-build-gnu
     docker build --tag flow123d/flow-libs-dev-dbg  flow-libs-dev-dbg
     docker build --tag flow123d/flow-libs-dev-rel  flow-libs-dev-rel
     docker build --tag flow123d/install            install

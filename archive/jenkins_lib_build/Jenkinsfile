@@ -32,7 +32,7 @@ pipeline {
               dir('cmakefiles') {
                   script {
                       for (lib in debug_libs) {
-                            sh "make IMAGE=flow123d/base-env BUILD_TYPE=Debug ${lib}"
+                            sh "make IMAGE=flow123d/base-gnu-env BUILD_TYPE=Debug ${lib}"
                         }
                     }
                 }
@@ -44,7 +44,7 @@ pipeline {
               dir('cmakefiles') {
                   script {
                       for (lib in release_libs) {
-                            sh "make IMAGE=flow123d/base-env BUILD_TYPE=Release ${lib}"
+                            sh "make IMAGE=flow123d/base-gnu-env BUILD_TYPE=Release ${lib}"
                         }
                     }
                 }
