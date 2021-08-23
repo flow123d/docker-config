@@ -15,7 +15,6 @@ run=docker run -v ${PWD}/$(build_dir):/build_dir -w /build_dir
 # 	mkdir -p $(build_dir)
 
 
-
 .PHONY: img-base-gnu
 img-base-gnu:
 	cd dockerfiles/base-gnu && $(build) --tag flow123d/base-gnu:$(images_version) .
@@ -40,7 +39,7 @@ $(libs_rel): img-base-build-gnu
 
 .PHONY: img-flow-dev-gnu-rel
 img-flow-dev-gnu-rel: $(libs_rel)
-	cd dockerfiles/flow-dev_gnu && $(build) --build-arg BUILD_TYPE=Release --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/flow-dev-gnu-rel:$(images_version) .
+	cd dockerfiles/flow-dev-gnu && $(build) --build-arg BUILD_TYPE=Release --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/flow-dev-gnu-rel:$(images_version) .
 
 .PHONY: flow-dev-gnu
 flow-dev-gnu: img-flow-dev-gnu-dbg img-flow-dev-gnu-rel
