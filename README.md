@@ -5,52 +5,42 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
 
 ## Resulting Images (to be updated):  
   -  [`flow123d/base-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-gnu) 
-     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base-gnu "analysed by microbadger")
      Auxiliary base of all gnu images.
 
    -  [`flow123d/base-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-intel) 
-     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base-gnu "analysed by microbadger")
      Auxiliary base of all intel images.
 
   -  [`flow123d/base-build-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-build-gnu)
-     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/base-build-gnu "analysed by microbadger")
      FROM: `base-gnu`
      Auxiliary base of the development gnu images. Contains common build tools: compilers, cmake, git, valgrind, ...
 
   -  [`flow123d/base-build-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-build-intel)
-     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/base-build-intel "analysed by microbadger")
      FROM: `base-intel`
      Auxiliary base of the development intel images. Contains common build tools: compilers, cmake, git, valgrind, ...
 
   -  [`flow123d/libs-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/libs-gnu)
-     [![](https://images.microbadger.com/badges/image/flow123d/lib-build-base.svg)](https://microbadger.com/images/flow123d/lib-build-base "analysed by microbadger")
      FROM: `base-build-gnu`
      Auxiliary image for building necessary libraries for Flow123d and GNU environment.
 
   -  [`flow123d/libs-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/libs-intel)
-     [![](https://images.microbadger.com/badges/image/flow123d/lib-build-base.svg)](https://microbadger.com/images/flow123d/lib-build-base "analysed by microbadger")
      FROM: `base-build-intel`
      Auxiliary image for building necessary libraries for Flow123d and Intel environment.
 
   -  [`flow123d/flow-dev-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/flow-dev-gnu) 
-     [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-dbg.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-dbg "analysed by microbadger")
-      **depends on**: libs-gnu, release libraries
+     **depends on**: libs-gnu, release libraries
      FROM: `base-build-gnu`
      Debug development image.
 
   -  [`flow123d/flow-dev-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/flow-dev-intel) 
-     [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-rel.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-rel "analysed by microbadger")
      **depends on**: libs-intel, release libraries
      FROM: `base-build-intel`
      Release development image.
 
   -  [`flow123d/install-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-gnu) 
-     [![](https://images.microbadger.com/badges/image/flow123d/install.svg)](https://microbadger.com/images/flow123d/install "analysed by microbadger")
      FROM: `base-gnu`
      Base of release images for GNU.
 
   -  [`flow123d/install-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-intel) 
-     [![](https://images.microbadger.com/badges/image/flow123d/install.svg)](https://microbadger.com/images/flow123d/install "analysed by microbadger")
      FROM: `base-gnu`
      Base of release images for Intel.
 
