@@ -1,6 +1,6 @@
 # Rules to make the docker images and libraries.
 
-images_version=3.1.0
+images_version=3.1.0_charon
 
 # This target only configure the build process.
 # Useful for building unit tests without actually build whole program.

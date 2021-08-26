@@ -59,7 +59,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     liblapack-dev \    
     lib32z1-dev \   
     libpugixml-dev \
-    libpython3.9-dev
+    libpython3.9-dev \
+    libpsm2-dev
 
 # install doxygen and graphviz, latex
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
