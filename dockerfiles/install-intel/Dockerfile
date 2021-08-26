@@ -5,7 +5,7 @@ FROM ${source_image} as builder
 
 
 ARG images_version
-FROM flow123d/base:${images_version}
+FROM flow123d/base-intel:${images_version}
 MAINTAINER Jan Brezina
 
 ARG images_version

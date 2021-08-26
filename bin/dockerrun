@@ -39,8 +39,8 @@ shift
 version=${1:-dbg}
 shift
 
-work_image=flow123d/flow-libs-dev-$version:user
-flow123d_images="flow-libs-dev-dbg flow-libs-dev-rel install"
+work_image=flow123d/flow-dev-intel-$version:user
+flow123d_images="flow-dev-intel-dbg flow-dev-intel-rel install"
 
 
 function image_exist() {
@@ -53,7 +53,7 @@ function image_exist() {
 }
 
 function configure_files {
-  docker_image=${1:-flow-libs-dev-dbg}
+  docker_image=${1:-flow-dev-intel-dbg}
 
   sed -e "s/@gid@/$gid/g" \
       -e "s/@uid@/$uid/g" \

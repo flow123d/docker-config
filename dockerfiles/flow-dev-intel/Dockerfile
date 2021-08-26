@@ -6,7 +6,7 @@ FROM ${source_image} as builder
 
 
 ARG images_version
-FROM flow123d/build-base:${images_version}
+FROM flow123d/base-build-intel:${images_version}
 MAINTAINER Jan Hybs
 
 ARG images_version
