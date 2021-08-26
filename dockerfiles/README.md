@@ -3,8 +3,8 @@ Simple scheme where dependencies are shown:
 ```
 └── base
     ├── base-build
-    │   ├── flow-libs-dev-dbg
-    │   └── flow-libs-dev-rel
+    │   ├── flow-dev-dbg
+    │   └── flow-dev-rel
     └── install
 ```
 
@@ -51,7 +51,7 @@ Layer                                           | Size
 `/bin/sh -c pip install     pandoc-fignos     ` |  342.8 kB            
 
 
-## Dockerfile `flow123d/flow-libs-dev-dbg` ![flow-libs-dev-dbg](https://img.shields.io/badge/flow--libs--dev--dbg-5.8 GB | 7 layers-blue.svg)
+## Dockerfile `flow123d/flow-dev-gnu-dbg` ![flow-dev-gnu-dbg](https://img.shields.io/badge/flow--libs--dev--dbg-5.8 GB | 7 layers-blue.svg)
 Contains additional debug libraries compiled with debug flag: `YamlCpp, PETSC, Armadillo, BDDCML`
 
 Layer                                           | Size
@@ -64,7 +64,7 @@ Layer                                           | Size
 `BUILD_TYPE=debug /bin/sh -c /usr/bin/ins`      |  4.838 MB
 `BUILD_TYPE=debug /bin/sh -c /usr/bin/ins`      |  37.73 MB
 
-## Dockerfile `flow123d/flow-libs-dev-rel` ![flow-libs-dev-rel](https://img.shields.io/badge/flow--libs--dev--rel-6.2 GB | 7 layers-blue.svg)
+## Dockerfile `flow123d/flow-dev-gnu-rel` ![flow-dev-gnu-rel](https://img.shields.io/badge/flow--libs--dev--rel-6.2 GB | 7 layers-blue.svg)
  Contains additional debug libraries compiled with release flag: `YamlCpp, PETSC, Armadillo, BDDCML`
  
 Layer                                           | Size

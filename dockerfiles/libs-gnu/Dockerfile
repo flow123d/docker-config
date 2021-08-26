@@ -1,6 +1,6 @@
 # BASE-BUILD Dockerfile for running flow123d
 ARG images_version
-FROM flow123d/base-build-intel:${images_version}
+FROM flow123d/base-build-gnu:${images_version}
 MAINTAINER Jan Hybs
 ARG BUILD_TYPE
 

@@ -14,7 +14,8 @@ REMOVE_ALL=0
 GROUP_ID=`id -g`
 USER_ID=`id -u`
 USER_NAME=`whoami`
-IMAGES="flow123d/flow-dev-intel-dbg flow123d/flow-dev-intel-rel flow123d/install-intel"
+IMAGES="flow123d/flow-dev-gnu-dbg flow123d/flow-dev-gnu-rel flow123d/install-gnu flow123d/flow-dev-intel-dbg flow123d/flow-dev-intel-rel flow123d/install-intel"
+
 
 function usage {
     echo "Configure script which will install all docker images"
@@ -102,11 +103,19 @@ function build_images {
     cd $DOCKERFILES
     echo "Building images..."
     echo "============================================"
+
     docker build --tag flow123d/base-intel               base-intel
     docker build --tag flow123d/base-build-intel         base-build-intel
     docker build --tag flow123d/flow-dev-intel-dbg  flow-dev-intel-dbg
     docker build --tag flow123d/flow-dev-intel-rel  flow-dev-intel-rel
     docker build --tag flow123d/install-intel            install-intel
+
+    docker build --tag flow123d/base-gnu               base-gnu
+    docker build --tag flow123d/base-build-gnu         base-build-gnu
+    docker build --tag flow123d/flow-dev-gnu-dbg  flow-dev-gnu-dbg
+    docker build --tag flow123d/flow-dev-gnu-rel  flow-dev-gnu-rel
+    docker build --tag flow123d/install-gnu            install-gnu
+
     echo "============================================"
     echo "Images built"
     echo ""
