@@ -9,7 +9,7 @@ base_name=bddcml-$(version)
 clear=false
 
 
-build_root=/libs-build
+build_root=/libs-build-gnu
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 # package_dir   = $(build_root)/packages
 # package_name  = $(library)_$(build_type)
@@ -47,9 +47,8 @@ blopex_dir: $(blopex_install_file)
 	fi
 
 $(blopex_make_inc): blopex_dir
-	echo CC=icc >$(blopex_make_inc)
+	echo CC=/usr/bin/gcc >$(blopex_make_inc)
 	echo CFLAGS=$(CC_FLAGS_$(build_type)) >>$(blopex_make_inc)
-	echo FC=ifort >>$(blopex_make_inc)
 	echo include $(blopex_build_dir)/../blopex_make_inc.common >>$(blopex_make_inc)
 	
 	
@@ -89,7 +88,7 @@ build_dir:  clean_build $(bddcml_install_file)
 # 	sudo ln -s $(install_dir) $(prefix)
 # 	ls -l $(prefix)
 
-mpi_dir=/opt/intel/oneapi/mpi/latest
+mpi_dir=/usr/local/$(mpich_lib)
 # full_mpich_lib=$(mpi_dir)/lib/libmpi.so
 # $(full_mpich_lib):
 # 	cd /usr/local && sudo tar xzf $(package_dir)/mpich_$(build_type).tar.gz
@@ -107,9 +106,7 @@ $(make_inc): clean_build build_dir blopex_build
 	echo petsc_dir=$(petsc_dir) >>$(make_inc)
 	echo blopex_dir=$(blopex_build_dir) >>$(make_inc)
 	echo build_dir=$(build_dir) >>$(make_inc)
-	echo fc=ifort >>$(make_inc)
 	echo fc_flags=$(FC_FLAGS_$(build_type)) >>$(make_inc)
-	echo cc=icc >>$(make_inc)
 	echo cc_flags=$(CC_FLAGS_$(build_type)) >>$(make_inc)
 	cat $(build_dir)/../bddcml_make_inc.common >>$(make_inc)
 
@@ -161,7 +158,7 @@ BDDCML_LINK_SEQUENCE = \
 	-L$(petsc_dir)/lib -lparmetis \
 	-L$(petsc_dir)/lib -lmetis \
 	-L$(petsc_dir)/lib -lscalapack \
-	-L/opt/intel/oneapi/mkl/latest/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential \
+	-L/usr/lib -lblas -llapack \
 	-lpthread
 
 

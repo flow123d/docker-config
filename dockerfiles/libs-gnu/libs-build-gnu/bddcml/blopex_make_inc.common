@@ -11,4 +11,4 @@ LOBPCG_ROOT_DIR =  ../../blopex_abstract
 
 
 LAPACKLIB = 
-BLASLIB =  /opt/intel/oneapi/mkl/latest/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
+BLASLIB =  /usr/lib -lblas -llapack

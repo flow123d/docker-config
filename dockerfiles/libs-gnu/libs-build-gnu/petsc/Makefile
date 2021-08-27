@@ -7,7 +7,7 @@ base_name=petsc-$(version)
 package_name  = $(library)_$(build_type)
 clear=false
 
-build_root=/libs-build
+build_root=/libs-build-gnu
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 package_dir   = $(build_root)/packages
 n_jobs	      = 5
@@ -24,7 +24,7 @@ cfg_opt_Debug= \
         --with-debugging=1 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O" \
-        --CXXFLAGS="-O -Wall -std=c++11"
+        --CXXFLAGS="-O -Wall -Wno-unused-local-typedefs -std=c++11"
 
 cfg_opt_Release= \
         --download-metis=yes --download-parmetis=yes \
@@ -33,7 +33,7 @@ cfg_opt_Release= \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O3 -DNDEBUG" \
-        --CXXFLAGS="-O3 -DNDEBUG -Wall -std=c++11"
+        --CXXFLAGS="-O3 -DNDEBUG -Wall -Wno-unused-local-typedefs -std=c++11"
 
 # Somehow we run under root's SUID even if as the 'flow' user. 
 # So the simplest way is to install directly into /usr/local and then build packages from there.
@@ -42,8 +42,7 @@ prefix=/usr/local/$(library)_$(version)
 configure_options= \
 	PETSC_ARCH=$(petsc_arch) \
 	--prefix=$(prefix) \
-	--with-cc=mpiicc --with-cxx=mpiicpc --with-fc=mpiifort \
-	--with-blaslapack-dir=/opt/intel/oneapi/mkl/latest \
+	--with-mpi-dir=/usr/local/$(mpich_lib) \
 	$(cfg_opt_$(build_type))
 
 .PHONY : clean_build

@@ -6,34 +6,30 @@ ARG BUILD_TYPE
 
 # auxiliary build image 
 # just build libraries Dbug or Release using ${BUILD_TYPE} variable
-COPY libs-build /libs-build 
+COPY libs-build-gnu /libs-build-gnu
 
 # Need to copy these into ../libs-dbg/Docrefile
 ARG ver_yamlcpp=0.6.3
 ARG ver_armadillo=10.5.2
-#ARG ver_mpich=3.4.2
+ARG ver_mpich=3.4.2
 ARG ver_petsc=3.15.1
 ARG ver_bddcml=2.6
 
 RUN 	echo "*** building YAMLCPP ***"; \
-	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build/yamlcpp build_type=${BUILD_TYPE} version=$ver_yamlcpp install
+	make -C libs-build-gnu/yamlcpp build_type=${BUILD_TYPE} version=$ver_yamlcpp install
 
 RUN     echo "*** building Armadillo ***"; \
-	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build/armadillo build_type=${BUILD_TYPE} version=$ver_armadillo install
+	make -C libs-build-gnu/armadillo build_type=${BUILD_TYPE} version=$ver_armadillo install
 
 
-#RUN     echo "*** building MPICH ***"; \
-#	make -C libs-build/mpich build_type=${BUILD_TYPE} version=$ver_mpich install
+RUN     echo "*** building MPICH ***"; \
+	make -C libs-build-gnu/mpich build_type=${BUILD_TYPE} version=$ver_mpich install
 
 
 RUN     echo "*** building PETSC ***"; \
-	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build/petsc build_type=${BUILD_TYPE} version=${ver_petsc}  install
+	make -C libs-build-gnu/petsc build_type=${BUILD_TYPE} mpich_lib=mpich_${ver_mpich} version=${ver_petsc}  install
 
 
 RUN     echo "*** building BDDCML ***"; \
-	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build/bddcml build_type=${BUILD_TYPE} version=$ver_bddcml petsc_lib=petsc_${ver_petsc} install
+	make -C libs-build-gnu/bddcml build_type=${BUILD_TYPE} version=$ver_bddcml mpich_lib=mpich_${ver_mpich} petsc_lib=petsc_${ver_petsc} install
 

@@ -9,7 +9,7 @@
 # 'package-name' - optional, default is $(library)
 
 
-build_root=/libs-build
+build_root=/libs-build-intel
 package_name  ?= $(library)_$(build_type)
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 
