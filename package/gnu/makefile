@@ -7,7 +7,7 @@ flow_install_location   ?= /opt/flow123d
 flow_repo_location      ?= /opt/flow123d/flow123d
 
 # The 'docker exec' command runs a new command in a running container
-destination  ?= $(shell pwd)/publish
+destination  ?= $(shell pwd)/publish_gnu
 flow_version ?= $(strip $(shell docker exec $(container_name) cat $(flow_repo_location)/version ))
 git_hash     ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --short HEAD"))
 git_branch   ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --abbrev-ref HEAD"))
@@ -123,10 +123,10 @@ $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
          --build-arg cmake_package_name=$(cmake_package_name) \
          --build-arg git_hash=$(git_hash) \
          --build-arg build_date=$(build_date) \
-         --tag flow123d/$(flow_version) \
+         --tag flow123d/$(flow_version)_gnu \
          project/src/docker/create/default
     # 'docker save' Save one or more images to a tar archive (streamed to STDOUT by default)
-	docker save flow123d/$(flow_version) > $(destination)/$(docker_arch_name)
+	docker save flow123d/$(flow_version)_gnu > $(destination)/$(docker_arch_name)
 	rm -rf project/src/docker/create/default/$(cmake_package_name)
 
 # create package from flow123d project
@@ -173,4 +173,4 @@ $(destination)/flow123d_$(flow_version)_doc.pdf:
 # will push the images to the hub
 # you must be logged in already in order to push the images to docker hub
 push-to-hub:
-	-docker push flow123d/$(flow_version)
+	-docker push flow123d/$(flow_version)_gnu
