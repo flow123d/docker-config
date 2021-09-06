@@ -4,7 +4,7 @@
 #   ./dockerrun
 # will start a container and mount your $HOME (/home/jan/) to work (/work/jan/)
 # The docker images are altered via Dockerfile. Now by default when you start a container:
-#   $> docker run --rm -ti flow123d/flow-libs-dev-dbg:user
+#   $> docker run --rm -ti flow123d/flow-dev-gnu-dbg:user
 #   $> jan-hybs@flow $>
 # you will became current user
 
@@ -39,8 +39,8 @@ shift
 version=${1:-dbg}
 shift
 
-work_image=flow123d/flow-libs-dev-$version:user
-flow123d_images="flow-libs-dev-dbg flow-libs-dev-rel install"
+work_image=flow123d/flow-dev-gnu-$version:user
+flow123d_images="flow-dev-gnu-dbg flow-dev-gnu-rel install"
 
 
 function image_exist() {
@@ -53,7 +53,7 @@ function image_exist() {
 }
 
 function configure_files {
-  docker_image=${1:-flow-libs-dev-dbg}
+  docker_image=${1:-flow-dev-gnu-dbg}
 
   sed -e "s/@gid@/$gid/g" \
       -e "s/@uid@/$uid/g" \

@@ -1,6 +1,6 @@
 # Common building tools.
 ARG images_version
-FROM flow123d/base:${images_version}
+FROM flow123d/base-gnu:${images_version}
 MAINTAINER Jan Hybs
 ARG images_version
 

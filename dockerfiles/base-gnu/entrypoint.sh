@@ -60,11 +60,11 @@ EOL
   bldblu='\e[1;34m' # Blue
   bldpur='\e[1;35m' # Purple
   txtrst='\e[m' # Text Reset
-  
+
   # edit main bash.bashrc file
   cat >> $GOSU_HOME/.bashrc << EOL
 export HOME="\${home#/mnt/}"
-  
+
 # add flow123d bashcompletion
 function _flow123d() {
   local cur=\${COMP_WORDS[COMP_CWORD]}
@@ -96,10 +96,10 @@ elif [[ "$theme" == "dark" ]]; then
   export PS1="${bldpur}\${short_version}${bldblu} \w ${txtrst}"
 else
   export PS1="\${short_version} \w "
-  
+
 fi
 
-# clear the terminal  
+# clear the terminal
 printf '\033[2J'
 echo " ___ _            _ ___ ____    _ "
 echo "| __| |_____ __ _/ |_  )__ / __| |"

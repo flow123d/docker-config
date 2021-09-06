@@ -4,35 +4,46 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
 
 
 ## Resulting Images (to be updated):  
-  -  [`flow123d/base`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/base) 
-     [![](https://images.microbadger.com/badges/image/flow123d/base.svg)](https://microbadger.com/images/flow123d/base "analysed by microbadger")
-     Auxiliary base of all other images.
-   
-  -  [`flow123d/build-base`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/build-base)
-     [![](https://images.microbadger.com/badges/image/flow123d/build-base.svg)](https://microbadger.com/images/flow123d/build-base "analysed by microbadger")
-     FROM: `base`
-     Auxiliary base of the development images. Contains common build tools: compilers, cmake, git, valgrind, ...
+  -  [`flow123d/base-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-gnu) 
+     Auxiliary base of all gnu images.
 
-  -  [`flow123d/lib-build-base-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/lib-build-base)
-     [![](https://images.microbadger.com/badges/image/flow123d/lib-build-base.svg)](https://microbadger.com/images/flow123d/lib-build-base "analysed by microbadger")
-     FROM: `build-base`
-     Auxiliary image for building necessary libraries for Flow123d.
+   -  [`flow123d/base-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-intel) 
+     Auxiliary base of all intel images.
 
-  -  [`flow123d/flow-libs-dev-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-dbg) 
-     [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-dbg.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-dbg "analysed by microbadger")
-     FROM: `build-base`, copy from: `lib-build-base`
+  -  [`flow123d/base-build-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-build-gnu)
+     FROM: `base-gnu`
+     Auxiliary base of the development gnu images. Contains common build tools: compilers, cmake, git, valgrind, ...
+
+  -  [`flow123d/base-build-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/base-build-intel)
+     FROM: `base-intel`
+     Auxiliary base of the development intel images. Contains common build tools: compilers, cmake, git, valgrind, ...
+
+  -  [`flow123d/libs-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/libs-gnu)
+     FROM: `base-build-gnu`
+     Auxiliary image for building necessary libraries for Flow123d and GNU environment.
+
+  -  [`flow123d/libs-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/libs-intel)
+     FROM: `base-build-intel`
+     Auxiliary image for building necessary libraries for Flow123d and Intel environment.
+
+  -  [`flow123d/flow-dev-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/flow-dev-gnu) 
+     **depends on**: libs-gnu, release libraries
+     FROM: `base-build-gnu`
      Debug development image.
-     
-  -  [`flow123d/flow-libs-dev-TYPE`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/flow-libs-dev-rel) 
-     [![](https://images.microbadger.com/badges/image/flow123d/flow-libs-dev-rel.svg)](https://microbadger.com/images/flow123d/flow-libs-dev-rel "analysed by microbadger")
-     **depends on**: lib-build-base, release libraries
-     FROM: `build-base`, copy from: `lib-build-base`
+
+  -  [`flow123d/flow-dev-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/flow-dev-intel) 
+     **depends on**: libs-intel, release libraries
+     FROM: `base-build-intel`
      Release development image.
-     
-  -  [`flow123d/install`](https://github.com/janhybs/flow123d-docker-images/tree/master/dockerfiles/install) 
-     [![](https://images.microbadger.com/badges/image/flow123d/install.svg)](https://microbadger.com/images/flow123d/install "analysed by microbadger")
-     FROM: `base`, copy from: lib-build-base-rel
-     Base of release images.
+
+  -  [`flow123d/install-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-gnu) 
+     FROM: `base-gnu`
+     Base of release images for GNU.
+
+  -  [`flow123d/install-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-intel) 
+     FROM: `base-gnu`
+     Base of release images for Intel.
+
      
 
 How to build new images?
@@ -47,10 +58,10 @@ How to build new images?
    upload them to: `astra.nti.tul.cz/Projekty/Modelari/flow123d/libraries`
 
 3. Modify `dockerfiles` for the images,
-   in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-base`
+   in particular set lib versions in: `dockerfiles/flow-libc`, `dockerfiles/flow-libs-dev`, and `dockerfiles/install-gnu`
    
 
-4. Upload images (flow-libs-dev-TYPE, install):
+4. Upload images (flow-dev-gnu-TYPE, install):
 
     ```
     docker push flow123d/IMAGE_NAME:VERSION

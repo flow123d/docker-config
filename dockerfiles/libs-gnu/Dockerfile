@@ -1,6 +1,6 @@
 # BASE-BUILD Dockerfile for running flow123d
 ARG images_version
-FROM flow123d/build-base:${images_version}
+FROM flow123d/base-build-gnu:${images_version}
 MAINTAINER Jan Hybs
 ARG BUILD_TYPE
 
@@ -8,7 +8,7 @@ ARG BUILD_TYPE
 # just build libraries Dbug or Release using ${BUILD_TYPE} variable
 COPY libs-build /libs-build 
 
-# Need to copy these into ../flow-libs-dbg/Docrefile
+# Need to copy these into ../libs-dbg/Docrefile
 ARG ver_yamlcpp=0.6.3
 ARG ver_armadillo=10.5.2
 ARG ver_mpich=3.4.2
