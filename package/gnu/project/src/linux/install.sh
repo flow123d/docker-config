@@ -14,10 +14,10 @@ function check_image {
 }
 
 # get image path and import into to machine
-echo "Pulling docker image '@IMAGE_TAG@_gnu'"
-check_image "@IMAGE_TAG@_gnu"
-docker pull "@IMAGE_TAG@_gnu"
-docker images | grep "@IMAGE_TAG@_gnu"
+echo "Pulling docker image '@IMAGE_TAG@'"
+check_image "@IMAGE_TAG@"
+docker pull "@IMAGE_TAG@"
+docker images | grep "@IMAGE_TAG@"
 
 if [ $? -eq 0 ]; then
     echo "Installation finished successfully"

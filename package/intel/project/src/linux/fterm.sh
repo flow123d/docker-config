@@ -39,7 +39,7 @@ function dbgc() {
   $@
 }
 
-version=@IMAGE_TAG@_intel
+version=@IMAGE_TAG@
 if [[ -z "$version" ]]; then
     echo -e "$byellow no docker image version specified$reset"
     exit 1
