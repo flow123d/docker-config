@@ -42,7 +42,7 @@ help:
 	@echo "  all           packs entire flow"
 	@echo "  help          prints this message"
 	@echo "  info          prints package configuration"
-	@echo "  push-to-hub   pushes docker image flow123d/flow123d-intel:$(flow_version) to the docker hub"
+	@echo "  push-to-hub   pushes docker image flow123d/$(target_image):$(flow_version) to the docker hub"
 
 
 #$(destination)/$(win_arch_name) $(destination)/$(lin_arch_name)
@@ -99,7 +99,7 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 	cd install-linux && cmake \
 		-DFLOW_VERSION="$(flow_version)" \
 		-DFLOW123D_ROOT="$(flow_repo_location)" \
-		-DIMAGE_TAG="flow123d/flow123d-intel:$(flow_version)" \
+		-DIMAGE_TAG="flow123d/$(target_image):$(flow_version)" \
 		-DIMAGE_NAME="$(docker_arch_name)" \
 		-DDEST="$(destination)" \
 		../project
@@ -112,24 +112,25 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 # create a docker image using docker export containing installed flow123d
 # from docker image flow123d/install
 $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
-	-@docker rmi -f flow123d-intel:$(flow_version)
+	-@docker rmi -f $(target_image):$(flow_version)
 	cp $(destination)/$(cmake_package_name) project/src/docker/create/default/$(cmake_package_name)
 	# 'docker build' build an image from a Dockerfile
 	docker build \
+		 --build-arg install_image=$(install_image) \
          --build-arg flow_version=$(flow_version) \
          --build-arg flow_install_location=$(flow_install_location) \
          --build-arg cmake_package_name=$(cmake_package_name) \
          --build-arg git_hash=$(git_hash) \
          --build-arg build_date=$(build_date) \
-         --tag flow123d/flow123d-intel:$(flow_version) \
+         --tag flow123d/$(target_image):$(flow_version) \
          project/src/docker/create/default
     # 'docker save' Save one or more images to a tar archive (streamed to STDOUT by default)
-	docker save flow123d/flow123d-intel:$(flow_version) > $(destination)/$(docker_arch_name)
+	docker save flow123d/$(target_image):$(flow_version) > $(destination)/$(docker_arch_name)
 	rm -rf project/src/docker/create/default/$(cmake_package_name)
 
 # create package from flow123d project
 $(destination)/$(cmake_package_name): $(destination)/tests $(destination)/flow123d_$(flow_version)_doc.pdf
-	$(dexec)  /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) package"
+	$(dexec)  /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) package"
 	docker cp $(container_name):$(flow_repo_location)/build_tree/$(cmake_package_name) $(destination)/$(cmake_package_name)
 
 # copy tests outside
@@ -137,10 +138,8 @@ $(destination)/tests:
 	# create destination folders
 	mkdir -p $(destination)/tests
 	# clean and copy tests folder
-	$(dexec) /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) clean-tests"
-	
-	$(dexec) ls -l $(flow_repo_location)  #@TODO: remove ASAP
 
+	$(dexec) /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) clean-tests"
 	docker cp $(container_name):$(flow_repo_location)/tests/. $(destination)/tests
 
 	# delete runtest because we will have to create other runtest for docker
@@ -149,17 +148,15 @@ $(destination)/tests:
 
 # call ref doc if pdf was not already created
 $(destination)/flow123d_$(flow_version)_doc.pdf:
-	$(dexec) /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) all"                         # compile just in case
-	$(dexec) /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) FORCE_DOC_UPDATE=1 ref-doc"   # generate latex doc
-	$(dexec) /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) html-doc"                    # generate html doc
-	$(dexec) /bin/bash -c ". /opt/intel/oneapi/setvars.sh && make -C $(flow_repo_location) doxy-doc"                     # generate source doc
+	$(dexec) /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) all"                         # compile just in case
+	$(dexec) /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) FORCE_DOC_UPDATE=1 ref-doc"   # generate latex doc
+	$(dexec) /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) html-doc"                    # generate html doc
+	$(dexec) /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) doxy-doc"                     # generate source doc
 
 	mkdir -p $(destination)/htmldoc
 	mkdir -p $(destination)/doxygen
 	mkdir -p $(destination)/config/docker/
 	mkdir -p $(destination)/bin/
-
-	$(dexec) ls -l $(flow_repo_location)
 
 	docker cp $(container_name):$(flow_repo_location)/build_tree/$(pdf_location)             $(destination)/flow123d_$(flow_version)_doc.pdf
 	docker cp $(container_name):$(flow_repo_location)/build_tree/htmldoc/html/src/.          $(destination)/htmldoc
@@ -171,4 +168,4 @@ $(destination)/flow123d_$(flow_version)_doc.pdf:
 # will push the images to the hub
 # you must be logged in already in order to push the images to docker hub
 push-to-hub:
-	-docker push flow123d/flow123d-intel:$(flow_version)
+	-docker push flow123d/$(target_image):$(flow_version)
