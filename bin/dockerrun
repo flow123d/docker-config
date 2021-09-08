@@ -39,8 +39,9 @@ shift
 version=${1:-dbg}
 shift
 
-work_image=flow123d/flow-dev-gnu-$version:user
-flow123d_images="flow-dev-gnu-dbg flow-dev-gnu-rel install"
+work_image_intel=flow123d/flow-dev-intel-$version:user
+flow123d_images="flow-dev-intel-dbg flow-dev-intel-rel install-intel flow-dev-gnu-dbg flow-dev-gnu-rel install-gnu"
+work_image_gnu=flow123d/flow-dev-gnu-$version:user
 
 
 function image_exist() {
@@ -53,13 +54,15 @@ function image_exist() {
 }
 
 function configure_files {
-  docker_image=${1:-flow-dev-gnu-dbg}
+  docker_image_intel=${1:-flow-dev-intel-dbg}
+  docker_image_gnu=${1:-flow-dev-gnu-dbg}
 
   sed -e "s/@gid@/$gid/g" \
       -e "s/@uid@/$uid/g" \
       -e "s/@uname@/$uname/g" \
       -e "s/@image_tag@/$image_tag/g" \
-      -e "s/@docker_image@/$docker_image/g" \
+      -e "s/@docker_image_intel@/$docker_image_intel/g" \
+      -e "s/@docker_image_gnu@/$docker_image_gnu/g" \
       -e "s/@git_email@/$git_email/g" \
       -e "s/@git_uname@/$git_uname/g" \
       "$CWD/templates/setup.template.sh" > "$CWD/dockerfile/setup.sh"
@@ -67,7 +70,8 @@ function configure_files {
       -e "s/@uid@/$uid/g" \
       -e "s/@uname@/$uname/g" \
       -e "s/@image_tag@/$image_tag/g" \
-      -e "s/@docker_image@/$docker_image/g" \
+      -e "s/@docker_image_intel@/$docker_image_intel/g" \
+      -e "s/@docker_image_gnu@/$docker_image_gnu/g" \
       -e "s/@git_email@/$git_email/g" \
       -e "s/@git_uname@/$git_uname/g" \
       "$CWD/templates/Dockerfile.template" > "$CWD/dockerfile/Dockerfile"
@@ -190,9 +194,11 @@ elif [ "$action" == "update" ]; then
     update_images
     make_work_images
 elif [ "$action" == "flow123d" ]; then
-    docker run  --rm -v "$HOME":"$HOME" -w `pwd` $work_image bash -c "${CWD}/../../flow123d $*"
+    docker run  --rm -v "$HOME":"$HOME" -w `pwd` $work_image_intel bash -c "${CWD}/../../flow123d $*"
+    docker run  --rm -v "$HOME":"$HOME" -w `pwd` $work_image_gnu bash -c "${CWD}/../../flow123d $*"
 elif [ "$action" == "run" ]; then
-    docker run --rm -it -w "/work/$uname" -v "$HOME":"/work/$uname" $work_image
+    docker run --rm -it -w "/work/$uname" -v "$HOME":"/work/$uname" $work_image_intel
+    docker run --rm -it -w "/work/$uname" -v "$HOME":"/work/$uname" $work_image_gnu
 elif [ "$action" == "remove-old" ]; then
     remove_old
 fi
