@@ -113,6 +113,11 @@ latest:
 	docker push flow123d/flow-dev-gnu-dbg:latest
 	docker push flow123d/flow-dev-gnu-rel:latest
 
+	docker tag flow123d/install-gnu:$(images_version) flow123d/install-gnu:latest
+	docker push flow123d/install-gnu:latest
+	docker tag flow123d/install-intel:$(images_version) flow123d/install-intel:latest
+	docker push flow123d/install-intel:latest
+
 
 .PHONY: clean
 clean:
