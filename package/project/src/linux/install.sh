@@ -17,7 +17,7 @@ function check_image {
 echo "Pulling docker image '@IMAGE_TAG@'"
 check_image "@IMAGE_TAG@"
 docker pull "@IMAGE_TAG@"
-docker images | grep "@IMAGE_TAG@"
+docker images --format "{{.Repository}}:{{.Tag}}" | grep "@IMAGE_TAG@"
 
 if [ $? -eq 0 ]; then
     echo "Installation finished successfully"
