@@ -33,3 +33,6 @@ RUN     echo "*** building PETSC ***"; \
 RUN     echo "*** building BDDCML ***"; \
 	make -C libs-build-gnu/bddcml build_type=${BUILD_TYPE} version=$ver_bddcml mpich_lib=mpich_${ver_mpich} petsc_lib=petsc_${ver_petsc} install
 
+
+RUN     echo "*** building Permon ***"; \
+	make -C libs-build-gnu/permon build_type=${BUILD_TYPE} version=$ver_bddcml mpich_lib=mpich_${ver_mpich} petsc_lib=petsc_${ver_petsc} install
