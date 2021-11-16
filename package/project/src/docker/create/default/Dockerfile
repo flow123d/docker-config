@@ -1,6 +1,6 @@
 # This Dockerfile will install flow123d into a flow123d/install image
 ARG install_image
-FROM flow123d/${install_image}
+FROM flow123d/${install_image} as installer
 
 ARG flow_version
 ARG flow_install_location=/opt/flow123d
@@ -36,4 +36,4 @@ ENV PATH="/opt/flow123d/bin:${PATH}"
 # save the image version
 RUN echo $flow_version > /.dockerversion
 
-RUN echo ${MPICC_PATH} > /.mpiccpath
+COPY --from=installer /.mpiccpath /.mpiccpath
