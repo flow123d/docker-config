@@ -27,4 +27,4 @@ COPY --from=builder /usr/local/bddcml_${ver_bddcml} /usr/local/bddcml_${ver_bddc
 
 RUN echo ${BUILD_TYPE} ${images_version} >/.dockerversion
 
-RUN echo /usr/local/mpich_${ver_mpich}/bin/mpicc > /.mpiccpath
+ENV MPICC_PATH=/usr/local/mpich_${ver_mpich}/bin/mpicc

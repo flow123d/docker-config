@@ -35,3 +35,5 @@ ENV PATH="/opt/flow123d/bin:${PATH}"
 
 # save the image version
 RUN echo $flow_version > /.dockerversion
+
+RUN echo ${MPICC_PATH} > /.mpiccpath
