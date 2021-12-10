@@ -38,7 +38,8 @@ RUN apt-get update && apt-get install -y \
     libpugixml1v5 \
     libpython3.9 \
     python3-vtk7 \
-    python3-numpy
+    python3-numpy \
+    python3-venv
 
 # Basic cmd line tools and APT package manager
 #   sudo \    

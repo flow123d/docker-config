@@ -33,3 +33,5 @@ COPY --from=builder /usr/local/petsc_${ver_petsc} /usr/local/petsc_${ver_petsc}
 COPY --from=builder /usr/local/bddcml_${ver_bddcml} /usr/local/bddcml_${ver_bddcml}
 
 RUN echo ${BUILD_TYPE} ${images_version} >/.dockerversion
+
+RUN echo /opt/intel/oneapi/mpi/latest/bin/mpicc > /.mpiccpath
