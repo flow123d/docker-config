@@ -59,10 +59,11 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     liblapack-dev \
     lib32z1-dev \
     libpugixml-dev \
-    libpython3.9-dev
+    libpython3.9-dev \
+    python3-vtk7
 
 # install doxygen and graphviz, latex
-RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \    
     doxygen \
     graphviz \
     texlive \
@@ -87,7 +88,9 @@ RUN pip3 install \
     formic \
     pymongo \
     pandoc-fignos \
-    pandoc-tablenos
+    pandoc-tablenos 
+    
+
 
 
 # /usr/bin/c++ |-> /etc/alternatives/c++ -> /usr/bin/g++ -> /etc/alternatives/g++ |-> /usr/bin/g++-9

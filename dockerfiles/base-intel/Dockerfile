@@ -35,7 +35,6 @@ RUN apt-get update && apt-get install -y \
     lib32z1 \
     libpugixml1v5 \
     libpython3.9 \
-    python3-vtk7 \
     python3-numpy \
     python3-venv \
     gnupg2

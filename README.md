@@ -38,12 +38,27 @@ the [Flow123d](https://github.com/flow123d/flow123d) development and continuous 
 
   -  [`flow123d/install-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-gnu) 
      FROM: `base-gnu`
-     Base of release images for GNU.
+     Base for install package image, based on GNU.
 
   -  [`flow123d/install-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-intel) 
-     FROM: `base-gnu`
-     Base of release images for Intel.
+     FROM: `base-intel`
+     Base for install package image, based on Intel.
 
+  -  [`flow123d/ci-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-gnu) 
+     FROM: `base-gnu`
+     Repository of continuous builds, tagged by branch and commit, GNU base.
+
+  -  [`flow123d/ci-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-intel) 
+     FROM: `base-intel`
+     Repository of continuous builds, tagged by branch and commit, Intel base.
+
+  -  [`flow123d/flow123d-gnu`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-gnu) 
+     FROM: `base-gnu`
+     Release install image, GNU base.
+
+  -  [`flow123d/flow123d-intel`](https://github.com/flow123d/docker-config/tree/master/dockerfiles/install-intel) 
+     FROM: `base-intel`
+     Release install image, Intel base.
      
 
 How to build new images?

@@ -1,5 +1,14 @@
 # This makefile will create docker images from a running container containing
 # Flow123d (assuming the project is already compiled)
+#
+# Variables passed in:
+#   container_name=cont{environment}{build-type} 		 # the source container where the Flow123d has been build.
+#   install_image="install-{environment}:$imagesversion" 	 # the base image for the installation image
+#   target_image=flow123d-{environment}                          # name of the installation image 
+#   destination=$destination 					 # working directory to prepare the installation 
+#
+
+
 
 # ?= setting of a variable only if it doesn't have a value.
 flow_install_location   ?= /opt/flow123d
@@ -37,12 +46,14 @@ ist_location=doc/reference_manual/input_reference.json
 dexec=docker exec $(container_name) # execute command which will follow
 dcp=docker cp $(container_name)   # Copy files/folders between a container and the local filesystem
 
+target_tagged=flow123d/$(target_image):$(git_branch)_$(git_hash)
+
 help:
 	@echo "usage: "
 	@echo "  all           packs entire flow"
 	@echo "  help          prints this message"
 	@echo "  info          prints package configuration"
-	@echo "  push-to-hub   pushes docker image flow123d/$(target_image):$(flow_version) to the docker hub"
+	@echo "  push-to-hub   pushes docker image $(target_tagged) to the docker hub"
 
 
 #$(destination)/$(win_arch_name) $(destination)/$(lin_arch_name)
@@ -99,7 +110,7 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 	cd install-linux && cmake \
 		-DFLOW_VERSION="$(flow_version)" \
 		-DFLOW123D_ROOT="$(flow_repo_location)" \
-		-DIMAGE_TAG="flow123d/$(target_image):$(flow_version)" \
+		-DIMAGE_TAG="$(target_tagged)" \
 		-DIMAGE_NAME="$(docker_arch_name)" \
 		-DDEST="$(destination)" \
 		../project
@@ -122,10 +133,10 @@ $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
          --build-arg cmake_package_name=$(cmake_package_name) \
          --build-arg git_hash=$(git_hash) \
          --build-arg build_date=$(build_date) \
-         --tag flow123d/$(target_image):$(flow_version) \
+         --tag $(target_tagged) \
          project/src/docker/create/default
     # 'docker save' Save one or more images to a tar archive (streamed to STDOUT by default)
-	docker save flow123d/$(target_image):$(flow_version) > $(destination)/$(docker_arch_name)
+	docker save $(target_tagged) > $(destination)/$(docker_arch_name)
 	rm -rf project/src/docker/create/default/$(cmake_package_name)
 
 # create package from flow123d project
@@ -168,4 +179,4 @@ $(destination)/flow123d_$(flow_version)_doc.pdf:
 # will push the images to the hub
 # you must be logged in already in order to push the images to docker hub
 push-to-hub:
-	-docker push flow123d/$(target_image):$(flow_version)
+	-docker push $(target_tagged)
