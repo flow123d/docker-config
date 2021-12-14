@@ -25,8 +25,8 @@ img-base-intel:
 img-base-build-intel: img-base-intel
 	cd dockerfiles/base-build-intel && $(build) --tag flow123d/base-build-intel:$(images_version) .
 
-libs_dbg=libs-build-intel-dbg
-.PHONY: $(libs_dbg)
+libs_dbg:=libs-build-intel-dbg
+.PHONY: libs-build-intel-dbg
 $(libs_dbg): img-base-build-intel
 	cd dockerfiles/libs-intel && $(build) --build-arg BUILD_TYPE=Debug --tag flow123d/$(libs_dbg):$(images_version) .
 
@@ -34,7 +34,7 @@ $(libs_dbg): img-base-build-intel
 img-flow-dev-intel-dbg: $(libs_dbg)
 	cd dockerfiles/flow-dev-intel && $(build) --build-arg BUILD_TYPE=Debug --build-arg source_image=flow123d/$(libs_dbg):$(images_version) --tag flow123d/flow-dev-intel-dbg:$(images_version) .
 
-libs_rel=libs-build-intel-rel
+libs_rel:=libs-build-intel-rel
 .PHONY: $(libs_rel)
 $(libs_rel): img-base-build-intel
 	cd dockerfiles/libs-intel && $(build) --build-arg BUILD_TYPE=Release --tag flow123d/$(libs_rel):$(images_version) .
@@ -60,7 +60,7 @@ img-base-gnu:
 img-base-build-gnu: img-base-gnu
 	cd dockerfiles/base-build-gnu && $(build) --tag flow123d/base-build-gnu:$(images_version) .
 
-libs_dbg=libs-build-dbg
+libs_dbg:=libs-build-gnu-dbg
 .PHONY: $(libs_dbg)
 $(libs_dbg): img-base-build-gnu
 	cd dockerfiles/libs-gnu && $(build) --build-arg BUILD_TYPE=Debug --tag flow123d/$(libs_dbg):$(images_version) .
@@ -69,7 +69,7 @@ $(libs_dbg): img-base-build-gnu
 img-flow-dev-gnu-dbg: $(libs_dbg)
 	cd dockerfiles/flow-dev-gnu && $(build) --build-arg BUILD_TYPE=Debug --build-arg source_image=flow123d/$(libs_dbg):$(images_version) --tag flow123d/flow-dev-gnu-dbg:$(images_version) .
 
-libs_rel=libs-build-rel
+libs_rel:=libs-build-gnu-rel
 .PHONY: $(libs_rel)
 $(libs_rel): img-base-build-gnu
 	cd dockerfiles/libs-gnu && $(build) --build-arg BUILD_TYPE=Release --tag flow123d/$(libs_rel):$(images_version) .

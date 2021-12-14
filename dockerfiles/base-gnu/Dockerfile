@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe"
 # OMPI_CC=${DEFAULT_MPICC} OMPI_CXX=${DEFAULT_MPICXX}
 
 # fix bash (??)
-# RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # install basic set of tools
 RUN apt-get update && apt-get install -y \
