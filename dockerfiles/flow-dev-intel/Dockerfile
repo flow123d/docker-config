@@ -28,4 +28,7 @@ COPY --from=builder /usr/local/petsc_${ver_petsc} /usr/local/petsc_${ver_petsc}
 COPY --from=builder /usr/local/bddcml_${ver_bddcml} /usr/local/bddcml_${ver_bddcml}
 COPY --from=builder /usr/local/permon_${ver_permon} /usr/local/permon_${ver_permon}
 
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \  
+    python3-vtk7
+
 RUN echo ${BUILD_TYPE} ${images_version} >/.dockerversion

@@ -18,6 +18,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     man \
     tree \
     clang \
+    gdbserver \
     valgrind \
     oprofile \
     pandoc \
@@ -29,8 +30,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     libboost-filesystem1.71-dev \    
     lib32z1-dev \
     libpugixml-dev \
-    libpython3.9-dev \
-    python3-vtk7
+    libpython3.9-dev
 
 # install intel compiler, mkl and mpi
 RUN apt-get update && apt-get install -y \

@@ -46,6 +46,7 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     gcc-8 g++-8 \
     gcc-9 g++-9 \
     clang \
+    gdbserver \
     valgrind \
     oprofile \
     pandoc \
@@ -59,8 +60,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     liblapack-dev \
     lib32z1-dev \
     libpugixml-dev \
-    libpython3.9-dev \
-    python3-vtk7
+    libpython3.9-dev 
+    
 
 # install doxygen and graphviz, latex
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \    

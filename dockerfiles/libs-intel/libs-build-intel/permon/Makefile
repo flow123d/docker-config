@@ -9,7 +9,7 @@ base_name=$(library)-$(version)
 clear=true
 
 
-build_root=/libs-build-gnu
+build_root=/libs-build-intel
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 # package_dir   = $(build_root)/packages
 # package_name  = $(library)_$(build_type)
@@ -24,10 +24,7 @@ install_file=$(notdir $(url))
 
 prefix=/usr/local/$(library)_$(version)
 
-FC_FLAGS_Debug=-O3 -DNDEBUG -g $(SHARED_FLAGS)
-FC_FLAGS_Release=-O3 -DNDEBUG $(SHARED_FLAGS)
-CC_FLAGS_Debug=$(FC_FLAGS_Debug) 
-CC_FLAGS_Release=$(FC_FLAGS_Release)
+# compilers and optimization flags taken from PETSC build
 
 
 ###################
