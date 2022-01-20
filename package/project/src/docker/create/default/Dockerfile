@@ -23,7 +23,7 @@ LABEL org.label-schema.build-date="$build_date" \
 COPY ${cmake_package_name} /tmp/${cmake_package_name}
 
 RUN mkdir -p ${flow_install_location} \
- && tar -xzf /tmp/${cmake_package_name} \
+ && tar -vxzf /tmp/${cmake_package_name} \
     -C ${flow_install_location} \
     --strip-components=1 \
  && rm -rf /tmp/${cmake_package_name} \

@@ -4,11 +4,14 @@
 # Variables passed in:
 #   container_name=cont{environment}{build-type} 		 # the source container where the Flow123d has been build.
 #   install_image="install-{environment}:$imagesversion" 	 # the base image for the installation image
-#   target_image=flow123d-{environment}                          # name of the installation image 
+#   target_image=flow123d-{environment}                          # name of the installation image, ci images use:ci-{enviriment}:master-{commit} 
 #   destination=$destination 					 # working directory to prepare the installation 
 #
 
-
+#container_name=contgnurelease
+#install_image="install-gnu:3.1.0"
+#target_image=ci-gnu
+#destination=/home/jb/workspace/flow123d/publish_gnu
 
 # ?= setting of a variable only if it doesn't have a value.
 flow_install_location   ?= /opt/flow123d
@@ -96,6 +99,7 @@ remove-unwanted:
 $(destination)/$(win_arch_name): $(destination)/$(docker_arch_name)
 	cp -r project/src/windows/* $(destination)/
 	echo "$(flow_version)" > $(destination)/version
+	echo "$(target_tagged)" > $(destination)/imagename
 
     # The 'docker run' command first creates a writeable container layer over the specified image, and then starts it using the specified command
 	docker run -i --rm -u $(uid):$(gid) -v $(destination):/nsis-project hp41/nsis /nsis-project/install.nsi
@@ -123,7 +127,8 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 # create a docker image using docker export containing installed flow123d
 # from docker image flow123d/install
 $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
-	-@docker rmi -f $(target_image):$(flow_version)
+	-@docker rmi -f $(target_tagged)
+	docker pull flow123d/$(install_image)
 	cp $(destination)/$(cmake_package_name) project/src/docker/create/default/$(cmake_package_name)
 	# 'docker build' build an image from a Dockerfile
 	docker build \
