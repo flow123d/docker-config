@@ -8,10 +8,11 @@
 #   destination=$destination 					 # working directory to prepare the installation 
 #
 
-#container_name=contgnurelease
-#install_image="install-gnu:3.1.0"
-#target_image=ci-gnu
-#destination=/home/jb/workspace/flow123d/publish_gnu
+container_name=contgnurelease
+install_image=install-gnu:3.1.0
+target_image=ci-gnu
+destination=$(PWD)/publish_gnu
+flow_repo_location=/opt/flow123d/flow123d
 
 # ?= setting of a variable only if it doesn't have a value.
 flow_install_location   ?= /opt/flow123d
@@ -94,19 +95,18 @@ remove-unwanted:
 	@echo "Following files will be included in package: "
 	ls -la $(destination)
 
-# A 'make target' is basically a file that you want rebuilt
-# create docker image for windows users
+# create installation package for windows users
 $(destination)/$(win_arch_name): $(destination)/$(docker_arch_name)
 	cp -r project/src/windows/* $(destination)/
 	echo "$(flow_version)" > $(destination)/version
 	echo "$(target_tagged)" > $(destination)/imagename
 
-    # The 'docker run' command first creates a writeable container layer over the specified image, and then starts it using the specified command
+	# The 'docker run' command first creates a writeable container layer over the specified image, and then starts it using the specified command
 	docker run -i --rm -u $(uid):$(gid) -v $(destination):/nsis-project hp41/nsis /nsis-project/install.nsi
 	echo "{\"build\": \"$(current_date)\", \"hash\": \"$(git_hash)\"}" > $(destination)/flow123d_$(flow_version)_windows_install.json
 
 
-# create docker image for linux users
+# create TAR.GZ package for linux users
 $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 
 	mkdir -p install-linux
@@ -123,33 +123,37 @@ $(destination)/$(lin_arch_name): $(destination)/$(docker_arch_name)
 	mv install-linux/$(base_name).tar.gz $(destination)/$(lin_arch_name)
 	echo "{\"build\": \"$(current_date)\", \"hash\": \"$(git_hash)\"}" > $(destination)/$(lin_arch_name:.tar.gz=.json)
 
-
-# create a docker image using docker export containing installed flow123d
+ci_docker_file_path=../dockerfiles/ci-X
+# create release docker image with flow123d binary and depdendencies
 # from docker image flow123d/install
 $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
-	-@docker rmi -f $(target_tagged)
+	-@docker rmi -f $(target_tagged) 
+	docker commit $(container_name) flow123d/temporary_build
 	docker pull flow123d/$(install_image)
-	cp $(destination)/$(cmake_package_name) project/src/docker/create/default/$(cmake_package_name)
+	#cp $(destination)/$(cmake_package_name) project/src/docker/create/default/$(cmake_package_name)
 	# 'docker build' build an image from a Dockerfile
 	docker build \
-		 --build-arg install_image=$(install_image) \
+	 --build-arg base_image=flow123d/$(install_image) \
+         --build-arg source_image=flow123d/temporary_build \
+         --build-arg source_location=$(flow_install_location)/build_package \
          --build-arg flow_version=$(flow_version) \
          --build-arg flow_install_location=$(flow_install_location) \
-         --build-arg cmake_package_name=$(cmake_package_name) \
          --build-arg git_hash=$(git_hash) \
          --build-arg build_date=$(build_date) \
          --tag $(target_tagged) \
-         project/src/docker/create/default
-    # 'docker save' Save one or more images to a tar archive (streamed to STDOUT by default)
-	docker save $(target_tagged) > $(destination)/$(docker_arch_name)
-	rm -rf project/src/docker/create/default/$(cmake_package_name)
+         $(ci_docker_file_path)
+	# 'docker save' Save one or more images to a tar archive (streamed to STDOUT by default)
+	# docker save $(target_tagged) > $(destination)/$(docker_arch_name)
+	#rm -rf project/src/docker/create/default/$(cmake_package_name)
 
 # create package from flow123d project
 $(destination)/$(cmake_package_name): $(destination)/tests $(destination)/flow123d_$(flow_version)_doc.pdf
 	$(dexec)  /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) package"
-	docker cp $(container_name):$(flow_repo_location)/build_tree/$(cmake_package_name) $(destination)/$(cmake_package_name)
-
-# copy tests outside
+	$(dexec) cp -r $(flow_repo_location)/build_tree/_CPack_Packages/Linux/TGZ/Flow123d-3.1.0-Linux $(flow_install_location)/build_package
+	# we only use temporary installation and copy it directly form the build image to the taget image
+	# TODO: need to copy the package out of the vmount, but only for testing
+	
+# copy tests outside for system dependent packages, tests and doc do not go into the docker image
 $(destination)/tests:
 	# create destination folders
 	mkdir -p $(destination)/tests

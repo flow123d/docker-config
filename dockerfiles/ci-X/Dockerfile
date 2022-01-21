@@ -1,11 +1,15 @@
 # This Dockerfile will install flow123d into a flow123d/install image
-ARG install_image
-FROM flow123d/${install_image} as installer
+ARG source_image
+ARG base_image
+FROM ${source_image} as source_image
 
+ARG base_image
+FROM ${base_image}
+
+ARG base_image
+ARG source_location
 ARG flow_version
 ARG flow_install_location=/opt/flow123d
-ARG cmake_package_name=Flow123d-${version}-Linux.tar.gz
-
 ARG git_hash
 ARG build_date
 
@@ -19,19 +23,12 @@ LABEL org.label-schema.build-date="$build_date" \
       org.label-schema.vendor="Technical University of Liberec" \
       org.label-schema.version="$flow_version" \
       org.label-schema.schema-version="1.0"
-
-COPY ${cmake_package_name} /tmp/${cmake_package_name}
-
-RUN mkdir -p ${flow_install_location} \
- && tar -vxzf /tmp/${cmake_package_name} \
-    -C ${flow_install_location} \
-    --strip-components=1 \
- && rm -rf /tmp/${cmake_package_name} \
- && rm -rf ${flow_install_location}/tests \
- && echo "${cmake_package_name} successfully inserted into image"
+      
+      
+COPY --from=source_image /${source_location} ${flow_install_location} 
 
 # update PATH
-ENV PATH="/opt/flow123d/bin:${PATH}"
+ENV PATH="${flow_install_location}/bin:${PATH}"
 
 # save the image version
-RUN echo $flow_version > /.dockerversion
+RUN echo ${flow_version} > /.dockerversion
