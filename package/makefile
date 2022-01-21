@@ -51,6 +51,7 @@ dexec=docker exec $(container_name) # execute command which will follow
 dcp=docker cp $(container_name)   # Copy files/folders between a container and the local filesystem
 
 target_tagged=flow123d/$(target_image):$(git_branch)_$(git_hash)
+geomop_image=flow123d/geomop:$(git_branch)_$(git_hash)
 
 help:
 	@echo "usage: "
@@ -62,7 +63,7 @@ help:
 
 #$(destination)/$(win_arch_name) $(destination)/$(lin_arch_name)
 # 'all' is the default target. As in running just 'make' should do the same as 'make all'
-all: info linux windows
+all: info geomop_image linux windows
 	ls -la $(destination)
 
 
@@ -146,6 +147,17 @@ $(destination)/$(docker_arch_name): $(destination)/$(cmake_package_name)
 	# docker save $(target_tagged) > $(destination)/$(docker_arch_name)
 	#rm -rf project/src/docker/create/default/$(cmake_package_name)
 
+geomop_docker_file_path=../dockerfiles/geomop-X
+geomop_image: $(destination)/$(docker_arch_name)
+	docker build \
+	 --build-arg base_image=$(target_tagged) \
+         --build-arg flow_version=$(flow_version) \
+         --build-arg flow_install_location=$(flow_install_location) \
+         --build-arg git_hash=$(git_hash) \
+         --build-arg build_date=$(build_date) \
+         --tag ${geomop_image} \
+         $(geomop_docker_file_path)
+	
 # create package from flow123d project
 $(destination)/$(cmake_package_name): $(destination)/tests $(destination)/flow123d_$(flow_version)_doc.pdf
 	$(dexec)  /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) package"
@@ -189,3 +201,4 @@ $(destination)/flow123d_$(flow_version)_doc.pdf:
 # you must be logged in already in order to push the images to docker hub
 push-to-hub:
 	-docker push $(target_tagged)
+	-docker push $(geomop_image)

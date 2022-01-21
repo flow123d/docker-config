@@ -31,4 +31,9 @@ COPY --from=source_image /${source_location} ${flow_install_location}
 ENV PATH="${flow_install_location}/bin:${PATH}"
 
 # save the image version
-RUN echo ${flow_version} > /.dockerversion
+RUN echo ${flow_version} > /.dockerversion; \
+    ln -s /usr/local/${mpich}/bin/mpirun /usr/bin/mpirun; \
+    ln -s /usr/local/${mpich}/bin/mpicc /usr/bin/mpicc; \
+    ln -s /usr/local/${mpich}/bin/mpicc /usr/bin/mpicxx; \
+    ln -s /usr/local/${mpich}/bin/mpicc /usr/bin/mpif90; \
+    ln -s /usr/local/${mpich}/bin/mpicc /usr/bin/mpifort
