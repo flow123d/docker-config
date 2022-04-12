@@ -38,7 +38,11 @@ RUN apt-get update && apt-get install -y \
     libpugixml1v5 \
     libpython3.9 \
     python3-numpy \
-    python3-venv
+    python3-venv \
+    libxinerama-dev \    
+    libxcursor-dev \
+    libglu1-mesa
+    
 
 # Basic cmd line tools and APT package manager
 #   sudo \    
@@ -69,7 +73,8 @@ RUN pip3 install \
     pyyaml \
     simplejson \
     psutil \
-    loguru
+    loguru \
+    gmsh
 
 
 

@@ -43,8 +43,12 @@ $(libs_rel): img-base-build-intel
 img-flow-dev-intel-rel: $(libs_rel)
 	cd dockerfiles/flow-dev-intel && $(build) --build-arg BUILD_TYPE=Release --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/flow-dev-intel-rel:$(images_version) .
 
+.PHONY: img-flow-dev-intel-profile
+img-flow-dev-intel-profile: img-flow-dev-intel-rel
+	cd dockerfiles/flow-dev-profile && $(build) --build-arg source_image=flow123d/flow-dev-intel-rel:$(images_version) --tag flow123d/flow-dev-intel-profile:$(images_version) .
+
 .PHONY: flow-dev-intel
-flow-dev-intel: img-flow-dev-intel-dbg img-flow-dev-intel-rel
+flow-dev-intel: img-flow-dev-intel-dbg img-flow-dev-intel-rel img-flow-dev-intel-profile
 
 -PHONY: img-install-intel
 img-install-intel: img-base-intel $(libs_rel)
@@ -78,8 +82,13 @@ $(libs_rel): img-base-build-gnu
 img-flow-dev-gnu-rel: $(libs_rel)
 	cd dockerfiles/flow-dev-gnu && $(build) --build-arg BUILD_TYPE=Release --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/flow-dev-gnu-rel:$(images_version) .
 
+.PHONY: img-flow-dev-gnu-profile
+img-flow-dev-gnu-profile: img-flow-dev-gnu-rel
+	cd dockerfiles/flow-dev-profile && $(build) --build-arg source_image=flow123d/flow-dev-gnu-rel:$(images_version) --tag flow123d/flow-dev-gnu-profile:$(images_version) .
+
+	
 .PHONY: flow-dev-gnu
-flow-dev-gnu: img-flow-dev-gnu-dbg img-flow-dev-gnu-rel
+flow-dev-gnu: img-flow-dev-gnu-dbg img-flow-dev-gnu-rel img-flow-dev-gnu-profile
 
 -PHONY: img-install-gnu
 img-install-gnu: img-base-gnu $(libs_rel)
