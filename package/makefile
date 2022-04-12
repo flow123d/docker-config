@@ -161,7 +161,7 @@ geomop_image: $(destination)/$(docker_arch_name)
 # create package from flow123d project
 $(destination)/$(cmake_package_name): $(destination)/tests $(destination)/flow123d_$(flow_version)_doc.pdf
 	$(dexec)  /bin/bash -c ". $(flow_repo_location)/bin/setvars.sh && make -C $(flow_repo_location) package"
-	$(dexec) cp -r $(flow_repo_location)/build_tree/_CPack_Packages/Linux/TGZ/Flow123d-3.1.0-Linux $(flow_install_location)/build_package
+	$(dexec) cp -r $(flow_repo_location)/build_tree/_CPack_Packages/Linux/TGZ/Flow123d-$(flow_version)-Linux $(flow_install_location)/build_package
 	# we only use temporary installation and copy it directly form the build image to the taget image
 	# TODO: need to copy the package out of the vmount, but only for testing
 	
