@@ -20,10 +20,10 @@ docker pull "@IMAGE_TAG@"
 docker images --format "{{.Repository}}:{{.Tag}}" | grep "@IMAGE_TAG@"
 
 if [ $? -eq 0 ]; then
-    echo "Installation finished successfully"
-    echo "run Flow123d using script fterm.sh or flow123d.sh in bin folder"
-    echo "For start try printing version of the flow123d"
-    echo "  bin/fterm.sh flow123d --version"
+    echo "Installation of Flow123d finished successfully."
+    echo "Run Flow123d using script fterm.sh or flow123d.sh in bin folder."
+    echo "You can start by printing the version of Flow123d:"
+    echo "  bin/fterm.sh run --version"
 else
     echo "Error during installation"
     exit 1
