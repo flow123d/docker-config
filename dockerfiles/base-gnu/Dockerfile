@@ -41,7 +41,8 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     libxinerama-dev \    
     libxcursor-dev \
-    libglu1-mesa
+    libglu1-mesa \
+    libxft-dev
     
 
 # Basic cmd line tools and APT package manager
