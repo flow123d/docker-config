@@ -9,12 +9,12 @@ ARG BUILD_TYPE
 COPY libs-build-gnu /libs-build-gnu
 
 # Need to copy these into ../libs-dbg/Docrefile
-ARG ver_yamlcpp=0.6.3
-ARG ver_armadillo=10.5.2
-ARG ver_mpich=3.4.2
-ARG ver_petsc=3.15.1
-ARG ver_bddcml=2.6
-ARG ver_permon=3.15.0
+ARG ver_yamlcpp
+ARG ver_armadillo
+ARG ver_mpich
+ARG ver_petsc
+ARG ver_bddcml
+ARG ver_permon
 
 RUN 	echo "*** building YAMLCPP ***"; \
 	make -C libs-build-gnu/yamlcpp build_type=${BUILD_TYPE} version=$ver_yamlcpp install

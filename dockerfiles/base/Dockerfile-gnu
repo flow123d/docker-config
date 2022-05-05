@@ -22,12 +22,13 @@ RUN apt-get update && apt-get install -y \
     wget  \    
     bash-completion \
     apt-utils \         
-    nano \
+    nano \    
     less \
     tzdata \
     perl \
     python3.9 \
     python3-pip \    
+    openssh-client \
     libboost-program-options1.71.0 \
     libboost-serialization1.71.0 \
     libboost-regex1.71.0 \
