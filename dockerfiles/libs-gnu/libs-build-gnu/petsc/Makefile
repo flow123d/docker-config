@@ -7,6 +7,8 @@ base_name=petsc-$(version)
 package_name  = $(library)_$(build_type)
 clear=false
 
+
+
 build_root=/libs-build-gnu
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 package_dir   = $(build_root)/packages
@@ -79,8 +81,18 @@ $(configure_bin):  clean_build $(install_file)
 # 	ls /usr/local
 # 
 
+#.PHONY:
+# python:
+# 	older petsc configure scripts wants 'python' to be available
+# 	trying to use python3 as python
+# 	python_bin=`which python` \
+# 	if [ ! -x "${python_bin}" ]; \
+# 		then sudo ln -s /usr/bin/python3 /usr/local/bin/python; \
+# 	fi
+
+	
 lib_config=$(build_dir)/$(petsc_arch)/include/petscconf.h
-$(lib_config): clean_build $(configure_bin)
+$(lib_config): clean_build $(configure_bin) 
 	cd $(build_dir) && ./configure $(configure_options)
 
 .PHONY: build

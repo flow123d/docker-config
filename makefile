@@ -1,6 +1,6 @@
 # Rules to make the docker images and libraries.
 
-images_version=4.0.0
+images_version=3.0.5
 
 # This target only configure the build process.
 # Useful for building unit tests without actually build whole program.
@@ -13,12 +13,13 @@ build_gnu=$(build) -f Dockerfile-gnu
 build_intel=$(build) -f Dockerfile-intel
 run=docker run -v ${PWD}/$(build_dir):/build_dir -w /build_dir
 versions=--build-arg ver_yamlcpp=0.6.3 \
-	 --build-arg ver_armadillo=10.5.2 \
+	 --build-arg ver_armadillo=8.3.4 \
 	 --build-arg ver_mpich=3.4.2 \
-	 --build-arg ver_petsc=3.17.0 \
-	 --build-arg ver_bddcml=2.6 \
-	 --build-arg ver_permon=3.17.0 
-
+	 --build-arg ver_petsc=3.8.3 \
+	 --build-arg ver_bddcml=2.6 	
+	 # /usr/local/bddcml-2.5.0/bddcml)
+	 # tring to keep 2.6 version as the 2.5.0 version have directory structure incompatible with current build
+	 
 # TODO: write versions available into the image and use autoamticaly in Flow123d configuration
 
 	 
@@ -111,10 +112,11 @@ img-install-gnu: img-base-gnu $(libs_rel)
 .PHONY: push
 push:
 	docker push flow123d/base-gnu:$(images_version)
-	docker push flow123d/base-intel:$(images_version)
 	docker push flow123d/flow-dev-gnu-dbg:$(images_version)
 	docker push flow123d/flow-dev-gnu-rel:$(images_version)
 	docker push flow123d/install-gnu:$(images_version)
+	#
+	docker push flow123d/base-intel:$(images_version)
 	docker push flow123d/flow-dev-intel-dbg:$(images_version)
 	docker push flow123d/flow-dev-intel-rel:$(images_version)
 	docker push flow123d/install-intel:$(images_version)
@@ -125,21 +127,21 @@ all: flow-dev-gnu img-install-gnu flow-dev-intel img-install-intel  push
 
 # Mark built images as latest.
 # Do not use: latest can change, all tools should depend on particular tag that should not change (only fixes allowed).
-.PHONY: latest
-latest:
-	docker tag flow123d/flow-dev-intel-dbg:$(images_version) flow123d/flow-dev-intel-dbg:latest
-	docker tag flow123d/flow-dev-intel-rel:$(images_version) flow123d/flow-dev-intel-rel:latest
-	docker push flow123d/flow-dev-intel-dbg:latest
-	docker push flow123d/flow-dev-intel-rel:latest
-	docker tag flow123d/flow-dev-gnu-dbg:$(images_version) flow123d/flow-dev-gnu-dbg:latest
-	docker tag flow123d/flow-dev-gnu-rel:$(images_version) flow123d/flow-dev-gnu-rel:latest
-	docker push flow123d/flow-dev-gnu-dbg:latest
-	docker push flow123d/flow-dev-gnu-rel:latest
-
-	docker tag flow123d/install-gnu:$(images_version) flow123d/install-gnu:latest
-	docker push flow123d/install-gnu:latest
-	docker tag flow123d/install-intel:$(images_version) flow123d/install-intel:latest
-	docker push flow123d/install-intel:latest
+# .PHONY: latest
+# latest:
+# 	docker tag flow123d/flow-dev-intel-dbg:$(images_version) flow123d/flow-dev-intel-dbg:latest
+# 	docker tag flow123d/flow-dev-intel-rel:$(images_version) flow123d/flow-dev-intel-rel:latest
+# 	docker push flow123d/flow-dev-intel-dbg:latest
+# 	docker push flow123d/flow-dev-intel-rel:latest
+# 	docker tag flow123d/flow-dev-gnu-dbg:$(images_version) flow123d/flow-dev-gnu-dbg:latest
+# 	docker tag flow123d/flow-dev-gnu-rel:$(images_version) flow123d/flow-dev-gnu-rel:latest
+# 	docker push flow123d/flow-dev-gnu-dbg:latest
+# 	docker push flow123d/flow-dev-gnu-rel:latest
+# 
+# 	docker tag flow123d/install-gnu:$(images_version) flow123d/install-gnu:latest
+# 	docker push flow123d/install-gnu:latest
+# 	docker tag flow123d/install-intel:$(images_version) flow123d/install-intel:latest
+# 	docker push flow123d/install-intel:latest
 
 
 .PHONY: clean

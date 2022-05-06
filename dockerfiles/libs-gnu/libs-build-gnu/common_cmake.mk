@@ -1,7 +1,7 @@
 # This generic makefile is included by makfiels of the specific libraries.
 # Variables to set before include:
 # 'library' - library name 
-# 'url' - URL for download sources
+# 'url' - URL for download sources, TODO:  accept space separated list to deal with different compression tools
 # 'basename' - name of directory in the package
 
 # 'version' - libary version

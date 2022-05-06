@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     less \
     tzdata \
     perl \
+    python \
     python3.9 \
     python3-pip \    
     openssh-client \

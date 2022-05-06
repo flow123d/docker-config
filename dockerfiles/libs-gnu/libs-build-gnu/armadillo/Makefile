@@ -3,7 +3,8 @@
 # Simple makefile for building and packaging project Yaml cpp
 
 library=armadillo
-url=https://flow.nti.tul.cz/libraries/armadillo-$(version).tar.xz
+url=https://flow.nti.tul.cz/libraries/armadillo-$(version).tar.gz 
 base_name=armadillo-$(version)
 
 include ../common_cmake.mk
+

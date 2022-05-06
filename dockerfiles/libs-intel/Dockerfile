@@ -13,6 +13,7 @@ ARG ver_yamlcpp
 ARG ver_armadillo
 ARG ver_mpich
 ARG ver_petsc
+ARG ver_hypre
 ARG ver_bddcml
 ARG ver_permon
 
@@ -39,7 +40,7 @@ RUN     echo "*** building BDDCML ***"; \
 	. /opt/intel/oneapi/setvars.sh; \
 	make -C libs-build-intel/bddcml build_type=${BUILD_TYPE} version=$ver_bddcml petsc_lib=petsc_${ver_petsc} install
 
-RUN     echo "*** building Permon ***"; \
-	. /opt/intel/oneapi/setvars.sh; \
-	make -C libs-build-intel/permon build_type=${BUILD_TYPE} version=${ver_permon} petsc_lib=petsc_${ver_petsc} install
+# RUN     echo "*** building Permon ***"; \
+# 	. /opt/intel/oneapi/setvars.sh; \
+# 	make -C libs-build-intel/permon build_type=${BUILD_TYPE} version=${ver_permon} petsc_lib=petsc_${ver_petsc} install
 #make build_type=Debug version=3.15.0 petsc_lib=petsc_3.15.1 install
