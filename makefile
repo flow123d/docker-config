@@ -16,6 +16,7 @@ versions=--build-arg ver_yamlcpp=0.6.3 \
 	 --build-arg ver_armadillo=10.5.2 \
 	 --build-arg ver_mpich=3.4.2 \
 	 --build-arg ver_petsc=3.17.0 \
+	 --build-arg ver_hypre=2.24.0 \
 	 --build-arg ver_bddcml=2.6 \
 	 --build-arg ver_permon=3.17.0 
 

@@ -1,5 +1,8 @@
 # Simple makefile for building and packaging project Petsc
 # PETSC build is specific do not use common makefile.
+# accepted variables:
+# $(version) - the PETSC version
+# $(hypre_version) - the HYPRE version
 
 library       = petsc
 url=http://flow.nti.tul.cz/libraries/petsc-$(version).tar.gz
@@ -20,7 +23,7 @@ package=$(package_dir)/$(package_name).tar.gz
 cfg_opt_Debug= \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
-        --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v2.21.0.tar.gz \
+        --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \
         --with-debugging=1 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O" \
@@ -29,7 +32,7 @@ cfg_opt_Debug= \
 cfg_opt_Release= \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
-        --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v2.21.0.tar.gz \
+        --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O3 -DNDEBUG" \
