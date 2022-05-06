@@ -16,10 +16,12 @@ versions=--build-arg ver_yamlcpp=0.6.3 \
 	 --build-arg ver_armadillo=8.3.4 \
 	 --build-arg ver_mpich=3.4.2 \
 	 --build-arg ver_petsc=3.8.3 \
+	 --build-arg ver_hypre=2.13.0 \
 	 --build-arg ver_bddcml=2.6 	
 	 # /usr/local/bddcml-2.5.0/bddcml)
 	 # tring to keep 2.6 version as the 2.5.0 version have directory structure incompatible with current build
 	 
+	 # last hypre: 2.21.0
 # TODO: write versions available into the image and use autoamticaly in Flow123d configuration
 
 	 

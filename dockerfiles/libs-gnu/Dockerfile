@@ -13,6 +13,7 @@ ARG ver_yamlcpp
 ARG ver_armadillo
 ARG ver_mpich
 ARG ver_petsc
+ARG ver_hypre
 ARG ver_bddcml
 ARG ver_permon
 
@@ -28,7 +29,7 @@ RUN     echo "*** building MPICH ***"; \
 
 
 RUN     echo "*** building PETSC ***"; \
-	make -C libs-build-gnu/petsc build_type=${BUILD_TYPE} mpich_lib=mpich_${ver_mpich} version=${ver_petsc}  install
+	make -C libs-build-gnu/petsc build_type=${BUILD_TYPE} mpich_lib=mpich_${ver_mpich} version=${ver_petsc} hypre_version=${ver_hypre} install
 
 
 RUN     echo "*** building BDDCML ***"; \
