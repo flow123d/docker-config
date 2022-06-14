@@ -12,13 +12,12 @@ FROM flow123d/base-build-intel:${images_version}
 ARG images_version
 ARG BUILD_TYPE
 
-
-ARG ver_yamlcpp=0.6.3
-ARG ver_armadillo=10.5.2
-# ARG ver_mpich=3.4.2
-ARG ver_petsc=3.15.1
-ARG ver_bddcml=2.6
-ARG ver_permon=3.15.0
+ARG ver_yamlcpp
+ARG ver_armadillo
+ARG ver_mpich
+ARG ver_petsc
+ARG ver_bddcml
+ARG ver_permon
 
 # install libraries
 COPY --from=builder /usr/local/yamlcpp_$ver_yamlcpp /usr/local/yamlcpp_$ver_yamlcpp
