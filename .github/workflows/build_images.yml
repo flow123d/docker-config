@@ -1,0 +1,54 @@
+name: Build docker images for Flow123d ecosystem
+# Build official release installation packages on the Jenkins.
+
+#on:
+  #release:
+    #types: [created, published, edited, released]
+
+#on:
+#  push:
+#    tags:
+#    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+on:
+  push
+
+# TODO: add to manual reference to web generated doc and mention that one should trust the generated part 
+
+# článek Martin
+
+# 
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_HUB_FLOW123D_USERNAME}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_FLOW123D_TOKEN}}
+  #environment: gnu
+  #build_type: release
+  #build_container: contgnurelease
+  #FLOW: /opt/flow123d/flow123d
+  
+jobs:
+  build:  
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 4
+      matrix:
+        environment: ['gnu', 'intel']    
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Login
+      #uses: docker/login-action@v1  
+      # docker/* provides various actions provided by docker, but that requires learning their approach of CI/CD
+      run: |
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+
+        - name: Build
+      run: |
+
+        make flow-dev-${{ matrix.environment }} 
+        make img-install-${{ matrix.environment }}
+        make push
