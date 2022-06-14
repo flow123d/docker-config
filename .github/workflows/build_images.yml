@@ -51,4 +51,4 @@ jobs:
 
         make flow-dev-${{ matrix.environment }} 
         make img-install-${{ matrix.environment }}
-        make push
+        make push-${{ matrix.environment }}
