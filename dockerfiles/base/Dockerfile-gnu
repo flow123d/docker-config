@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
     python3.9 \
     python3-pip \    
     openssh-client \
+    libpsm2-dev \
     libboost-program-options1.71.0 \
     libboost-serialization1.71.0 \
     libboost-regex1.71.0 \
@@ -45,6 +46,7 @@ RUN apt-get update && apt-get install -y \
     libglu1-mesa \
     libxft-dev
     
+    # libpsm2-dev - neccessary for performing MPICH
 
 # Basic cmd line tools and APT package manager
 #   sudo \    

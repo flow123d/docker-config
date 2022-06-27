@@ -4,13 +4,14 @@
 # Variables passed in:
 #   container_name=cont{environment}{build-type} 		 # the source container where the Flow123d has been build.
 #   install_image="install-{environment}:$imagesversion" 	 # the base image for the installation image
-#   target_image=flow123d-{environment}                          # name of the installation image, ci images use:ci-{enviriment}:master-{commit} 
+#   target_image=flow123d-{environment}                          # name of the installation image, ci images use: ci-{enviroment}
+#   image_tag={flow123d_version}				 # tag of the image, the release tag for the release images, ci images use: master-{commit} 
 #   destination=$destination 					 # working directory to prepare the installation 
 #
 
 container_name=contgnurelease
 install_image=install-gnu:3.1.0
-target_image=ci-gnu
+target_image?=ci-gnu
 destination=$(PWD)/publish_gnu
 flow_repo_location=/opt/flow123d/flow123d
 
@@ -21,7 +22,8 @@ flow_repo_location      ?= /opt/flow123d/flow123d
 # The 'docker exec' command runs a new command in a running container
 flow_version ?= $(strip $(shell docker exec $(container_name) cat $(flow_repo_location)/version ))
 git_hash     ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --short HEAD"))
-git_branch   ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --abbrev-ref HEAD"))
+# default image tag formed from the git branch name and the commit
+image_tag   ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --abbrev-ref HEAD"))
 
 # default user
 uid 				 ?= $(shell id -u)
@@ -50,8 +52,8 @@ ist_location=doc/reference_manual/input_reference.json
 dexec=docker exec $(container_name) # execute command which will follow
 dcp=docker cp $(container_name)   # Copy files/folders between a container and the local filesystem
 
-target_tagged=flow123d/$(target_image):$(git_branch)_$(git_hash)
-geomop_image=flow123d/geomop:$(git_branch)_$(git_hash)
+target_tagged=flow123d/$(target_image):$(image_tag)_$(git_hash)
+geomop_image=flow123d/geomop:$(image_tag)_$(git_hash)
 
 help:
 	@echo "usage: "
@@ -80,7 +82,7 @@ info:
 	@echo "  flow_version: $(flow_version)"
 	@echo "  destination:  $(destination)"
 	@echo "  git_hash:     $(git_hash)"
-	@echo "  git_branch:   $(git_branch)"
+	@echo "  image_tag:   $(image_tag)"
 
 
 # removes unwanted files before publishing to the flow.nti.tul.cz

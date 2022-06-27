@@ -1,6 +1,6 @@
 # Rules to make the docker images and libraries.
 
-images_version=4.0.0
+images_version=$(shell cat images_version)
 
 # This target only configure the build process.
 # Useful for building unit tests without actually build whole program.
@@ -109,17 +109,25 @@ img-install-gnu: img-base-gnu $(libs_rel)
 
 
 # Push all public images.
-.PHONY: push
-push:
+
+.PHONY: push-gnu
+push-gnu:
 	docker push flow123d/base-gnu:$(images_version)
-	docker push flow123d/base-intel:$(images_version)
 	docker push flow123d/flow-dev-gnu-dbg:$(images_version)
 	docker push flow123d/flow-dev-gnu-rel:$(images_version)
 	docker push flow123d/install-gnu:$(images_version)
+
+
+.PHONY: push-intel
+push-intel:
+	docker push flow123d/base-intel:$(images_version)
 	docker push flow123d/flow-dev-intel-dbg:$(images_version)
 	docker push flow123d/flow-dev-intel-rel:$(images_version)
 	docker push flow123d/install-intel:$(images_version)
 
+.PHONY: push
+push: push-gnu push-intel
+	
 .PHONY: all
 all: flow-dev-gnu img-install-gnu flow-dev-intel img-install-intel  push
 
