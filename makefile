@@ -1,6 +1,6 @@
 # Rules to make the docker images and libraries.
 
-images_version=4.0.1
+images_version=$(shell cat images_version)
 
 # This target only configure the build process.
 # Useful for building unit tests without actually build whole program.
