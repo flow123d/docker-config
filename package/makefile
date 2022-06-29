@@ -65,7 +65,7 @@ help:
 
 #$(destination)/$(win_arch_name) $(destination)/$(lin_arch_name)
 # 'all' is the default target. As in running just 'make' should do the same as 'make all'
-all: info geomop_image linux windows
+all: info linux windows
 	ls -la $(destination)
 
 
