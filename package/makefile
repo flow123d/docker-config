@@ -10,7 +10,8 @@
 #
 
 container_name=contgnurelease
-install_image=install-gnu:3.1.0
+install_image=install-gnu:4.1.0
+
 target_image?=ci-gnu
 destination=$(PWD)/publish_gnu
 flow_repo_location=/opt/flow123d/flow123d
