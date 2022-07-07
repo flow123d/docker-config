@@ -9,26 +9,27 @@
 #   destination=$destination 					 # working directory to prepare the installation 
 #
 
-container_name=contgnurelease
-install_image=install-gnu:4.1.0
+container_name?=contgnurelease
+install_image?=install-gnu
 
 target_image?=ci-gnu
 destination=$(PWD)/publish_gnu
 flow_repo_location=/opt/flow123d/flow123d
 
 # ?= setting of a variable only if it doesn't have a value.
+
+# These variables should not be passed in but need to check Jenkins.
 flow_install_location   ?= /opt/flow123d
 flow_repo_location      ?= /opt/flow123d/flow123d
-
+uid 				 ?= $(shell id -u)
+gid 				 ?= $(shell id -u)
 # The 'docker exec' command runs a new command in a running container
 flow_version ?= $(strip $(shell docker exec $(container_name) cat $(flow_repo_location)/version ))
 git_hash     ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --short HEAD"))
+
 # default image tag formed from the git branch name and the commit
 image_tag   ?= $(strip $(shell docker exec $(container_name) sh -c "cd $(flow_repo_location) && git rev-parse --abbrev-ref HEAD"))_$(git_hash)
 
-# default user
-uid 				 ?= $(shell id -u)
-gid 				 ?= $(shell id -u)
 
 # name of the archives from CMake CPack tool
 cmake_package_name=Flow123d-$(flow_version)-Linux.tar.gz
