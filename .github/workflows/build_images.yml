@@ -51,10 +51,10 @@ jobs:
     - name: Read images_version file
       id: getversion
       run: echo "::set-output name=version::$(cat images_version)"    
-    - name: Release
-      uses: avakar/tag-and-release@v1
-      with:
-        tag_name: v${{ steps.getversion.outputs.version }}
-        release_name: release_${{ steps.getversion.outputs.version }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+#    - name: Release
+#      uses: avakar/tag-and-release@v1
+#      with:
+#        tag_name: v${{ steps.getversion.outputs.version }}
+#        release_name: release_${{ steps.getversion.outputs.version }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
