@@ -81,7 +81,8 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     texlive-pstricks \
     texlive-science \
     lmodern \
-    imagemagick
+    imagemagick \
+    ps2eps
 
 # some pip packages
 RUN pip3 install \
