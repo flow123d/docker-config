@@ -20,6 +20,17 @@ jenkins:
     users:
     - id: ${JENKINS_ADMIN_ID}
       password: ${JENKINS_ADMIN_PASSWORD}
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "jb"
+        name: "Jan Brezina"
+        password: ${jb_pass}
+        properties:        
+        - mailer:
+            emailAddress: "jan.brezina@tul.cz"      
   nodes:
     - permanent:
         name: "ci2runner"

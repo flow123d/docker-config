@@ -1,5 +1,6 @@
 configuration-as-code:latest
 ssh-slaves
+credentials
 build-name-setter
 build-metrics
 console-column-plugin

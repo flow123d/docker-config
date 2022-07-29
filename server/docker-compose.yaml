@@ -15,5 +15,6 @@ services:
         ports:
             - "8080:8080"
             - "50000:50000"
-
+        environment:
+            - SECRETS_FILE="test_secrets.properties"
 # Can use .env file for host dependent data
