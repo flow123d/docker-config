@@ -1,0 +1,62 @@
+# Configuration of the Jenkins server through the Configuration as Code plugin.
+# TODO:
+# - test setup of the Jenkins server with proper plugins
+# - configuration of nodes
+# - try to upload flow123d jobs
+
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  #globalNodeProperties:
+  #- envVars:
+      #env:
+      #- key: VARIABLE1
+        #value: foo
+      #- key: VARIABLE2
+        #value: bar
+          
+  securityRealm:
+    local:
+    allowsSignup: false
+    users:
+    - id: ${JENKINS_ADMIN_ID}
+      password: ${JENKINS_ADMIN_PASSWORD}
+  nodes:
+    - permanent:
+        name: "ci2runner"
+        remoteFS: "/home/builder/jenkins"
+        launcher:
+          ssh:
+            credentialsId: builder
+            host: ci2runner.nti.tul.cz
+            sshHostKeyVerificationStrategy: manuallyProvidedKeyVerificationStrategy
+              disabled: true
+              failIfWorkDirIsMissing: false
+              internalDir: "remoting"
+              workDirPath: "/tmp"
+        retentionStrategy: always
+        numExecutors: 5
+
+  #slaveAgentPort: 50000
+unclassified:
+  location:
+    url: http://server_ip:8080/
+
+#tool:
+  #git:
+    #installations:
+      #- name: git
+        #home: /usr/local/bin/git
+
+#credentials:
+  #system:
+    #domainCredentials:
+      #- credentials:
+          #- basicSSHUserPrivateKey:
+              #scope: SYSTEM
+              #id: ssh_with_passphrase_provided
+              #username: ssh_root
+              #passphrase: ${SSH_KEY_PASSWORD}
+              #description: "SSH passphrase with private key file. Private key provided"
+              #privateKeySource:
+                #directEntry:
+                  #privateKey: ${SSH_PRIVATE_KEY}

@@ -1,0 +1,19 @@
+version: '2'
+
+volumes:
+    jenkins_data:
+        external: true
+        name: jenkins-ciflow
+
+services:
+    jenkins_casc:                   # derived Jenkins image using Configuration as code plugin for configuring from scratch
+        build: .
+        restart: unless-stopped
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - jenkins_data:/var/jenkins_home
+        ports:
+            - "8080:8080"
+            - "50000:50000"
+
+# Can use .env file for host dependent data
