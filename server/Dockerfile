@@ -14,7 +14,7 @@ ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
 COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
-RUN ssh-keyscan -H ci2runner.nti.tul.cz >> ~/.ssh/known_hosts
+#RUN ssh-keyscan -H ci2runner.nti.tul.cz >> ~/.ssh/known_hosts
 # Setup Configuration as Code
 #COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt

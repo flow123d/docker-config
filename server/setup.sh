@@ -21,19 +21,24 @@ function setup_server {
 #     if ! docker compose --help >/dev/null;
 #     then install_docker_compose
 #     fi
-      
+    
+    # configuration in docker-compose.yaml, variables in .env
+    # set secrets path out of the git repository
+    echo SECRETS_PATH=../../secrets > .env
 
     docker compose rm --stop --force --volumes 
     docker volume rm jenkins-ciflow
     
     docker volume create jenkins-ciflow
+    
     docker pull jenkins/jenkins
     docker compose build
+        
     docker compose up       # initial service start
 }
 
 
-export CASC_JENKINS_CONFIG="${script_path}"
+#export CASC_JENKINS_CONFIG="${script_path}"
 cmd=$1
 if [ "$cmd" == "setup" ]
 then

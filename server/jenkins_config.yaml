@@ -9,10 +9,10 @@ credentials:
     - credentials:
       - basicSSHUserPrivateKey:
           id: "builder-key"
-          passphrase: ${SSH_passphrase}
+          passphrase: ${ci2runner_ssh_passphrase}
           privateKeySource:
             directEntry:
-              privateKey: ${SSH_ci2runner_privatekey}
+              privateKey: ${ci2runner_ssh_key}
           scope: SYSTEM
           username: "builder"
           usernameSecret: true
@@ -20,6 +20,7 @@ jenkins:
   agentProtocols:
   - "JNLP4-connect"
   - "Ping"
+  authorizationStrategy: "loggedInUsersCanDoAnything"
   crumbIssuer:
     standard:
       excludeClientIPFromCrumb: false
@@ -58,20 +59,21 @@ jenkins:
       allowsSignup: false
       enableCaptcha: false
       users:
-      - id: "admin"
-        name: "admin"
-        properties:
-        - "apiToken"
-        - "myView"
-        - preferredProvider:
-            providerId: "default"
-        - "timezone"
-        - mailer:
-            emailAddress: "j@j.com"
-  slaveAgentPort: 50000
-  systemMessage: |+
-    Jenkins configured automatically by Jenkins Configuration as Code plugin
+      - id: Admin
+        password: ${jenkins_admin_pw}
+# Generated:
+#        name: "admin"
+#        properties:
+#        - "apiToken"
+#        - "myView"
+#        - preferredProvider:
+#            providerId: "default"
+#        - "timezone"
+#        - mailer:
+#            emailAddress: "j@j.com"
 
+  slaveAgentPort: 50000
+  systemMessage: Jenkins configured automatically by Jenkins Configuration as Code plugin
   updateCenter:
     sites:
     - id: "default"
