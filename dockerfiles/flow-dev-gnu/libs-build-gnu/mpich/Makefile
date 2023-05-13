@@ -5,9 +5,13 @@ url=http://flow.nti.tul.cz/libraries/mpich-${version}.tar.gz
 base_name=mpich-$(version)
 
 conf_opt_Debug= \
+	FFLAGS=-fallow-argument-mismatch \
+	FCFLAGS=-fallow-argument-mismatch \
 	--with-device=ch4:ofi 
 
 conf_opt_Release= \
+	FFLAGS=-fallow-argument-mismatch \
+	FCFLAGS=-fallow-argument-mismatch \
 	--enable-fast=O3,ndebug \
 	--disable-error-checking \
 	--without-timing \
