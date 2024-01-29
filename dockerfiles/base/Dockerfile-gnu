@@ -74,7 +74,8 @@ RUN apt-get update && apt-get install -y \
 #     libpython3.7 \
 #     python3-vtk9    # Mainly for ndiff replacement, but usefull in general for manipulation with outputs. Trying to not include whole paraview.
 
-RUN pip3 install \
+RUN python3 -m pip install -U pip &&\
+    pip3 install \
     pyyaml \
     simplejson \
     psutil \

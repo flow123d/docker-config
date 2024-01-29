@@ -84,7 +84,8 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     ps2eps
 
 # some pip packages
-RUN pip3 install \
+RUN python3 -m pip install -U pip &&\
+    pip3 install \
     markdown \
     formic \
     pymongo \
