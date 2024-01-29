@@ -81,6 +81,11 @@ COPY --from=libs-build /usr/local/petsc_${ver_petsc} /usr/local/petsc_${ver_pets
 COPY --from=libs-build /usr/local/bddcml_${ver_bddcml} /usr/local/bddcml_${ver_bddcml}
 COPY --from=libs-build /usr/local/permon_${ver_permon} /usr/local/permon_${ver_permon}
 
+# install eigen
+RUN wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz &&\
+    tar -xzf eigen-3.4.0.tar.gz &&\
+    mv eigen-3.4.0 /usr/local
+
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \  
     python3-vtk7
 
