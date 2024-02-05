@@ -9,7 +9,7 @@
 # 'package-name' - optional, default is $(library)
 
 
-build_root=/libs-build-gnu
+build_root=/build
 package_name  ?= $(library)_$(build_type)
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 
@@ -39,13 +39,14 @@ $(CURDIR)/$(install_file):
 	wget $(url)
 
 $(build_dir)/configure: clean_build $(CURDIR)/$(install_file) 
-	if [ ! -d $(build_dir) ]; then \
+	if [ ! -d $(build_dir) -o ! -x $(build_dir)/configure ]; then \
 		cmake -E tar x $(install_file); \
 		mv $(base_name) build_$(build_type); \
 	fi
 
 lib_makefile=$(build_dir)/Makefile
 $(lib_makefile): $(build_dir)/configure
+	ls $(build_dir)
 	cd $(build_dir) && ./configure --prefix=$(install_prefix) $(configure_options)
 
 

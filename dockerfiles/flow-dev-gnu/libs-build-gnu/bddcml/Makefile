@@ -9,7 +9,7 @@ base_name=bddcml-$(version)
 clear=false
 
 
-build_root=/libs-build-gnu
+build_root=/build
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 # package_dir   = $(build_root)/packages
 # package_name  = $(library)_$(build_type)
