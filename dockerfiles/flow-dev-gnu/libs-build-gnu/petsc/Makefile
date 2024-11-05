@@ -24,6 +24,8 @@ cfg_opt_Debug= \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \
+				--download-hdf5=yes --download-fblaslapack=yes --download-zlib=yes \
+				--download-hdf5-fortran-bindings=yes --download-hdf5-configure-arguments="--with-zlib=yes" \
         --with-debugging=1 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O" \
@@ -33,6 +35,8 @@ cfg_opt_Release= \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \
+				--download-hdf5=yes --download-fblaslapack=yes --download-zlib=yes \
+				--download-hdf5-fortran-bindings=yes --download-hdf5-configure-arguments="--with-zlib=yes" \
         --with-debugging=0 --with-shared-libraries=1 \
         --with-make-np $(n_jobs) \
         --CFLAGS="-O3 -DNDEBUG" \

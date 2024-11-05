@@ -1,0 +1,101 @@
+# BASE-BUILD Dockerfile for running flow123d
+ARG images_version
+FROM flow123d/base-build-gnu:${images_version} as pflotran-libs-build
+ARG BUILD_TYPE
+
+# TODO:
+# COPY invalidates all layers even if the chance takes place only in configuration of a single library
+# Resolution:
+# - break into multiple stages one for each library, copy only relevant directory
+# - merge with flow-dev-gnu
+# auxiliary build image 
+# just build libraries Dbug or Release using ${BUILD_TYPE} variable
+
+RUN mkdir /build
+COPY libs-build-gnu/common_cmake.mk /build/common_cmake.mk
+COPY libs-build-gnu/common_configure.mk /build/common_configure.mk
+
+
+### MPICH
+COPY libs-build-gnu/mpich /build/mpich
+ARG ver_mpich
+RUN     echo "*** building MPICH ***"; \
+	make -C /build/mpich build_type=${BUILD_TYPE} version=$ver_mpich install
+
+### PETSC
+COPY libs-build-gnu/petsc /build/petsc
+ARG ver_petsc
+ARG ver_hypre
+RUN     echo "*** building PETSC ***"; \
+  echo "build_type=${BUILD_TYPE} mpich_lib=mpich_${ver_mpich} version=${ver_petsc} hypre_version=${ver_hypre}"; \
+  mkdir -p /logs && \
+	make -C /build/petsc build_type=${BUILD_TYPE} mpich_lib=mpich_${ver_mpich} version=${ver_petsc} hypre_version=${ver_hypre} install
+
+##################################
+# Target pflotran-dev-gnu image
+
+ARG images_version
+FROM flow123d/base-build-gnu:${images_version} as pflotran-dev-gnu
+
+LABEL org.opencontainers.image.authors="jan.brezina@tul.cz,pavel.exner@tul.cz" \
+      org.opencontainers.image.url="https://github.com/flow123d/docker-config"
+
+ARG BUILD_TYPE
+
+ARG ver_mpich
+ARG ver_petsc
+
+# install libraries
+COPY --from=pflotran-libs-build /usr/local/mpich_${ver_mpich} /usr/local/mpich_${ver_mpich}
+COPY --from=pflotran-libs-build /usr/local/petsc_${ver_petsc} /usr/local/petsc_${ver_petsc}
+
+# some pip packages
+RUN python3 -m pip install -U pip &&\
+    pip3 install \
+    h5py \
+    matplotlib
+
+# install Pflotran
+RUN mkdir -p /build/pflotran \
+  && git clone -b v6.0.0 https://bitbucket.org/pflotran/pflotran /build/pflotran \
+  && cd /build/pflotran \
+  && ./configure --prefix=/usr/local/pflotran --with-petsc-dir=/usr/local/petsc_${ver_petsc} --with-petsc-arch=flow123d_Release \
+  && make install
+
+RUN echo ${BUILD_TYPE} ${images_version} >/.dockerversion
+
+
+###################################
+# Target pflotran-gnu image
+
+ARG images_version
+FROM flow123d/base-gnu:${images_version} as pflotran-gnu
+
+LABEL org.opencontainers.image.authors="jan.brezina@tul.cz,pavel.exner@tul.cz" \
+      org.opencontainers.image.url="https://github.com/flow123d/docker-config"
+
+ARG BUILD_TYPE=Release
+
+ARG ver_mpich
+ARG ver_petsc
+
+# some pip packages
+RUN python3 -m pip install -U pip &&\
+    pip3 install \
+    h5py \
+    matplotlib
+
+# install libraries
+COPY --from=pflotran-libs-build /usr/local/mpich_${ver_mpich} /usr/local/mpich_${ver_mpich}
+COPY --from=pflotran-libs-build /usr/local/petsc_${ver_petsc} /usr/local/petsc_${ver_petsc}
+COPY --from=pflotran-dev-gnu /usr/local/pflotran /usr/local/pflotran
+
+RUN echo ${BUILD_TYPE} ${images_version} >/.dockerversion; \
+    echo /usr/local/mpich_${ver_mpich}/bin/mpicc >/.mpiccpath; \
+    ln -s /usr/local/${ver_mpich}/bin/mpirun /usr/bin/mpirun; \
+    ln -s /usr/local/${ver_mpich}/bin/mpicc /usr/bin/mpicc; \
+    ln -s /usr/local/${ver_mpich}/bin/mpicc /usr/bin/mpicxx; \
+    ln -s /usr/local/${ver_mpich}/bin/mpicc /usr/bin/mpif90; \
+    ln -s /usr/local/${ver_mpich}/bin/mpicc /usr/bin/mpifort
+
+ENTRYPOINT ["/usr/local/pflotran/bin/pflotran"]

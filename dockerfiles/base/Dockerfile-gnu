@@ -3,7 +3,8 @@ FROM ubuntu:22.04
 ARG images_version
 ARG boost_version 
 
-MAINTAINER Jan Březina, Jan Hybš
+LABEL org.opencontainers.image.authors="jan.brezina@tul.cz,pavel.exner@tul.cz" \
+      org.opencontainers.image.url="https://github.com/flow123d/docker-config"
 
 ENV LANG C.UTF-8
 

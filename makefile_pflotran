@@ -1,0 +1,77 @@
+# Rules to make the docker images and libraries.
+
+images_version=$(shell cat images_version)
+
+# This target only configure the build process.
+# Useful for building unit tests without actually build whole program.
+
+build_dir=build_$(build_type)
+
+
+build=docker build --build-arg images_version=$(images_version)
+build_gnu=$(build) -f Dockerfile-gnu
+build_intel=$(build) -f Dockerfile-intel
+run=docker run -v ${PWD}/$(build_dir):/build_dir -w /build_dir
+versions=\
+	 --build-arg ver_mpich=4.1 \
+	 --build-arg ver_hypre=2.25.0 \
+	 --build-arg ver_petsc=3.21.4
+
+ver_boost=--build-arg boost_version=1.74
+# TODO: write versions available into the image and use autoamticaly in Flow123d configuration
+
+	 
+# $(build_dir):  
+# 	mkdir -p $(build_dir)
+
+
+# GNU IMAGES #
+
+.PHONY: img-base-gnu
+img-base-gnu: dockerfiles/base/Dockerfile-gnu dockerfiles/base/entrypoint.sh
+	cd dockerfiles/base && $(build_gnu) $(ver_boost) --tag flow123d/base-gnu:$(images_version) .
+
+.PHONY: img-base-build-gnu
+img-base-build-gnu: img-base-gnu dockerfiles/base-build/Dockerfile-gnu
+	cd dockerfiles/base-build && $(build_gnu) $(ver_boost) --tag flow123d/base-build-gnu:$(images_version) .
+
+build_gnu_rel:=cd dockerfiles/flow-dev-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Release
+dockerfile:=dockerfiles/flow-dev-gnu/Dockerfile-pflotran
+libs_rel:=pflotran-libs-build-gnu-rel
+.PHONY: $(libs_rel)
+$(libs_rel): img-base-build-gnu ${dockerfile}
+	$(build_gnu_rel) --target pflotran-libs-build --tag flow123d/$(libs_rel):$(images_version) -f Dockerfile-pflotran .
+
+target_dev:=pflotran-dev-gnu
+.PHONY: img-${target_dev}-rel
+img-${target_dev}-rel: $(libs_rel) ${dockerfile}
+	$(build_gnu_rel) --build-arg source_image=flow123d/$(libs_rel):$(images_version)  --target ${target_dev} \
+	--tag flow123d/${target_dev}-rel:$(images_version) -f Dockerfile-pflotran .
+
+target_install:=pflotran-gnu
+.PHONY: img-${target_install}
+img-${target_install}: img-base-gnu $(libs_rel) ${dockerfile}
+	$(build_gnu_rel) --build-arg source_image=flow123d/$(libs_rel):$(images_version) --target ${target_install} \
+	--tag flow123d/${target_install}:$(images_version) -f Dockerfile-pflotran .
+
+
+.PHONY: ${target_dev}
+${target_dev}: img-${target_install} img-${target_dev}-rel
+
+
+# Push all public images.
+
+.PHONY: push
+push:
+	docker push flow123d/base-gnu:$(images_version)
+	docker push flow123d/${target_dev}-rel:$(images_version)
+	docker push flow123d/${target_install}:$(images_version)
+
+	
+.PHONY: all
+all: ${target_dev} img-${target_install} # push
+
+
+.PHONY: clean
+clean:
+	docker system prune	# remove dangling images (= without name)
