@@ -10,7 +10,7 @@ base_name=petsc-$(version)
 package_name  = $(library)_$(build_type)
 clear=false
 
-build_root=/libs-build-gnu
+build_root=/build
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 package_dir   = $(build_root)/packages
 n_jobs	      = 5
@@ -21,6 +21,7 @@ sources_dir=$(CURDIR)/$(base_name)
 cpack_config=$(build_dir)/CPackConfig.cmake
 package=$(package_dir)/$(package_name).tar.gz
 cfg_opt_Debug= \
+	--download-hdf5=yes --download-hdf5-fortran-bindings=yes \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \
@@ -30,6 +31,7 @@ cfg_opt_Debug= \
         --CXXFLAGS="-O -Wall -Wno-unused-local-typedefs -std=c++11"
 
 cfg_opt_Release= \
+	--download-hdf5=yes --download-hdf5-fortran-bindings=yes \
         --download-metis=yes --download-parmetis=yes \
         --download-blacs=yes --download-scalapack=yes \
         --download-mumps=yes --download-hypre=https://github.com/hypre-space/hypre/archive/v$(hypre_version).tar.gz \

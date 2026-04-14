@@ -13,11 +13,7 @@ name: Build docker images for Flow123d ecosystem
 on:
   push
 
-# TODO: add to manual reference to web generated doc and mention that one should trust the generated part 
 
-# článek Martin
-
-# 
 
 env:
   DOCKER_USER: ${{secrets.DOCKER_HUB_FLOW123D_USERNAME}}
@@ -53,12 +49,12 @@ jobs:
         make img-install-${{ matrix.environment }}
         make push-${{ matrix.environment }}
     - name: Read images_version file
-        id: getversion
-        run: echo "::set-output name=version::$(cat images_version)"    
-    - name: Release
-      uses: avakar/tag-and-release@v1
-        with:
-          tag_name: v${{ steps.getversion.outputs.version }}
-          release_name: release_${{ steps.getversion.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      id: getversion
+      run: echo "::set-output name=version::$(cat images_version)"    
+#    - name: Release
+#      uses: avakar/tag-and-release@v1
+#      with:
+#        tag_name: v${{ steps.getversion.outputs.version }}
+#        release_name: release_${{ steps.getversion.outputs.version }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}

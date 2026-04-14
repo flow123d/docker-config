@@ -12,14 +12,14 @@ build=docker build --build-arg images_version=$(images_version)
 build_gnu=$(build) -f Dockerfile-gnu
 build_intel=$(build) -f Dockerfile-intel
 run=docker run -v ${PWD}/$(build_dir):/build_dir -w /build_dir
-versions=--build-arg ver_yamlcpp=0.6.3 \
-	 --build-arg ver_armadillo=10.5.2 \
-	 --build-arg ver_mpich=3.4.2 \
-	 --build-arg ver_petsc=3.17.0 \
-	 --build-arg ver_hypre=2.24.0 \
+versions=--build-arg ver_yamlcpp=0e6e28d \
+	 --build-arg ver_armadillo=12.2.0 \
+	 --build-arg ver_mpich=4.0.3 \
+	 --build-arg ver_petsc=v3.18.6 \
+	 --build-arg ver_hypre=2.25.0 \
 	 --build-arg ver_bddcml=2.6 \
-	 --build-arg ver_permon=3.17.0 
-
+	 --build-arg ver_permon=3.18.0
+ver_boost=--build-arg boost_version=1.74
 # TODO: write versions available into the image and use autoamticaly in Flow123d configuration
 
 	 
@@ -32,11 +32,11 @@ versions=--build-arg ver_yamlcpp=0.6.3 \
 
 .PHONY: img-base-intel
 img-base-intel: dockerfiles/base/Dockerfile-intel dockerfiles/base/entrypoint.sh
-	cd dockerfiles/base && $(build_intel) --tag flow123d/base-intel:$(images_version) .
+	cd dockerfiles/base && $(build_intel) $(ver_boost) --tag flow123d/base-intel:$(images_version) .
 
 .PHONY: img-base-build-intel
 img-base-build-intel: img-base-intel dockerfiles/base-build/Dockerfile-intel
-	cd dockerfiles/base-build && $(build_intel) --tag flow123d/base-build-intel:$(images_version) .
+	cd dockerfiles/base-build && $(build_intel) $(ver_boost) --tag flow123d/base-build-intel:$(images_version) .
 
 libs_dbg:=libs-build-intel-dbg
 .PHONY: libs-build-intel-dbg
@@ -71,30 +71,37 @@ img-install-intel: img-base-intel $(libs_rel)
 
 .PHONY: img-base-gnu
 img-base-gnu: dockerfiles/base/Dockerfile-gnu dockerfiles/base/entrypoint.sh
-	cd dockerfiles/base && $(build_gnu) --tag flow123d/base-gnu:$(images_version) .
+	cd dockerfiles/base && $(build_gnu) $(ver_boost) --tag flow123d/base-gnu:$(images_version) .
 
 .PHONY: img-base-build-gnu
 img-base-build-gnu: img-base-gnu dockerfiles/base-build/Dockerfile-gnu
-	cd dockerfiles/base-build && $(build_gnu) --tag flow123d/base-build-gnu:$(images_version) .
+	cd dockerfiles/base-build && $(build_gnu) $(ver_boost) --tag flow123d/base-build-gnu:$(images_version) .
 
+build_gnu_dbg:=cd dockerfiles/flow-dev-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Debug
 libs_dbg:=libs-build-gnu-dbg
 .PHONY: $(libs_dbg)
-$(libs_dbg): img-base-build-gnu dockerfiles/libs-gnu/Dockerfile
-	cd dockerfiles/libs-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Debug --tag flow123d/$(libs_dbg):$(images_version) .
+$(libs_dbg): img-base-build-gnu dockerfiles/flow-dev-gnu/Dockerfile
+	 $(build_gnu_dbg) --target libs-build --tag flow123d/$(libs_dbg):$(images_version) .
 
 .PHONY: img-flow-dev-gnu-dbg
 img-flow-dev-gnu-dbg: $(libs_dbg) dockerfiles/flow-dev-gnu/Dockerfile
-	cd dockerfiles/flow-dev-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Debug --build-arg source_image=flow123d/$(libs_dbg):$(images_version) --tag flow123d/flow-dev-gnu-dbg:$(images_version) .
+	$(build_gnu_dbg) --build-arg source_image=flow123d/$(libs_dbg):$(images_version) --target flow-dev-gnu --tag flow123d/flow-dev-gnu-dbg:$(images_version) .
 
+build_gnu_rel:=cd dockerfiles/flow-dev-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Release
 libs_rel:=libs-build-gnu-rel
 .PHONY: $(libs_rel)
-$(libs_rel): img-base-build-gnu dockerfiles/libs-gnu/Dockerfile
-	cd dockerfiles/libs-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Release --tag flow123d/$(libs_rel):$(images_version) .
+$(libs_rel): img-base-build-gnu dockerfiles/flow-dev-gnu/Dockerfile
+	$(build_gnu_rel) --target libs-build --tag flow123d/$(libs_rel):$(images_version) .
 
 .PHONY: img-flow-dev-gnu-rel
 img-flow-dev-gnu-rel: $(libs_rel) dockerfiles/flow-dev-gnu/Dockerfile
-	cd dockerfiles/flow-dev-gnu && $(build) $(versions) --build-arg BUILD_TYPE=Release --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/flow-dev-gnu-rel:$(images_version) .
+	$(build_gnu_rel) --build-arg source_image=flow123d/$(libs_rel):$(images_version)  --target flow-dev-gnu --tag flow123d/flow-dev-gnu-rel:$(images_version) .
 
+.PHONY: img-install-gnu
+img-install-gnu: img-base-gnu $(libs_rel) dockerfiles/flow-dev-gnu/Dockerfile
+	$(build_gnu_rel) --build-arg source_image=flow123d/$(libs_rel):$(images_version) --target install-gnu --tag flow123d/install-gnu:$(images_version) .
+
+	
 # .PHONY: img-flow-dev-gnu-profile
 # img-flow-dev-gnu-profile: img-flow-dev-gnu-rel
 # 	cd dockerfiles/flow-dev-profile && $(build) --build-arg source_image=flow123d/flow-dev-gnu-rel:$(images_version) --tag flow123d/flow-dev-gnu-profile:$(images_version) .
@@ -103,9 +110,6 @@ img-flow-dev-gnu-rel: $(libs_rel) dockerfiles/flow-dev-gnu/Dockerfile
 .PHONY: flow-dev-gnu
 flow-dev-gnu: img-install-gnu img-flow-dev-gnu-dbg img-flow-dev-gnu-rel # img-flow-dev-gnu-profile
 
--PHONY: img-install-gnu
-img-install-gnu: img-base-gnu $(libs_rel)
-	cd dockerfiles/install-gnu && $(build) $(versions) --build-arg source_image=flow123d/$(libs_rel):$(images_version) --tag flow123d/install-gnu:$(images_version) .
 
 
 # Push all public images.

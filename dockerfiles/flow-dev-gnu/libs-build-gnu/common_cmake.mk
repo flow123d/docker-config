@@ -10,7 +10,7 @@
 
 
 package_name  ?= $(library)_$(build_type)
-build_root=/libs-build-gnu
+build_root=/build
 build_dir     = $(build_root)/$(library)/build_$(build_type)
 # package_dir   = $(build_root)/packages
 # package=$(package_dir)/$(package_name).tar.gz
@@ -48,6 +48,7 @@ configure: $(build_dir) $(sources_dir)
 				-DCMAKE_BUILD_TYPE=$(build_type) \
 				-DCMAKE_INSTALL_PREFIX=/usr/local/$(library)_$(version) \
 				-DCMAKE_CXX_FLAGS=$(CXX_FLAGS) \
+				$(cmake_options) \
 				$(sources_dir)
 
 .PHONY : build

@@ -3,6 +3,7 @@ ARG images_version
 FROM flow123d/base-gnu:${images_version}
 MAINTAINER Jan Hybs
 ARG images_version
+ARG boost_version
 
 # Environment variables are part of the images.
 # We will use the same base boost package when selectiong specific parts of the BOOST for the install image.
@@ -14,7 +15,7 @@ ARG images_version
 #  2  /usr/bin/gcc-7     7   manual mode
 #  3  /usr/bin/gcc-8     8   manual mode
 #  4  /usr/bin/gcc-9     9   manual mode
-ARG DEFAULT_GCC=/usr/bin/gcc-9
+ARG DEFAULT_GCC=/usr/bin/gcc-11
 
 # [g++]
 # 0   /usr/bin/g++-9     9  auto mode
@@ -22,13 +23,13 @@ ARG DEFAULT_GCC=/usr/bin/gcc-9
 # 2   /usr/bin/g++-7     7  manual mode
 # 3   /usr/bin/g++-8     8  manual mode
 # 4   /usr/bin/g++-9     9  manual mode
-ARG DEFAULT_GXX=/usr/bin/g++-9
+ARG DEFAULT_GXX=/usr/bin/g++-11
 
 # [c++]
 # 0   /usr/bin/g++      20  auto mode
 # 1   /usr/bin/clang++  10  manual mode
 # 2   /usr/bin/g++      20  manual mode
-ARG DEFAULT_CXX=/usr/bin/g++-9
+ARG DEFAULT_CXX=/usr/bin/g++-11
 
 
 # install basic set of tools and pandoc tools
@@ -42,25 +43,23 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     man \
     tree \
     gfortran \
-    gcc-7 g++-7 \
-    gcc-8 g++-8 \
-    gcc-9 g++-9 \
+    gcc-11 g++-11 \
     clang \
     gdbserver \
     valgrind \
     oprofile \
     pandoc \
     ccache \
-    libboost1.71-dev \
-    libboost-program-options1.71-dev \
-    libboost-serialization1.71-dev \
-    libboost-regex1.71-dev \
-    libboost-filesystem1.71-dev \
+    libboost${boost_version}-dev \
+    libboost-program-options${boost_version}-dev \
+    libboost-serialization${boost_version}-dev \
+    libboost-regex${boost_version}-dev \
+    libboost-filesystem${boost_version}-dev \
     libblas-dev \
     liblapack-dev \
     lib32z1-dev \
     libpugixml-dev \
-    libpython3.9-dev 
+    libpython3-dev 
     
 
 # install doxygen and graphviz, latex
@@ -81,10 +80,12 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends  \
     texlive-pstricks \
     texlive-science \
     lmodern \
-    imagemagick
+    imagemagick \
+    ps2eps
 
 # some pip packages
-RUN pip3 install \
+RUN python3 -m pip install -U pip &&\
+    pip3 install \
     markdown \
     formic \
     pymongo \
