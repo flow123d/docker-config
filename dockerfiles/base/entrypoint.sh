@@ -54,12 +54,14 @@ EOL
     done
   fi
   
-  # Color definition
-  bldgrn='\e[1;32m' # Green
-  bldylw='\e[1;33m' # Yellow
-  bldblu='\e[1;34m' # Blue
-  bldpur='\e[1;35m' # Purple
-  txtrst='\e[m' # Text Reset
+  # Color definition - bold colors
+  # see: https://unix.stackexchange.com/questions/16120/in-bash-how-can-i-change-the-color-of-my-command-prompt
+  # Trying to have stable flow123d cmd line history. The glitches are caused by the colors setting.
+  bldgrn='\[\033[1;32m\]' # Green
+  bldylw='\[\033[1;33m\]' # Yellow
+  bldblu='\[\033[1;34m\]' # Blue
+  bldpur='\[\033[1;35m\]' # Purple
+  txtrst='\[\033[0m\]' # Text Reset
 
   # edit main bash.bashrc file
   cat >> $GOSU_HOME/.bashrc << EOL
