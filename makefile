@@ -13,12 +13,12 @@ build_gnu=$(build) -f Dockerfile-gnu
 build_intel=$(build) -f Dockerfile-intel
 run=docker run -v ${PWD}/$(build_dir):/build_dir -w /build_dir
 versions=--build-arg ver_yamlcpp=0e6e28d \
-	 --build-arg ver_armadillo=12.2.0 \
-	 --build-arg ver_mpich=4.0.3 \
-	 --build-arg ver_petsc=v3.18.6 \
-	 --build-arg ver_hypre=2.25.0 \
+	 --build-arg ver_armadillo=15.2.4 \
+	 --build-arg ver_mpich=5.0.1 \
+	 --build-arg ver_hypre=3.1.0 \
+	 --build-arg ver_petsc=3.25.0 \
 	 --build-arg ver_bddcml=2.6 \
-	 --build-arg ver_permon=3.18.0
+	 --build-arg ver_permon=3.25.0
 ver_boost=--build-arg boost_version=1.74
 # TODO: write versions available into the image and use autoamticaly in Flow123d configuration
 
